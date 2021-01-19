@@ -1,0 +1,16 @@
+{
+  "name": "bettercode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/has": "^1.0.0",
+    "change-case": "^4.1.2",
+    "has": "^1.0.3"
+  }
+}
