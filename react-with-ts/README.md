@@ -15,6 +15,17 @@ folder를 만든후 css와 필요한결 다같이 넣는방법의 문제점은 c
 
 # css module
 
+## 3.1~
+
+css 가 module화 시키는것
+RCA 에서는 css naming 을 Header.module.css 와 같이 하면됨.
+이후 js 처럼 import styles from './Header.module.css';
+그리고 적용하는 위치에서는 `<ul className={styles.navList}>` 와 같이 쓴다
+이런 방법을 쓰면 실제 랜더링 되었을떄 classname이 자동 변경된다
+
+하지만 여전히 classname 을 기억해야 한다는 단점이 있다
+그렇기에 하나의 파일로 합치고 싶다. + className을 기억하고 싶지않다.
+
 # App.js
 
 민들어둔 헤더를 import 하면 router 밖에 있기 때문에 항상 노출이 된다
