@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# index.js
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+가장 상위의 파일
+실제 랜더링 되는 components를 import해서 사용한다
 
-## Available Scripts
+# Component
 
-In the project directory, you can run:
+component를 쓰는 이유는 어플리케이션의 부분부분을 캡슐화 해서 쓰기 위해서
+그렇기 떄문에 ja, logic, html, css도 한 곳에 모으고 싶은것.
 
-### `npm start`
+folder를 만든후 css와 필요한결 다같이 넣는방법의 문제점은 classname을 기억해야하고,
+사용할때마다 Import해줘야하고 class name이 중복이 되면 안됨
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+왜냐면 지금 Css 는 global로 작동한 띠라서 우리의component에서만 작동하는 css를 만들어야함
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# css module
 
-### `npm test`
+# App.js
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+민들어둔 헤더를 import 하면 router 밖에 있기 때문에 항상 노출이 된다
+여러개의 리턴을 위하여 flagment를 쓴다
 
-### `npm run build`
+# Header
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+index.js파일을 넣고 header 파일을 굳이 import시키는 이유는
+App.js에서 import Header from 'Components/Header'; 와 같이 import해주고 싶기때문
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# route
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+URL에 # 라고 나오는게 hash route를 쓰기 떄문임
+Browser router ->원래의 웹사이트 처럼 보여준다 : HTML history를 쓴다
 
-### `npm run eject`
+<></>로 깜싼이유는 1개의 child만 return 할수 있어서임
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Hash router -> url이 이쁘진 않음, 웹이아닌 앱에 있다는 느낌을 준다 : hash를 쓴다
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Composition은 두개 이상의 라우트러르 랜더링 하는 방법임
+-> 예를 들어 TV안에 tab 들이 있을떄 (/tv/popular)쓸수있다
+이때 2개의 component가 전부 적합하기 때문에 둘다 랜더링이된다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Redirect 는 아무곳도 아닐떄 /으로 리다이렉트 시킬려고한다
+하지만 같은 route로 render를 하려고 하면 에러가 나는데 이는, 위에서 한것처럼 composition error가
+나기 때문이다. 이것을 해결해 주기위하여 Switch를 사용한다
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+switch는 1개의 ruote만 render되게 해준다
+하지만 이결우에 아까 만든 popular가 같이 보이지 않게 해준다 exact를 넣어주면 정확히 같을때만 랜더된다
