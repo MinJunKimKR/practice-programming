@@ -19,7 +19,7 @@ folder를 만든후 css와 필요한결 다같이 넣는방법의 문제점은 c
 
 css 가 module화 시키는것
 RCA 에서는 css naming 을 Header.module.css 와 같이 하면됨.
-이후 js 처럼 import styles from './Header.module.css';
+이후 js 처럼 `import styles from './Header.module.css';`
 그리고 적용하는 위치에서는 `<ul className={styles.navList}>` 와 같이 쓴다
 이런 방법을 쓰면 실제 랜더링 되었을떄 classname이 자동 변경된다
 
@@ -53,6 +53,53 @@ Link 는 페이지 내의 링크가 존재한다면 브라우저한 방식일 �
 Router 내부의 Route로 들어가게된다.
 이때, only one child의 원칙에 따라 `<></>` 을 써서 Switch부분과 Header를 1개의 child로 묶어준다
 
+## 3.4 global style
+
+SC을 설치하거나 font 설정을 위해 사용한다
+`npm install styled-reset`
+이건 SC를 이용해서 css를 초기화한다음에 시작하도록 한다.
+
+```
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
+
+const globalStyles = createGlobalStyle`
+    ${reset}
+    a{
+        text-decoration : none;
+        color :inherit;
+    }
+    *{
+        box-sizing : border-box;
+    }
+
+    body{
+        font-family : -apple-system, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size :14px;
+        background-color :rgba(20,20,20,1)
+    }
+`;
+
+export default globalStyles;
+```
+
+위 와같이 global style을 정의해준다
+
+이렇게 정의해둔 global style은 App.js에 Router하단에 추가해준다
+
+```
+class App extends Component {
+  render() {
+    return (
+      <>
+        <Router />
+        <GlobalStyles />
+      </>
+    );
+  }
+}
+```
+
 # App.js
 
 민들어둔 헤더를 import 하면 router 밖에 있기 때문에 항상 노출이 된다
@@ -62,6 +109,14 @@ Router 내부의 Route로 들어가게된다.
 
 index.js파일을 넣고 header 파일을 굳이 import시키는 이유는
 App.js에서 `import Header from 'Components/Header'; `와 같이 import해주고 싶기때문
+
+```
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
+const globalStyle = createGlobalStyle`
+
+`;
+```
 
 # route
 
