@@ -42,12 +42,16 @@ const List = styled.ul` display: flex; &:hover { background-color: blue; }`;
 ```
 
 기존의 ul이 있던자리에 넣으면 잘 적용이 된다
-<a href="/">Movies</a> 의 방식을 사용하지 않기 위하여
-import {Link} from 'react-router-dom'
+`<a href="/">Movies</a>` 의 방식을 사용하지 않기 위하여
+`import {Link} from 'react-router-dom'`
 을 사용할 것이다.
 Link 는 페이지 내의 링크가 존재한다면 브라우저한 방식일 아닌 JS한 방싱으로 가게 해준다
-<SLink to="/">Movies</SLink> 이렇게 바꿔주자.
-여기서 Link 는 Rotuter-dom에서 가져온 것이기에 const SLink = styled(Link)``; 로 써준다,
+`<SLink to="/">Movies</SLink>` 이렇게 바꿔주자.
+여기서 Link 는 Rotuter-dom에서 가져온 것이기에 ` const SLink = styled(Link)``;  `로 써준다,
+
+다만 이때 Header에서 Route-dom을 쓰게 되는데 Route dom은 Router밖에 존재할수 없기 떄문에
+Router 내부의 Route로 들어가게된다.
+이때, only one child의 원칙에 따라 `<></>` 을 써서 Switch부분과 Header를 1개의 child로 묶어준다
 
 # App.js
 
@@ -57,18 +61,22 @@ Link 는 페이지 내의 링크가 존재한다면 브라우저한 방식일 �
 # Header
 
 index.js파일을 넣고 header 파일을 굳이 import시키는 이유는
-App.js에서 import Header from 'Components/Header'; 와 같이 import해주고 싶기때문
+App.js에서 `import Header from 'Components/Header'; `와 같이 import해주고 싶기때문
 
 # route
 
 URL에 # 라고 나오는게 hash route를 쓰기 떄문임
-Browser router ->원래의 웹사이트 처럼 보여준다 : HTML history를 쓴다
+`<></>`로 깜싼이유는 1개의 child만 return 할수 있어서임
 
-<></>로 깜싼이유는 1개의 child만 return 할수 있어서임
+### Browser router
 
-Hash router -> url이 이쁘진 않음, 웹이아닌 앱에 있다는 느낌을 준다 : hash를 쓴다
+원래의 웹사이트 처럼 보여준다 : HTML history를 쓴다
 
-Composition은 두개 이상의 라우트러르 랜더링 하는 방법임
+### Hash router
+
+url이 이쁘진 않음, 웹이아닌 앱에 있다는 느낌을 준다 : hash를 쓴다
+
+Composition은 두개 이상의 라우트로 랜더링 하는 방법임
 -> 예를 들어 TV안에 tab 들이 있을떄 (/tv/popular)쓸수있다
 이때 2개의 component가 전부 적합하기 때문에 둘다 랜더링이된다.
 
