@@ -26,6 +26,29 @@ RCA 에서는 css naming 을 Header.module.css 와 같이 하면됨.
 하지만 여전히 classname 을 기억해야 한다는 단점이 있다
 그렇기에 하나의 파일로 합치고 싶다. + className을 기억하고 싶지않다.
 
+# styled-component
+
+## 3.3
+
+`import styled from 'styled-components';`
+const List = styled.ul` display: flex; &:hover { background-color: blue; }`;
+
+위와 같은 소스를 추가한후 (여기에서 List는 ul이 된다.)
+
+```
+<header>
+    <List>
+      <li>
+```
+
+기존의 ul이 있던자리에 넣으면 잘 적용이 된다
+<a href="/">Movies</a> 의 방식을 사용하지 않기 위하여
+import {Link} from 'react-router-dom'
+을 사용할 것이다.
+Link 는 페이지 내의 링크가 존재한다면 브라우저한 방식일 아닌 JS한 방싱으로 가게 해준다
+<SLink to="/">Movies</SLink> 이렇게 바꿔주자.
+여기서 Link 는 Rotuter-dom에서 가져온 것이기에 const SLink = styled(Link)``; 로 써준다,
+
 # App.js
 
 민들어둔 헤더를 import 하면 router 밖에 있기 때문에 항상 노출이 된다
