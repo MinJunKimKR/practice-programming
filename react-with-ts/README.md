@@ -100,6 +100,77 @@ class App extends Component {
 }
 ```
 
+# SC(Styled component) props를 전달하는법
+
+`border-bottom: 5px solid ${(props) => (props.current ? '#3498db' : 'transparent')}; `
+위와 같이 props를 SC내에서 사용할수 있으며
+render를 할떄에
+`<Item current={true}>` 이와 같이 props값을 전달해 줄수 있다
+
+withRouter는 다른 컴포넌트를 감싸는 컴포넌트임
+
+```
+export default withRouter(() => (
+  <Header>
+    <List>
+      <Item current={true}>
+        <SLink to="/">Movies</SLink>
+      </Item>
+      <Item current={true}>
+        <SLink to="/tv">TV</SLink>
+      </Item>
+      <Item current={true}>
+        <SLink to="/search">Search</SLink>
+      </Item>
+    </List>
+  </Header>
+));
+```
+
+위와 같이 withRouter를 쓸수가 있다
+
+이는
+
+```
+const HeaderC = () => (
+  <Header>
+    <List>
+      <Item current={true}>
+        <SLink to="/">Movies</SLink>
+      </Item>
+      <Item current={true}>
+        <SLink to="/tv">TV</SLink>
+      </Item>
+      <Item current={true}>
+        <SLink to="/search">Search</SLink>
+      </Item>
+    </List>
+  </Header>
+);
+export default withRouter(HeaderC);
+```
+
+위와 같은형태이기에 props를 가질수 있게 된다
+
+즉, WithRouter를 쓰면 router 에서 값을 가져와서 props에서 쓸수 있게된다
+`(({ location: { pathname } }) ` 를 사용해서 spead를 하여
+pathname을 가져오고
+
+```
+<Item current={pathname === '/'}>
+        <SLink to="/">Movies</SLink>
+      </Item>
+      <Item current={pathname === '/tv'}>
+        <SLink to="/tv">TV</SLink>
+      </Item>
+      <Item current={pathname === '/search'}>
+        <SLink to="/search">Search</SLink>
+      </Item>
+```
+
+위와 같이 조건을 현재의 라우트 pathname으로 판변하게 하면 현재의
+route 위치와 그에 따른 효과를 줄수있다.
+
 # App.js
 
 민들어둔 헤더를 import 하면 router 밖에 있기 때문에 항상 노출이 된다
