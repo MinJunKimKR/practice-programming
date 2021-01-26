@@ -1,57 +1,90 @@
-# index.js
+# react의 구조
 
-가장 상위의 파일
+## public
+
+public directory 내부의 index.html의 `<div id="root"></div>` 부분이 있다.
+react는 저 id가 root인 div 내부에 내용을 바꿔가면서 보여주는데 이것을 가상DOM (virtual DOM) 이라고 한다
+
+## index.js
+
+가장 상위의 react 파일
 실제 랜더링 되는 components를 import해서 사용한다
+
+## App.js
+
+이 파일에서 개발에 사용하는 component를 import해준다
+이때 import되는 GlobalStyles, Header와 같이 상위개념의 component를 가져온다
+
+## router.js
+
+URL의 router가 바뀔떄다르게 보여줄 component를 정의해준다.
+이 component로 인하여 URL이 바뀔떄마다 다른 페이지를 보여줄수 있게된다.
 
 # Component
 
-component를 쓰는 이유는 어플리케이션의 부분부분을 캡슐화 해서 쓰기 위해서
-그렇기 떄문에 ja, logic, html, css도 한 곳에 모으고 싶은것.
+component를 쓰는 이유는 어플리케이션의 부분부분을 캡슐화 해서 쓰기 위해서 사용한다.
 
-folder를 만든후 css와 필요한결 다같이 넣는방법의 문제점은 classname을 기억해야하고,
-사용할때마다 Import해줘야하고 class name이 중복이 되면 안됨
+그렇기 떄문에 html, css, js, logic 을 한 곳에 모아서 독립적인 모듈화 시키고 싶기에 사용을 한다.
 
-왜냐면 지금 Css 는 global로 작동한 띠라서 우리의component에서만 작동하는 css를 만들어야함
+## component folder
 
-# css module
+우선 component의 개념을 가진 folder를 만든후 html, css, js 다같이 넣어서 폴더별로 관리하는 방법이 있다.
 
-## 3.1~
+하지만 문제점은 css의 classname을 사용을 할때마다 기억해야하고, 중복이 되면안되며 쓸때마다 import해줘야 하기에 불편하다.
+그렇기에 global로 적용이 되는 css가 아닌 local적용이 되는 css를 만들어야 한다.
 
-css 가 module화 시키는것
-RCA 에서는 css naming 을 Header.module.css 와 같이 하면됨.
-이후 js 처럼 `import styles from './Header.module.css';`
-그리고 적용하는 위치에서는 `<ul className={styles.navList}>` 와 같이 쓴다
-이런 방법을 쓰면 실제 랜더링 되었을떄 classname이 자동 변경된다
+## css module
 
-하지만 여전히 classname 을 기억해야 한다는 단점이 있다
-그렇기에 하나의 파일로 합치고 싶다. + className을 기억하고 싶지않다.
+_강의 3.1_
 
-# styled-component
+위의 문제를 개선할수 있는 방법은 바로 **css를 module화** 시키는방법이다.
 
-## 3.3
+RCA 에서는 css naming을 Header.module.css와 같이 만들게 되면 css파일이 module화가 되어서
+js 처럼 `import styles from './Header.module.css';`와 같은 방법으로 import할수 있게된다.
 
-`import styled from 'styled-components';`
-const List = styled.ul` display: flex; &:hover { background-color: blue; }`;
+또한 적용하는 위치에서는 `<ul className={styles.navList}>` 와 같이 사용을 하게되면 적용이되며 클래스네임은
+실제 랜더링 되었을떄 classname이 자동 변경된다
+
+하지만 여전히 classname 을 기억해야 한다는 단점이 있다.
+그렇기에 하나의 파일로 합치고 싶으며 className을 기억하고 있지 않아도 쓰고싶다.
+
+## styled-component
+
+_강의 3.3_
+위와 같은 니즈로 인해 만들어 진것이 styled-compoent 다.
+
+```
+import styled from 'styled-components';
+
+const List = styled.ul`
+display: flex; &:hover { background-color: blue; }`;
+```
 
 위와 같은 소스를 추가한후 (여기에서 List는 ul이 된다.)
 
 ```
 <header>
-    <List>
+    <List> //기존에 <ul> 자리
       <li>
 ```
 
-기존의 ul이 있던자리에 넣으면 잘 적용이 된다
-`<a href="/">Movies</a>` 의 방식을 사용하지 않기 위하여
-`import {Link} from 'react-router-dom'`
-을 사용할 것이다.
-Link 는 페이지 내의 링크가 존재한다면 브라우저한 방식일 아닌 JS한 방싱으로 가게 해준다
-`<SLink to="/">Movies</SLink>` 이렇게 바꿔주자.
-여기서 Link 는 Rotuter-dom에서 가져온 것이기에 ` const SLink = styled(Link)``;  `로 써준다,
+기존의 ul이 있던자리에 넣으면 잘 적용이 된다.
 
-다만 이때 Header에서 Route-dom을 쓰게 되는데 Route dom은 Router밖에 존재할수 없기 떄문에
+## Style-compoent에 Link 연결하기
+
+`<a>` 태그와 같이 link를 설정해줄떄 `<a href="/">Movies</a>` 의 방식을 사용하지 않기 위하여
+`import {Link} from 'react-router-dom'` 을 사용할 것이다.
+
+`Link` 는 페이지 내의 링크가 존재한다면 **브라우저한 방식**이 아닌 **JS한 방식**으로 가게 해준다.
+
+Link 는 Rotuter-dom에서 가져온 것이기에 ` const SLink = styled(Link)``;  `처럼 선언해준다.
+
+그이후에 `<a href="/">Movies</a>`소스를 `<SLink to="/">Movies</SLink>` 이렇게 바꿔주자.
+
+다만 이때 **Header에서 Route-dom**을 쓰게 되는데 **Route dom은 1개의 Router밖에** 존재할수 없기 떄문에
 Router 내부의 Route로 들어가게된다.
-이때, only one child의 원칙에 따라 `<></>` 을 써서 Switch부분과 Header를 1개의 child로 묶어준다
+
+이때, **only one child의 원칙**에 따라 `<></>` 을 써서 Switch부분과 Header를 1개의 child로 묶어준다.
 
 ## 3.4 global style
 
