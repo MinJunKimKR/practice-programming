@@ -254,4 +254,49 @@ export default withRouter(HeaderC);
 
 위와 같이 조건을 현재의 라우트 pathname으로 판변하게 하면 현재의 route 위치와 그에 따른 효과를 줄수있다.
 
-# Axios
+# Networking
+
+api.js 이라는 파일을 만들어서 api와 통신하는 코드를 몰아 넣을것이다.
+
+## axios
+
+```
+const api = axios.create({
+  baseURL: "https://api.themoviedb.org/3/",
+  params: {
+    api_key: "----",
+    language: "en-US",
+  },
+});
+
+```
+
+위와 같이 baseURL과 params를 설정을 해준다면 중복되는 코드를 막을수가 있다.
+
+```
+export const moviesApi = {
+  nowPlaying: () => api.get("movie/now_playing"),
+  upcoming: () => api.get("movie/upcoming"),
+  popular: () => api.get("movie/popular"),
+};
+
+export const tvApi = {
+  topRated: () => api.get("tv/top_rated"),
+  popular: () => api.get("tv/popular"),
+  airingToday: () => api.get("tv/airing_today"),
+};
+
+```
+
+따로따로 api요청을 보내는것이 아닌 위와 같이 json에 funtion으로 값을 바로 넣어줄수가 있다.
+
+```
+  showDetail: (id) =>
+    api.get(`tv/${id}`, {
+      params: {
+        append_to_response: "videos",
+      },
+    }),
+```
+
+위와 같이 사용한다면 각각의 api에 맞게 route나 params를 설정해 줄수 있다.
