@@ -13,12 +13,62 @@ react는 저 id가 root인 div 내부에 내용을 바꿔가면서 보여주는�
 ## App.js
 
 이 파일에서 개발에 사용하는 component를 import해준다
+
 이때 import되는 GlobalStyles, Header와 같이 상위개념의 component를 가져온다
+
+민들어둔 헤더를 import 하면 router 밖에 있기 때문에 항상 노출이 된다
+
+여러개의 리턴을 위하여 flagment를 쓴다
+
+---
 
 ## router.js
 
 URL의 router가 바뀔떄다르게 보여줄 component를 정의해준다.
 이 component로 인하여 URL이 바뀔떄마다 다른 페이지를 보여줄수 있게된다.
+
+## Header.js
+
+index.js파일을 넣고 header 파일을 굳이 import시키는 이유는
+
+App.js에서 `import Header from 'Components/Header'; `와 같이 import해주고 싶기 때문이다.
+
+```
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
+const globalStyle = createGlobalStyle`
+
+`;
+```
+
+# router
+
+URL에 # 라고 나오는게 hash route를 쓰기 떄문임
+`<></>`로 깜싼이유는 1개의 child만 return 할수 있어서임
+
+## Browser router
+
+원래의 웹사이트 처럼 보여준다 : HTML history를 쓴다
+
+## Hash router
+
+url이 이쁘진 않다.
+
+웹이아닌 앱에 있다는 느낌을 준다
+
+Composition은 두개 이상의 라우트로 랜더링 하는 방법이다
+
+-> 예를 들어 TV안에 tab 들이 있을떄 (/tv/popular)쓸수있다.
+
+이때 2개의 component가 전부 적합하기 때문에 둘다 랜더링이된다.
+
+Redirect 는 아무곳도 아닐떄 /으로 리다이렉트 시킬려고한다.
+
+하지만 같은 route로 render를 하려고 하면 에러가 나는데 이는, 위에서 한것처럼 composition error가 나기 때문이다.
+
+이것을 해결해 주기위하여 **Switch를** 사용한다
+
+switch는 1개의 ruote만 render되게 해준다.
 
 # Component
 
@@ -89,8 +139,8 @@ Router 내부의 Route로 들어가게된다.
 ## 3.4 global style
 
 SC을 설치하거나 font 설정을 위해 사용한다
-`npm install styled-reset`
-이건 SC를 이용해서 css를 초기화한다음에 시작하도록 한다.
+
+`npm install styled-reset`는 SC를 이용해서 css를 초기화한 다음에 적용해주도록 한다.
 
 ```
 import { createGlobalStyle } from 'styled-components';
@@ -118,7 +168,7 @@ export default globalStyles;
 
 위 와같이 global style을 정의해준다
 
-이렇게 정의해둔 global style은 App.js에 Router하단에 추가해준다
+이렇게 정의해둔 global style은 App.js에 Router하단에 추가해주면 global하게 적용이 된다
 
 ```
 class App extends Component {
@@ -136,11 +186,12 @@ class App extends Component {
 # SC(Styled component) props를 전달하는법
 
 `border-bottom: 5px solid ${(props) => (props.current ? '#3498db' : 'transparent')}; `
-위와 같이 props를 SC내에서 사용할수 있으며
-render를 할떄에
+
+위와 같이 props를 SC내에서 사용할수 있으며, render를 할떄에
+
 `<Item current={true}>` 이와 같이 props값을 전달해 줄수 있다
 
-withRouter는 다른 컴포넌트를 감싸는 컴포넌트임
+withRouter는 다른 컴포넌트를 감싸는 컴포넌트다.
 
 ```
 export default withRouter(() => (
@@ -183,11 +234,11 @@ const HeaderC = () => (
 export default withRouter(HeaderC);
 ```
 
-위와 같은형태이기에 props를 가질수 있게 된다
+위와 같은형태이기에 props를 가질수 있게 된다.
 
-즉, WithRouter를 쓰면 router 에서 값을 가져와서 props에서 쓸수 있게된다
-`(({ location: { pathname } }) ` 를 사용해서 spead를 하여
-pathname을 가져오고
+즉, WithRouter를 쓰면 router 에서 값을 가져와서 props에서 쓸수 있게된다.
+
+`(({ location: { pathname } }) ` 를 사용해서 spead를 하여 pathname을 가져오고,
 
 ```
 <Item current={pathname === '/'}>
@@ -201,47 +252,4 @@ pathname을 가져오고
       </Item>
 ```
 
-위와 같이 조건을 현재의 라우트 pathname으로 판변하게 하면 현재의
-route 위치와 그에 따른 효과를 줄수있다.
-
-# App.js
-
-민들어둔 헤더를 import 하면 router 밖에 있기 때문에 항상 노출이 된다
-여러개의 리턴을 위하여 flagment를 쓴다
-
-# Header
-
-index.js파일을 넣고 header 파일을 굳이 import시키는 이유는
-App.js에서 `import Header from 'Components/Header'; `와 같이 import해주고 싶기때문
-
-```
-import { createGlobalStyle } from 'styled-components';
-import reset from 'styled-reset';
-const globalStyle = createGlobalStyle`
-
-`;
-```
-
-# route
-
-URL에 # 라고 나오는게 hash route를 쓰기 떄문임
-`<></>`로 깜싼이유는 1개의 child만 return 할수 있어서임
-
-### Browser router
-
-원래의 웹사이트 처럼 보여준다 : HTML history를 쓴다
-
-### Hash router
-
-url이 이쁘진 않음, 웹이아닌 앱에 있다는 느낌을 준다 : hash를 쓴다
-
-Composition은 두개 이상의 라우트로 랜더링 하는 방법임
--> 예를 들어 TV안에 tab 들이 있을떄 (/tv/popular)쓸수있다
-이때 2개의 component가 전부 적합하기 때문에 둘다 랜더링이된다.
-
-Redirect 는 아무곳도 아닐떄 /으로 리다이렉트 시킬려고한다
-하지만 같은 route로 render를 하려고 하면 에러가 나는데 이는, 위에서 한것처럼 composition error가
-나기 때문이다. 이것을 해결해 주기위하여 Switch를 사용한다
-
-switch는 1개의 ruote만 render되게 해준다
-하지만 이결우에 아까 만든 popular가 같이 보이지 않게 해준다 exact를 넣어주면 정확히 같을때만 랜더된다
+위와 같이 조건을 현재의 라우트 pathname으로 판변하게 하면 현재의 route 위치와 그에 따른 효과를 줄수있다.
