@@ -1,3 +1,76 @@
+
+
+# 136. Single Number
+
+https://leetcode.com/problems/single-number/
+
+> Given a **non-empty** array of integers `nums`, every element appears *twice* except for one. Find that single one.
+>
+> **Follow up:** Could you implement a solution with a linear runtime complexity and without using extra memory?
+>
+>  
+>
+> **Example 1:**
+>
+> ```
+> Input: nums = [2,2,1]
+> Output: 1
+> ```
+>
+> **Example 2:**
+>
+> ```
+> Input: nums = [4,1,2,1,2]
+> Output: 4
+> ```
+>
+> **Example 3:**
+>
+> ```
+> Input: nums = [1]
+> Output: 1
+> ```
+>
+>  
+
+
+
+사실 이 문제는  169번 문제의 하위호완 이었다. 문제 해설 보러가기 [169번 문제 링크]
+
+
+
+배열내의 1개를 제외한 나머지 숫자는 2번씩 나오기에 1개만 나오는 숫자를 찾는 문제인데 나는 역시 같은 방법으로 해결했다.
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+const singleNumber = function (nums) {
+  const objNumberCount = {};
+  nums.map((num) => {
+    objNumberCount[num] = ++objNumberCount[num] || 1; //값을 증가 하던가 혹은 1을 넣던가.
+  });
+  for (const number in objNumberCount) {
+    if (objNumberCount.hasOwnProperty(number)) {
+      if (objNumberCount[number] == 1) return number; //값이 1이면 return
+    }
+  }
+};
+```
+
+
+
+하지만 너무 같은 방법이었기에 다른 방법도 찾아보고 싶다.
+
+
+
+
+
+
+
+
+
 # 169. Majority Element
 
 https://leetcode.com/problems/majority-element/
