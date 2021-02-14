@@ -387,3 +387,51 @@ export default class extends React.Component {
 기본적으로 loading은 false가 될것이다.html의
 searchTerm은 검색 기본값이 없음으로 empty이고, 검색하고 엔터를 누르면 로딩이 true고 그 결과값을
 Result에 넣을것이다.
+
+### DetailContainer
+
+ID를 가지고 얻게되는 모든것들은 Result를 가지게 되고
+같은 detail container를 사용한다
+
+## compoentDidMount
+
+> 컴포넌트 생명주기
+
+모든 컴포넌트는 여러 종류의 “생명주기 메서드”를 가지며, 이 메서드를 오버라이딩하여 특정 시점에 코드가 실행되도록 설정할 수 있습니다.
+
+마운트
+아래 메서드들은 컴포넌트의 인스턴스가 생성되어 DOM 상에 삽입될 때에 순서대로 호출됩니다.
+
+constructor()
+static getDerivedStateFromProps()
+render()
+**componentDidMount()**
+
+위와같이 만들어둔 api를 didmount에서 가져올수 있다.
+
+### Object Deconstruction (객체 비구조화)
+
+`const nowPlaying = await moviesApi.nowPlaying();` 이와 같이 api를 통해서
+가져오는 데이터를 분해하여 할당하는 것을 말한다.
+`const { data: { results }} = await moviesApi.nowPlaying();`
+위와 같이 object로 구조화 되어있는 결과값을 **분해하여서 할당하는것을 말한다.**
+`const { data: { results: nowPlaying }} = await moviesApi.nowPlaying();`
+위와 같이 naming을 해주면 할당과 동시에 이름을 재지정 해줄수 있다.
+
+### 자바스크립트 할당
+
+```
+  this.setState({
+        nowPlaying: nowPlaying,
+      });
+```
+
+위와 같은표현을 짧게 만들어 줄수 있다
+
+```
+      this.setState({
+        nowPlaying,
+      });
+```
+
+자바스크립트는 위와 아래를 같은것으로 인식한다.
