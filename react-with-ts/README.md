@@ -345,3 +345,45 @@ export default class extends React.Component {
 }
 
 ```
+
+위의 소스와 같이 가질수 있는 state들을 미리 정의를 해둔다
+나중에 여기에 모든 로직을 추가할것이다
+예를 들어서 에러 처리나 api전송과 같은 로직들은 container내부에서 처리하도록 한다
+
+### Search container
+
+```
+import React from 'react';
+import SearchPesenter from './SearchPesenter';
+
+export default class extends React.Component {
+  state = {
+    movieResults: null,
+    tvResult: null,
+    serchTerm: '',
+    error: null,
+    loading: false,
+  };
+
+  render() {
+    const { movieResults, tvResult, serchTerm, error, loading } = this.state;
+    return (
+      <SearchPesenter
+        movieResults={movieResults}
+        tvResult={tvResult}
+        serchTerm={serchTerm}
+        error={error}
+        loading={loading}
+      />
+    );
+  }
+}
+
+```
+
+위와 같은 소스에서 ` movieResults: null, tvResult: null,` 둘다 들어가 있는 이유는'
+검색을 했을시에 영화와 TV모두를 보여주고 싶기에 위와같이 적었다.
+
+기본적으로 loading은 false가 될것이다.html의
+searchTerm은 검색 기본값이 없음으로 empty이고, 검색하고 엔터를 누르면 로딩이 true고 그 결과값을
+Result에 넣을것이다.
