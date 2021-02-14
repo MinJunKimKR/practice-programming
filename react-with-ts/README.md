@@ -395,13 +395,16 @@ ID를 가지고 얻게되는 모든것들은 Result를 가지게 되고
 
 ## compoentDidMount
 
-> **컴포넌트 생명주기**
-> 모든 컴포넌트는 여러 종류의 “생명주기 메서드”를 가지며, 이 메서드를 오버라이딩하여 특정 시점에 코드가 실행되도록 설정할 수 있습니다.
-> 아래 메서드들은 컴포넌트의 인스턴스가 생성되어 DOM 상에 삽입될 때에 순서대로 호출됩니다.
-> constructor()
-> static getDerivedStateFromProps()
-> render()
-> **componentDidMount()**
+**컴포넌트 생명주기**
+
+모든 컴포넌트는 여러 종류의 “생명주기 메서드”를 가지며, 이 메서드를 오버라이딩하여 특정 시점에 코드가 실행되도록 설정할 수 있습니다.
+
+아래 메서드들은 컴포넌트의 인스턴스가 생성되어 DOM 상에 삽입될 때에 순서대로 호출됩니다.
+
+constructor()
+static getDerivedStateFromProps()
+render()
+**componentDidMount()**
 
 위와같이 만들어둔 api를 didmount에서 가져올수 있다.
 
