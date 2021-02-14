@@ -300,3 +300,48 @@ export const tvApi = {
 ```
 
 위와 같이 사용한다면 각각의 api에 맞게 route나 params를 설정해 줄수 있다.
+
+# container
+
+클래스컴포넌트와 스테이트를 만들고 api에서 가져오는데 이것은 작은 프로젝트에서 사용할때 주로 쓰인다
+
+## 리액트 컨테이너 프리젠터 패턴
+
+- 컨테이너는 data를 가지고 state를 가지고, api를 불러온다.그리고 모든 로직을 처리함
+- 프리젠터는 데이터를 보여줌 하지만 state를 가지고 있지도 않고 단순한 함수형 컴포넌트임
+- 프리젠터는 스타일 컨테이더는 데이터임
+
+index.js는 모든곳에서 만들어져야함
+
+1개의 컨테이너는
+index, container, presenter 로 이루어져 있다.
+
+### container component
+
+container는 상태(state)를 가지고 있다.
+
+```
+export default class extends React.Component {
+  state = {
+    nowPlaying: null,
+    upcoming: null,
+    popular: null,
+    error: null,
+    loading: true,
+  };
+
+  render() {
+    const { nowPlaying, upcoming, popular, error, loading } = this.state;
+    return (
+      <HomePesenter
+        nowPlaying={nowPlaying}
+        upcoming={upcoming}
+        popular={popular}
+        error={error}
+        loading={loading}
+      />
+    );
+  }
+}
+
+```
