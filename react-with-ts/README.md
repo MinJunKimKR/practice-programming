@@ -316,7 +316,7 @@ index.js는 모든곳에서 만들어져야함
 1개의 컨테이너는
 index, container, presenter 로 이루어져 있다.
 
-### container component
+## container component
 
 container는 상태(state)를 가지고 있다.
 
@@ -350,7 +350,7 @@ export default class extends React.Component {
 나중에 여기에 모든 로직을 추가할것이다
 예를 들어서 에러 처리나 api전송과 같은 로직들은 container내부에서 처리하도록 한다
 
-### Search container
+## Search container
 
 ```
 import React from 'react';
@@ -388,12 +388,12 @@ export default class extends React.Component {
 searchTerm은 검색 기본값이 없음으로 empty이고, 검색하고 엔터를 누르면 로딩이 true고 그 결과값을
 Result에 넣을것이다.
 
-### DetailContainer
+## DetailContainer
 
 ID를 가지고 얻게되는 모든것들은 Result를 가지게 되고
 같은 detail container를 사용한다
 
-## compoentDidMount
+### compoentDidMount
 
 **컴포넌트 생명주기**
 
@@ -436,3 +436,71 @@ render()
 ```
 
 자바스크립트는 위와 아래를 같은것으로 인식한다.
+
+## SearchContainer
+
+### handleSubmit
+
+누군가가 폼에서 text를 입력하고 엔터를 누르면, 그게 handleSubmit이 되는것이다.
+
+```
+import { moviesApi, tvApi } from 'api';
+import React from 'react';
+import SearchPesenter from './SearchPesenter';
+
+export default class extends React.Component {
+  state = {
+    movieResults: null,
+    tvResults: null,
+    serchTerm: '',
+    error: null,
+    loading: false,
+  };
+
+  handleSubmit = () => {
+    const { searchTerm } = this.state;
+    if (searchTerm !== '') {
+      this.searchByTerm();
+    }
+  };
+
+  searchByTerm = async () => {
+    const { searchTerm } = this.state;
+    try {
+      this.setState({ loading: true });
+      const {
+        data: { results: movieResults },
+      } = await moviesApi.search(searchTerm);
+      const {
+        data: { results: tvResults },
+      } = await tvApi.search(searchTerm);
+      this.setState({
+        movieResults,
+        tvResults,
+      });
+    } catch {
+      this.setState({ error: "Can't find results" });
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
+  render() {
+    const { movieResults, tvResults, serchTerm, error, loading } = this.state;
+    return (
+      <SearchPesenter
+        movieResults={movieResults}
+        tvResults={tvResults}
+        serchTerm={serchTerm}
+        loading={loading}
+        error={error}
+        handleSubmit={this.handleSubmit}
+      />
+    );
+  }
+}
+
+```
+
+위와 같은 코드에서 searchPresenter에서 form을 만들고, onSubmit을 호출하게되면
+handleSubmit이 작동이 된다.
+이때 container에서 미리 정의해준 handleSubmit을 presenter에게 전달해준다.
