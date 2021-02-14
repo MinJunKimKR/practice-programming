@@ -412,8 +412,10 @@ render()
 
 `const nowPlaying = await moviesApi.nowPlaying();` 이와 같이 api를 통해서
 가져오는 데이터를 분해하여 할당하는 것을 말한다.
+
 `const { data: { results }} = await moviesApi.nowPlaying();`
 위와 같이 object로 구조화 되어있는 결과값을 **분해하여서 할당하는것을 말한다.**
+
 `const { data: { results: nowPlaying }} = await moviesApi.nowPlaying();`
 위와 같이 naming을 해주면 할당과 동시에 이름을 재지정 해줄수 있다.
 
