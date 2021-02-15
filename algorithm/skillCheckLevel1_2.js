@@ -23,16 +23,21 @@ n	lost	reserve	return
 3번 학생이 2번 학생이나 4번 학생에게 체육복을 빌려주면 학생 4명이 체육수업을 들을 수 있습니다.
 */
 function solution(n, lost, reserve) {
-  var answer = 0;
-  //   let reserve;
-  lost.map((lostNum) => {
-    console.log(`lost Num ${lostNum}`);
-    const num = reserve.find(
-      (reserveNum) => reserveNum < lostNum + 2 && reserveNum > lostNum - 2
-    );
-    console.log(num);
+  const setReserve = new Set(reserve.filter((num) => !new Set(lost).has(num)));
+  const setLost = new Set(lost.filter((num) => !new Set(reserve).has(num)));
+  let emptyNum = 0;
+  [...setLost].map((lostNum) => {
+    if (setReserve.has(lostNum - 1)) {
+      setReserve.delete(lostNum - 1);
+      return;
+    }
+    if (setReserve.has(lostNum + 1)) {
+      setReserve.delete(lostNum + 1);
+      return;
+    }
+    emptyNum++;
   });
-  return answer;
+  return n - emptyNum;
 }
 
-console.log(solution(5, [2, 4], [1, 3, 5]));
+console.log(solution(5, [2, 4], [3]));
