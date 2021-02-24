@@ -504,3 +504,112 @@ export default class extends React.Component {
 위와 같은 코드에서 searchPresenter에서 form을 만들고, onSubmit을 호출하게되면
 handleSubmit이 작동이 된다.
 이때 container에서 미리 정의해준 handleSubmit을 presenter에게 전달해준다.
+
+## detail
+
+react router 각 parameter를 각각의 다른장소에게 전달해준다.
+
+```
+
+export default () => (
+  <Router>
+    <>
+      <Header />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/tv" exact component={TV} />
+        <Route path="/search" component={Search} />
+        <Route path="/movie/:id" component={Detail} />
+        <Route path="/show/:id" component={Detail} />
+        <Redirect from="*" to="/" />
+      </Switch>
+    </>
+  </Router>
+);
+```
+
+위에서 movie와 show부분에 :id를 사용했기에, props를 movie에서 확인해보면 id에 parameter가 담겨오게된다.
+
+```
+  async componentDidMount() {
+    const {
+      match: {
+        params: { id },
+      },
+      history: { push },
+    } = this.props;
+    const parsedId = parseInt(id);
+    if (isNaN(parsedId)) {
+      push("/");
+    }
+  }
+
+```
+
+위와 같이 history의 push를 사용해서 숫자가 아니라면 home으로 보낼수 있다.
+
+```
+    this.isMovie = pathname.includes("/movie/");
+```
+
+만일 랜더링할 필요가 없으면 class안에 둘수도 있다.
+핸더링 할 필요가 있다면 state에 두면 된다.
+
+### class생성
+
+```
+  constructor(props) {
+    super(props);
+    const {
+      location: { pathname },
+    } = props;
+    this.state = {
+      result: null,
+      error: null,
+      loading: true,
+      isMovie: pathname.includes("/movie/"),
+    };
+  }
+```
+
+위와같은 방법으로 class를 생성해줄수 있다.
+
+위와같은 방법으로 바뀌게 된다면 아래와 같이 isMovie도 바꿔 줄수있다.
+
+```
+
+  async componentDidMount() {
+    const {
+      match: {
+        params: { id },
+      },
+      history: { push },
+    } = this.props;
+    const parsedId = parseInt(id);
+    const { isMovie } = this.state;
+    if (isNaN(parsedId)) {
+      return push("/");
+    }
+  }
+
+```
+
+### 축약형
+
+```
+        const request = await moviesApi.movieDetail(parsedId);
+        result = request.data;
+```
+
+위와 같이 api에서 result를 받아올수 있다 하지만, cosnt를 한번더 선언을 해야하는것은 약간의 불편함이 있다.
+
+따라서 아래와 같이 바꿔주면 훨씬 깔끔하게 짤수가 있다
+
+```
+
+        ({
+          data:  result ,
+        } = await moviesApi.movieDetail(parsedId));
+```
+
+data를 return 해주는데 이것을 result로 해주는 것이다.
