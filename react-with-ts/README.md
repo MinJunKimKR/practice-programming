@@ -652,3 +652,91 @@ export default DetailPresenter;
 ```
 
 propTypes를 사용하여서, 넘어오는 데이터가 유효한지를 validate할수가 있다.
+
+## section
+
+```
+const Section = ({ title, children }) => (
+  <Container>
+    <Title>{title}</Title>
+    <Grid>{children}</Grid>
+  </Container>
+);
+
+Section.proTypes = {
+  title: ProTypes.string.isRequired,
+  children: ProTypes.oneOfType([
+    ProTypes.arrayOf(ProTypes.node),
+    ProTypes.node,
+  ]),
+};
+```
+
+위와 같이 styled component를 적용해서 Section을 만들었다.
+
+위에서 만들어진 Section은 component로서 어디서든 재활용이 가능해 졌다.
+이제 이것을 HomePresenter에 import해서 사용할것이다.
+
+```
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+
+import Section from "Components/Section";
+
+const Container = styled.div`
+  padding: 0px 10px;
+`;
+
+const HomePresenter = ({ nowPlaying, popular, upcoming, error, loading }) =>
+  loading ? null : (
+    <Container>
+      {nowPlaying && nowPlaying.length > 0 && (
+        <Section title="Now Playing">
+          {nowPlaying.map((movie) => movie.title)}
+        </Section>
+      )}
+      {upcoming && upcoming.length > 0 && (
+        <Section title="Upcoming Movies">
+          {upcoming.map((movie) => movie.title)}
+        </Section>
+      )}
+      {popular && popular.length > 0 && (
+        <Section title="popular Movies">
+          {popular.map((movie) => movie.title)}
+        </Section>
+      )}
+    </Container>
+  );
+
+HomePresenter.propTypes = {
+  nowPlaying: PropTypes.array,
+  popular: PropTypes.array,
+  upcoming: PropTypes.array,
+  error: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+};
+
+export default HomePresenter;
+
+```
+
+위에서 보는것과 같이 component인 Section을 가져와서
+각각, 상영중, 새영화, 유명한 영화 3가지 테마를 같은 component로 사용할수가 있고,
+이로서 재활용이 된다.
+
+또한, Continer에 css를 주어서 같은 Component를 쓴다 할지라도 Home에서만 적용되는 스타일을
+별도로 지정할수 있게되서 캡슐화가 가능해진다.
+
+여기서 포인트는 **children은 반드시 tag사이에 넣어줘야 한다.**
+
+```
+upcoming && upcoming.length > 0 && (
+        <Section title="Upcoming Movies">
+          {upcoming.map((movie) => movie.title)}
+        </Section>
+```
+
+위에서 && &&를 써준이유는 해당데이터가 없을경우에는 출력을 해주면 안되기에
+트리플 체크를 해준것이고, 잘보면 `{upcoming.map((movie) => movie.title)}`
+는 `<Section>` 태그 사이에 위치한다는것을 알수가 있다.
