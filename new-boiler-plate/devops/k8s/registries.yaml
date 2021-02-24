@@ -1,0 +1,4 @@
+mirrors:
+  "ateam-local-image-registry.localhost:5000":
+    endpoint:
+      - http://ateam-local-image-registry.localhost:5000

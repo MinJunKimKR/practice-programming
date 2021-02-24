@@ -56,5 +56,3 @@ GO template을 사용한다
 
 
 
-
-

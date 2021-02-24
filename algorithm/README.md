@@ -606,7 +606,157 @@ function solution(board, moves) {
 
 
 
+항상 느끼지만 문제를 잘읽으면 거기에 해답이 있는거 같다.
 
+이번에도 주목했던 문장이 있는데,
+
+> 만약 같은 모양의 인형 두 개가 바구니에 연속해서 쌓이게 되면 두 인형은 터뜨려지면서 바구니에서 사라지게 됩니다.  
+>
+> 위 상태에서 이어서 [5번] 위치에서 인형을 집어 바구니에 쌓으면 같은 모양 인형 **두 개**가 없어집니다.
+
+여기에서 눈여겨 봐야하는 문장은 `바구니에 쌓으면` 인데 이는 stack구조를 의미한다.
+
+
+
+따라서 인형을 담을 바구니를  Stack으로 만들어준다
+
+```javascript
+class Stack {
+  constructor() {
+    this._arr = [];
+  }
+  push(item) {
+    this._arr.push(item);
+  }
+  pop() {
+    return this._arr.pop();
+  }
+  peek() {
+    return this._arr[this._arr.length - 1];
+  }
+  clear() {
+    this._arr = [];
+  }
+  length() {
+    return this._arr.length;
+  }
+}
+```
+
+
+
+이제, 크레인 집게를 집는 동작을 추가해줘야한다.
+
+크레인을 집는 위치가 만일에 2라고 한다면, `board[0][1], board[1][1], board[2][1], board[3][1] ...`
+
+으로 순차적으로 검색을 해줘야한다.
+
+이렇게 검색을 하던중에 `0` 은 비어있는 칸을 의미함으로 무시하고 내려가야 하며 0이 아닐때 집고 stack에 넣는 동작을 추가해줘야 한다.
+
+```javascript
+const isSamePuppetInStack = (stack,puppetType) => {
+  return stack.peek() === puppetType;
+};
+
+function solution(board, moves) {
+  const stack = new Stack();
+  let disapearPuppetCount = 0;
+  moves.map((pullingSpot) => {
+    for (let i = 0; i < board.length; i++) {
+      const pulledPuppet = board[i][pullingSpot - 1];
+      if (pulledPuppet) {
+        board[i][pullingSpot - 1] = 0;
+        if (isSamePuppetInStack(stack,pulledPuppet)) {
+          stack.pop();
+          disapearPuppetCount += 2;
+          return;
+        }
+        stack.push(pulledPuppet);
+        return;
+      }
+    }
+  });
+  return disapearPuppetCount;
+}
+```
+
+먼저 눈여겨 봐야하는 요소를 몇가지 짚어보자
+
+`stack` : 만들어둔 스택을 이용해 만든 인형을 담을 바구니
+
+`disapearPuppetCount`는 stack에 중복이 되어 사라진 인형의갯수 즉, 이 문제의 해답을 의미한다.
+
+`pullingSpot` : 크레인이 집어 올리는 위치
+
+`isSamePuppetInStack` : stack 최상단의 인형의 타입과 새로 넣는 인형의 타입이 같은지를 찾는 function
+
+여기서 간단한 로직을 굳이 왜 function으로 만들었냐면, 가독성을 위해서이다.
+
+
+
+먼저 크레인의 움직임이 기준임으로, `moves` 을 map으로 loop하도록 합니다.
+
+그 후 board의 length만큼 for를 실행하여서 크레인을 내립니다.
+
+이때, 만나는 숫자가 0인경우 넘어가고 0이 아닌경우에 크레인에 의해 뽑혔으므로 0으로 만들어줍니다
+
+```javascript
+moves.map((pullingSpot) => {
+    for (let i = 0; i < board.length; i++) {
+      const pulledPuppet = board[i][pullingSpot - 1];
+      if (pulledPuppet) {
+        board[i][pullingSpot - 1] = 0;
+        .
+        .
+      }
+    }
+  });
+```
+
+
+
+이후, stack의 맨위의 인형과 같은 타입인지 검사를 합니다.
+
+이때, 같은 타입이라면 stack을 pop하여서 맨위의 인형을 꺼내고, 인형이 2개가 사라졌으므로 `disapearPuppetCount` 를 2 증가 시킵니다.
+
+
+
+만일 다르다면, stack의 맨위에 새 인형을 추가합니다.
+
+그후 해당 동작을 반복하면 총 사라진 인형을 구할수있습니다!
+
+```javascript
+function solution(board, moves) {
+  const stack = new Stack();
+  let disapearPuppetCount = 0;
+  moves.map((pullingSpot) => {
+    for (let i = 0; i < board.length; i++) {
+      const pulledPuppet = board[i][pullingSpot - 1];
+      if (pulledPuppet) {
+        board[i][pullingSpot - 1] = 0;
+        if (isSamePuppetInStack(stack,pulledPuppet)) {
+          stack.pop();
+          disapearPuppetCount += 2;
+          return;
+        }
+        stack.push(pulledPuppet);
+        return;
+      }
+    }
+  });
+  return disapearPuppetCount;
+}
+```
+
+
+
+----
+
+
+
+## 후기
+
+만일에 Stack에 대한 개념과 Stack을 구현할줄 안다면 쉽게 풀수있는 문제였습니다!
 
 
 

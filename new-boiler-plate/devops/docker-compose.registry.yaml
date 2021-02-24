@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  local-image-registry:
+    container_name: ${K8S_LOCAL_IMAGE_REGISTRY_NAME}
+    image: registry:2
+    restart: always
+    volumes:
+      - local_image_registry:/var/lib/registry
+    ports:
+      - target: 5000
+        published: ${K8S_LOCAL_IMAGE_REGISTRY_PORT}
+        protocol: tcp
+        mode: bridge
+volumes:
+  local_image_registry:
