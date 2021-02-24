@@ -1,19 +1,20 @@
-import { moviesApi, tvApi } from 'api';
-import React from 'react';
-import SearchPesenter from './SearchPesenter';
+import { moviesApi, tvApi } from "api";
+import React from "react";
+import SearchPesenter from "./SearchPesenter";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default class extends React.Component {
   state = {
     movieResults: null,
     tvResults: null,
-    serchTerm: '',
+    serchTerm: "",
     error: null,
     loading: false,
   };
 
   handleSubmit = () => {
     const { searchTerm } = this.state;
-    if (searchTerm !== '') {
+    if (searchTerm !== "") {
       this.searchByTerm();
     }
   };

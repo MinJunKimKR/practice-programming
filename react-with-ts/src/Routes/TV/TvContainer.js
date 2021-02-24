@@ -1,7 +1,8 @@
-import { tvApi } from 'api';
-import React from 'react';
-import TvPesenter from './TvPesenter';
+import { tvApi } from "api";
+import React from "react";
+import TvPesenter from "./TvPesenter";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default class extends React.Component {
   state = {
     topRated: null,

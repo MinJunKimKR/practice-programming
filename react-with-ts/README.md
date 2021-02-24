@@ -613,3 +613,42 @@ export default () => (
 ```
 
 data를 return 해주는데 이것을 result로 해주는 것이다.
+
+# Presenter
+
+Container에서 로직을 구현한다고 한다면
+Presenter는 로직의 결과를 보여주는 파트이다. 즉, 도면을 그리는것과 같다.
+
+그렇기에 index.js에서 container를 import하고, container는 presenter를 import해서 사용한다.
+
+```
+  render() {
+    console.log(this.state);
+    const { result, error, loading } = this.state;
+    return <DetailPesenter result={result} error={error} loading={loading} />;
+  }
+```
+
+위에서와 같이 DetailPesenter에 container의 render에서 return을 해주는데, 여기에 loading, error와 같은 값을 던져준다.
+이떄 state가 변경될때마다 reder를 해주게된다.
+
+이떄, DetailPresenter는 아래와 같다
+
+```
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+
+const DetailPresenter = ({ result, error, loading }) => null;
+
+DetailPresenter.propTypes = {
+  result: PropTypes.object,
+  error: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+};
+
+export default DetailPresenter;
+
+```
+
+propTypes를 사용하여서, 넘어오는 데이터가 유효한지를 validate할수가 있다.

@@ -1,7 +1,8 @@
-import { moviesApi } from 'api';
-import React from 'react';
-import HomePesenter from './HomePesenter';
+import { moviesApi } from "api";
+import React from "react";
+import HomePesenter from "./HomePesenter";
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default class extends React.Component {
   state = {
     nowPlaying: null,
