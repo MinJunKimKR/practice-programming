@@ -360,18 +360,18 @@ export default class extends React.Component {
   state = {
     movieResults: null,
     tvResult: null,
-    serchTerm: '',
+    searchTerm: '',
     error: null,
     loading: false,
   };
 
   render() {
-    const { movieResults, tvResult, serchTerm, error, loading } = this.state;
+    const { movieResults, tvResult, searchTerm, error, loading } = this.state;
     return (
       <SearchPesenter
         movieResults={movieResults}
         tvResult={tvResult}
-        serchTerm={serchTerm}
+        searchTerm={searchTerm}
         error={error}
         loading={loading}
       />
@@ -452,7 +452,7 @@ export default class extends React.Component {
   state = {
     movieResults: null,
     tvResults: null,
-    serchTerm: '',
+    searchTerm: '',
     error: null,
     loading: false,
   };
@@ -485,12 +485,12 @@ export default class extends React.Component {
     }
   };
   render() {
-    const { movieResults, tvResults, serchTerm, error, loading } = this.state;
+    const { movieResults, tvResults, searchTerm, error, loading } = this.state;
     return (
       <SearchPesenter
         movieResults={movieResults}
         tvResults={tvResults}
-        serchTerm={serchTerm}
+        searchTerm={searchTerm}
         loading={loading}
         error={error}
         handleSubmit={this.handleSubmit}
@@ -807,3 +807,46 @@ const Grid = styled.div`
 grid는 flex box보다 훨씬 좋다.
 격자로 구성되며 gap을 써서 사이의 간격을 넓혀 주거나 할수있다.
 
+## Input
+
+Input에서 타이핑을 한다고 Input내에 글자가 쳐지지는 않는다
+이유는, 타이핑을 하는 update에 해당하는 처리가 추가적으로 필요하기 떄문이다.
+또한, Enter를 누르게되면 browser가 refresh되면서 타이핑해놓은 내용이 전부다 없어지게 되는데, 이유는 새로고침이 되면 state를 잃어 버리기 때문이다.
+이것을 유지 시키기 위해서 별도의 처리가 필요하다.
+
+바로, 이벤트를 중간에 가로채는것이다.
+
+```
+
+  handleSubmit = () => {
+    const { searchTerm } = this.state;
+    if (searchTerm !== "") {
+      this.searchByTerm();
+    }
+  };
+
+```
+
+위의 내용은 form에서 엔터를 치면 동작하는 summit event를 수행하는 핸들러이다.
+
+```
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+```
+
+위와 같이 event를 preventDefault를 사용해서 가로채서 이벤트를 없애는 작업이 반드시 필요하다.
+
+### all:unset;
+
+우리는 Input과 같은 html기본 형태를 바꾸고 싶을때가 있다.
+왜냐면 기본형태는 우릭사 원하는 형태랑 다소 달라서 보기가 안좋기 때문이다.
+이럴떄 All:unset을 사용해주면 기본 형태가 전부 해제된다.
+
+```
+const Input = styled.input`
+all:unset;
+font-size : 28px;
+width : 100%;
+`
+```
