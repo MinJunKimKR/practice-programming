@@ -740,3 +740,70 @@ upcoming && upcoming.length > 0 && (
 위에서 && &&를 써준이유는 해당데이터가 없을경우에는 출력을 해주면 안되기에
 트리플 체크를 해준것이고, 잘보면 `{upcoming.map((movie) => movie.title)}`
 는 `<Section>` 태그 사이에 위치한다는것을 알수가 있다.
+
+
+## Loader
+
+그 동안은 Loader가 존재하지 않아서 리스트를 불러올때 깜빡이는 효과가 있었지만,
+Loader를 사용하면 로딩이 되는 순간에 보여줄수 있는 것을 추가해 줄수가 있다.
+
+```
+const Continer = styled.div`
+height : 100vh;
+width:100vw;
+display : flex;
+justify-content : center;
+font-size : 28px;
+margin-top : 20px;
+`
+
+export default () => (<Continer><span role="img" aria-label="Loading">⏰</span></Continer>)
+
+```
+
+위와같이 정말 간단한 로더를 생성하였다.
+이 로더는 공용사용임으로 component에 들어가 있다.
+
+이제, 이 Loader를 Presenter가 사용을 하게되는데, 
+
+```
+const HomePresenter = ({ nowPlaying, popular, upcoming, error, loading }) =>
+  loading ? <Loader />  : (
+    <Container>
+      {nowPlaying && nowPlaying.length > 0 && (
+        <Section title="Now Playing">
+          {nowPlaying.map((movie) => <span key = {movie.id}>{movie.title}</span>)}
+        </Section>
+      )}
+      {upcoming && upcoming.length > 0 && (
+        <Section title="Upcoming Movies">
+          {upcoming.map((movie) => <span key = {movie.id}>{movie.title}</span>)}
+        </Section>
+      )}
+      {popular && popular.length > 0 && (
+        <Section title="popular Movies">
+          {popular.map((movie) => <span key = {movie.id}>{movie.title}</span>)}
+        </Section>
+      )}
+    </Container>
+  );
+```
+
+
+위의 소스에서 원래는 `loading? null : (..... )` 과 같이 loading 이 아무것도 안되었다면 안보여줬지만
+
+지금은 Loader가 생성이 되었기 때문에 추가되었다.
+
+### Grid
+
+```
+const Grid = styled.div`
+  margin-top: 25px;
+  display : grid;
+  grid-template-columns:repeat(auto-fill, 125px);
+  grid-gap : 25px;
+`;
+```
+grid는 flex box보다 훨씬 좋다.
+격자로 구성되며 gap을 써서 사이의 간격을 넓혀 주거나 할수있다.
+
