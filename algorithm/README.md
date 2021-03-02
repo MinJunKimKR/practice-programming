@@ -760,3 +760,269 @@ function solution(board, moves) {
 
 
 
+
+
+
+
+
+
+----
+
+# 프로그래머스[lv.2] - 스킬트리(Summer/Winter Coding(~2018))
+
+## 문제 설명
+
+선행 스킬이란 어떤 스킬을 배우기 전에 먼저 배워야 하는 스킬을 뜻합니다.
+
+예를 들어 선행 스킬 순서가 `스파크 → 라이트닝 볼트 → 썬더`일때, 썬더를 배우려면 먼저 라이트닝 볼트를 배워야 하고, 라이트닝 볼트를 배우려면 먼저 스파크를 배워야 합니다.
+
+위 순서에 없는 다른 스킬(힐링 등)은 순서에 상관없이 배울 수 있습니다. 따라서 `스파크 → 힐링 → 라이트닝 볼트 → 썬더`와 같은 스킬트리는 가능하지만, `썬더 → 스파크`나 `라이트닝 볼트 → 스파크 → 힐링 → 썬더`와 같은 스킬트리는 불가능합니다.
+
+선행 스킬 순서 skill과 유저들이 만든 스킬트리[1](https://programmers.co.kr/learn/courses/30/lessons/49993#fn1)를 담은 배열 skill_trees가 매개변수로 주어질 때, 가능한 스킬트리 개수를 return 하는 solution 함수를 작성해주세요.
+
+##### 제한 조건
+
+- 스킬은 알파벳 대문자로 표기하며, 모든 문자열은 알파벳 대문자로만 이루어져 있습니다.
+- 스킬 순서와 스킬트리는 문자열로 표기합니다.
+  - 예를 들어, `C → B → D` 라면 "CBD"로 표기합니다
+- 선행 스킬 순서 skill의 길이는 1 이상 26 이하이며, 스킬은 중복해 주어지지 않습니다.
+- skill_trees는 길이 1 이상 20 이하인 배열입니다.
+- skill_trees의 원소는 스킬을 나타내는 문자열입니다.
+  - skill_trees의 원소는 길이가 2 이상 26 이하인 문자열이며, 스킬이 중복해 주어지지 않습니다.
+
+##### 입출력 예
+
+| skill   | skill_trees                         | return |
+| ------- | ----------------------------------- | ------ |
+| `"CBD"` | `["BACDE", "CBADF", "AECB", "BDA"]` | 2      |
+
+##### 입출력 예 설명
+
+- "BACDE": B 스킬을 배우기 전에 C 스킬을 먼저 배워야 합니다. 불가능한 스킬트립니다.
+- "CBADF": 가능한 스킬트리입니다.
+- "AECB": 가능한 스킬트리입니다.
+- "BDA": B 스킬을 배우기 전에 C 스킬을 먼저 배워야 합니다. 불가능한 스킬트리입니다.
+
+----
+
+## 해결법
+
+```javascript
+const skillTree = ["BACDE", "CBADF", "AECB", "BDA", "AEF", "ZJW"];
+const skill = "CBD";
+class Stack {
+    constructor(items){
+        this._arr = []
+        const arrItems = items.split('')
+        for (let i = arrItems.length - 1; i > -1; i--) {
+            this._arr.push(arrItems[i]);
+        }
+ }
+ getLength(){
+     return this._arr.length
+ }
+ push(item){
+    this._arr.push(item);
+ }
+ pop(){
+    return this._arr.pop()
+ }
+ peek(){
+    return this._arr[this._arr.length-1]
+ }
+}
+const isInSkillStep = (skill,skillPeek) =>{
+    return skill.split('').indexOf(skillPeek) > -1
+}
+const isNextSkillStep = (skillStepStack, skillPeek) =>{
+    return skillStepStack.pop() === skillPeek
+}
+
+function solution(skill, skill_trees) {
+    const results  = skill_trees.map(skillTree =>{
+        const skillStepStack = new Stack(skill);
+        const skillPeeks = skillTree.split('');
+
+        for (const index in skillPeeks) {
+            if (Object.hasOwnProperty.call(skillPeeks, index)) { 
+                const skillPeek = skillPeeks[index];
+                if (!isInSkillStep(skill,skillPeek)){
+                    if (index == skillPeeks.length - 1) {
+                        return true
+                    }
+                    continue 
+                }
+                if (!isNextSkillStep(skillStepStack, skillPeek)) {
+                    return false
+                }
+                if (skillStepStack.getLength() === 0){
+                    return true
+                }
+                if (index == skillPeeks.length - 1) {
+                    return true
+                }
+                
+            }
+        }
+    })
+    return results.filter( result => result == true).length;//정상적인 스킬트리의 숫자
+}
+```
+
+
+
+이전에 크레인 문제를 풀었을때 스택을 이용해서 문제를 풀이했었습니다.
+
+스택을 구현하기 위해 아래와 같이 class를 만들어 줍니다
+
+```javascript
+class Stack {
+    constructor(items){
+        this._arr = []
+        const arrItems = items.split('')
+        for (let i = arrItems.length - 1; i > -1; i--) {
+            this._arr.push(arrItems[i]);
+        }
+ }
+ getLength(){
+     return this._arr.length
+ }
+ push(item){
+    this._arr.push(item);
+ }
+ pop(){
+    return this._arr.pop()
+ }
+ peek(){
+    return this._arr[this._arr.length-1]
+ }
+}
+```
+
+이번 문제에서, 제가 눈여겨 본 부분은 다음과 같습니다
+
+> 위 순서에 없는 다른 스킬(힐링 등)은 순서에 상관없이 배울 수 있습니다
+
+즉, skill 로 주어지는 문자를 제외한 다른 문자는 무시해도 된다는 결론이 나옵니다.
+
+우선 skill을 역순으로 stack arr에 넣어줘야 했기에 생성자를 사용해서 문자열을 역순으로 stack 에 넣었습니다. 
+
+```javascript
+    constructor(items){
+        this._arr = []
+        const arrItems = items.split('')
+        for (let i = arrItems.length - 1; i > -1; i--) {
+            this._arr.push(arrItems[i]);
+        }
+ }
+```
+
+위의 과정을 거치면 ABC문자열은 ["C","B","A"]의 형태로 Stack에 들어가게 됩니다.
+
+이제 주어진 스킬트리를 기준으로 loop를 돌려서 각각의 스킬트리를 검증하기 시작합니다
+
+```javascript
+    const results  = skill_trees.map(skillTree =>{
+        const skillStepStack = new Stack(skill);
+        const skillPeeks = skillTree.split('');
+
+        for (const index in skillPeeks) {
+            if (Object.hasOwnProperty.call(skillPeeks, index)) { 
+                const skillPeek = skillPeeks[index];
+                if (!isInSkillStep(skill,skillPeek)){
+                    if (index == skillPeeks.length - 1) {
+                        return true //스탭안에 존재하지 않는 시점에서 스킬트리가 끝난다면
+                    }
+                    continue 
+                }
+                if (!isNextSkillStep(skillStepStack, skillPeek)) {
+                    return false
+                }
+                if (skillStepStack.getLength() === 0){
+                    return true
+                }
+                if (index == skillPeeks.length - 1) {
+                    return true
+                }
+                
+            }
+        }
+    })
+```
+
+각각의 스킬트리를 ` const skillPeeks = skillTree.split('');`을 사용해서 배열로 만들어줍니다.
+
+그후 각 스킬트리의 스킬이 제시된 Skill 이라는 문자열 안에 있는지 검증하는 `isInSkillStep` 라는 함수를 만들어서 사용하였습니다
+
+```
+const isInSkillStep = (skill,skillPeek) =>{
+    return skill.split('').indexOf(skillPeek) > -1
+}
+```
+
+그후 만일, 스탭안에 존재하지 않는 다면 패스하고, 
+
+만일 그 시점에서 스킬트리가 끝난다면 return true를 해서 true를 return 해줍니다.
+
+`fail case : ZJW`
+
+```
+                if (!isInSkillStep(skill,skillPeek)){
+                    if (index == skillPeeks.length - 1) {
+                        return true //스탭안에 존재하지 않는 시점에서 스킬트리가 끝난다면
+                    }
+                    continue 
+                }
+```
+
+그후 다음 스킬스탭과 동일한지 확인을 해봅니다.
+
+이것도 `isNextSkillStep` 이라는 function을 만들어서 사용했습니다.
+
+```
+const isNextSkillStep = (skillStepStack, skillPeek) =>{
+    return skillStepStack.pop() === skillPeek
+}
+
+```
+
+```
+                if (!isNextSkillStep(skillStepStack, skillPeek)) {
+                    return false
+                }
+```
+
+이제, 만일 모든 스킬트리를 다 소모했다면 true를 리턴해서 이 스킬트리는 옳다는것을 return 해줍니다
+
+```
+                if (skillStepStack.getLength() === 0){
+                    return true
+                }
+                if (index == skillPeeks.length - 1) {
+                    return true
+                }
+```
+
+그후 마지막으로 result 의 true의 개수를 return 해줍니다
+
+```
+return results.filter( result => result == true).length;//정상적인 스킬트리의 숫자
+```
+
+
+
+-----
+
+##  후기
+
+이번거는 예외 사항을 체크하는데 너무 오래걸렸습니다.
+
+특히 ZWS와 같이 어느것 하나도 skill이 없는상황에서 fail이 나는경우를 못잡은 것이 가장 컸습니다.
+
+또한, Stack이 아니라 Queue를 썼으면 좀더 편하지 않았을까란 생각이 들었고
+
+여전히 가독성이 떨어져서 다소 아쉽다는 생각을 했습니다.
+
+만일에 다시 한다면, 먼저 해당되지 않는 스킬을 전무 소멸시키고 큐를 사용하거나
+
+정규식을 사용해서 풀어보고 싶습니다.

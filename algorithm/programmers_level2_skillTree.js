@@ -8,18 +8,9 @@ class Stack {
             this._arr.push(arrItems[i]);
         }
  }
- getStackToArray(){
-     return this._arr
- }
  getLength(){
      return this._arr.length
  }
- defaultSetting(items){
-    const arrItems = items.split('')
-     for (let i = arrItems.length - 1; i > -1 ; i--) {
-        this._arr.push(arrItems[i]);
-    }
-}
  push(item){
     this._arr.push(item);
  }
@@ -29,7 +20,6 @@ class Stack {
  peek(){
     return this._arr[this._arr.length-1]
  }
-
 }
 const isInSkillStep = (skill,skillPeek) =>{
     return skill.split('').indexOf(skillPeek) > -1
@@ -44,9 +34,9 @@ function solution(skill, skill_trees) {
         const skillPeeks = skillTree.split('');
 
         for (const index in skillPeeks) {
-            if (Object.hasOwnProperty.call(skillPeeks, index)) { //javascript에서 관용적으로 loop내에 값이 있는가 체크
+            if (Object.hasOwnProperty.call(skillPeeks, index)) { 
                 const skillPeek = skillPeeks[index];
-                if (!isInSkillStep(skill,skillPeek)){//스킬트리 내에 있는가
+                if (!isInSkillStep(skill,skillPeek)){
                     if (index == skillPeeks.length - 1) {
                         return true
                     }
