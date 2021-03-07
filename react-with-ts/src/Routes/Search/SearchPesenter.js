@@ -1,23 +1,24 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import Loader from "Components/Loader"
-import Section from "Components/Section"
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import Loader from 'Components/Loader';
+import Section from 'Components/Section';
+import Message from 'Components/Message';
 
 const Container = styled.div`
-padding: 0px 20px;
+  padding: 0px 20px;
 `;
 
 const Form = styled.form`
-margin-bottom : 50px;
-width : 100%;
+  margin-bottom: 50px;
+  width: 100%;
 `;
 
 const Input = styled.input`
-all:unset;
-font-size : 28px;
-width : 100%;
-`
+  all: unset;
+  font-size: 28px;
+  width: 100%;
+`;
 
 const SearchPresenter = ({
   movieResults,
@@ -26,18 +27,23 @@ const SearchPresenter = ({
   loading,
   searchTerm,
   handleSubmit,
-  updateTerm
-}) => (<Container><Form onSubmit = {handleSubmit}>
-  <Input placeholder = "Search Movies or TV shows..." 
-  value = {searchTerm}
-   onChange = {updateTerm}></Input>
-  </Form>
-  {
-  loading ? <Loader /> : 
-     <>
-        {movieResults  && movieResults.length > 0 && (
+  updateTerm,
+}) => (
+  <Container>
+    <Form onSubmit={handleSubmit}>
+      <Input
+        placeholder="Search Movies or TV shows..."
+        value={searchTerm}
+        onChange={updateTerm}
+      ></Input>
+    </Form>
+    {loading ? (
+      <Loader />
+    ) : (
+      <>
+        {movieResults && movieResults.length > 0 && (
           <Section title="Movie Results">
-            {movieResults.map(movie => (
+            {movieResults.map((movie) => (
               <span key={movie.id}>{movie.title}</span>
             ))}
           </Section>
@@ -45,14 +51,22 @@ const SearchPresenter = ({
 
         {tvResults && tvResults.length > 0 && (
           <Section title="TV Show Results">
-            {tvResults.map(show => (
+            {tvResults.map((show) => (
               <span key={show.id}>{show.name}</span>
             ))}
           </Section>
         )}
+        {error && <Message color="#e74c3c" text={error} />}
+        {tvResults &&
+          movieResults &&
+          movieResults.length === 0 &&
+          tvResults.length === 0 && (
+            <Message text={`Nothing found`} color="#95a5a6" />
+          )}
       </>
-  }
-  </Container>);
+    )}
+  </Container>
+);
 
 SearchPresenter.propTypes = {
   movieRsults: PropTypes.array,

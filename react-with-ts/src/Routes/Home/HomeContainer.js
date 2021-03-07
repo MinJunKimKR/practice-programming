@@ -1,6 +1,6 @@
-import { moviesApi } from "api";
-import React from "react";
-import HomePesenter from "./HomePesenter";
+import { moviesApi } from 'api';
+import React from 'react';
+import HomePesenter from './HomePesenter';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default class extends React.Component {
@@ -23,7 +23,6 @@ export default class extends React.Component {
       const {
         data: { results: popular },
       } = await moviesApi.popular();
-
       this.setState({
         nowPlaying,
         upcoming,
