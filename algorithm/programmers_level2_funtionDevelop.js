@@ -49,7 +49,7 @@ const solution = (progresses, speeds) => {
     }
   }
 
-  console.log("remainTerm :", remainTerm);
+  console.log('remainTerm :', remainTerm);
 
   return answer;
 };
@@ -68,8 +68,6 @@ class Stack {
   }
   pop() {
     if (this.top > 0) {
-      // console.log("top : ", this.top);
-      // console.log("arr : ", this._arr[this.top - 1]);
       const lastItem = this._arr[this.top - 1];
       this.top -= 1;
       this._arr.splice(this.top, 1);
@@ -123,14 +121,14 @@ class Queue {
 }
 
 const stack = new Stack([1, 2]);
-stack.push("123");
+stack.push('123');
 
 console.log(stack);
 console.log(stack.peek());
 console.log(stack.pop());
 console.log(stack.size());
 console.log(stack);
-console.log("=========");
+console.log('==========');
 const queue = new Queue([1, 2, 3]);
 console.log(queue.inqueue(213));
 console.log(queue);
