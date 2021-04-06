@@ -164,7 +164,7 @@ https://www.redhat.com/ko/topics/containers/kubernetes-architecture
 
 > **kubelet**
 >
-> 각 컴퓨팅 노드에는 컨트롤 플레인과 통신하는 매우 작은 애플리케이션인 kubelet이 있습니다. kublet은 컨테이너가 포드에서 실행되게 합니다. 컨트롤 플레인에서 노드에 작업을 요청하는 경우 kubelet이 이 작업을 실행합니다.
+> 각 컴퓨팅 노드에는 **컨트롤 플레인과 통신**하는 매우 작은 애플리케이션인 kubelet이 있습니다. kublet은 **컨테이너가 포드에서 실행**되게 합니다. 컨트롤 플레인에서 노드에 작업을 요청하는 경우 **kubelet이 이 작업을 실행**합니다.
 
 
 
@@ -184,9 +184,9 @@ https://www.redhat.com/ko/topics/containers/kubernetes-architecture
 
 이를 **Pull-based 모니터링**이라고 합니다.
 
-프로메테우스(Prometheus)는 대표적인 Pull-based 모니터링 툴입니다.
+**프로메테우스(Prometheus)는 대표적인 Pull-based 모니터링 툴**입니다.
 
-프로메테우스는 kube-apiserver로부터 서비스를 디스커버리하고, 각 대상에서 메트릭을 수집(Scrape)합니다. 
+프로메테우스는 kube-apiserver로부터 **서비스를 디스커버리**하고, 각 대상에서 **메트릭을 수집(Scrape)**합니다. 
 
 > **kube-apiserver**
 >
@@ -222,15 +222,155 @@ metrics-server를 통해 수집된 모니터링 정보를 메모리에 저장하
 
 프로메테우스를 통해 **서비스 디스커버리(Service discovery), 메트릭 수집(Retrieval) 및 시계열 데이터베이스(TSDB, Time Series Database)를 통한 저장, 쿼리 엔진을 통한 PromQL 사용과 Alertmanager를 통한 통보**가 가능합니다.
 
- ![](https://image.samsungsds.com/kr/insights/kuber_img07.jpg?queryString=20210319023251) 
+ ![](https://prometheus.io/assets/architecture.png) 
 
 ### 정리
 
 - 매트릭 파이프라인 종류
   - 리소스 매트릭 파이프라인, 완전한 매트릭 파이프라인 2가지 종류가 있다
 - 리소스 매트릭 파이프라인
-  - 
+  - 쿠버네티스 컴포넌트의 매트릭 흐름
+  - 스케일링 설정이 되어있다면 자동 스케일링에 활용함
+  - 다만, 순간의 정보만 가지고 있기에 다양하게 수집하지 않으며 장기간 저장하지 않음
 - 완전한 매트릭 파이프라인
+  - Prometheus
+  - 서비스 디커버리, 매트릭수집, 시계열 데이터베이스를 통한 저장을 한다
+
+
+
+## 모니터링 컴포넌트
+
+- **cAdvisor**: kubelet에 포함되어 노드, 파드, 컨테이너의 리소스 사용률을 수집하는 모듈
+
+- **metrics server**: cAdvisor로부터 정보를 수집하는 도구로, 리소스 메트릭 파이프라인은 metrics server의 정보를 활용함
+-  **node exporter**: Prometheus와 연동되는 **수집기(Exporter) 중 하나**로 노드의 HW, OS 메트릭을 수집하기 위한 도구
+
+
+
+## 무엇을 모니터링해야 할까?
+
+**클러스터 구성요소(노드 및 주요 컴포넌트)의 상태**
+
+쿠버네티스 환경이라면 **쿠버네티스 자체를 모니터링**해야 합니다. 
+
+컨트롤 플레인의 구성요소에 문제가 발생되어 사용자 애플리케이션이 배포되지 않거나 컨트롤러가 수행해야 하는 동작이 실패하는 상황이 발생할 수 있습니다. 클러스터의 주요 **컴포넌트와 더불어 노드의 상태도 확인이 필요하며 각각 Healthy, Ready 상태**이어야 합니다.
+
+
+
+**노드의 리소스 가용량**
+
+특정 노드에 관한 파드의 스케줄링은 노드에 할당되지 않은 리소스가 남아 있는 경우에 한해 가능합니다.
+
+노드의 리소스 사용량 자체는 스케줄러가 수행하는 파드 스케줄링과 상관이 없습니다. 즉, 노드 가용량을 모니터링해야 하는 이유는 **전체 노드에 가용한 리소스(Allocatable)가 파드의 요청량(Request)보다 부족하면 파드가 더 이상 스케줄링되지 못하기 때문입니다.** 
+
+필요한 경우 노드 리소스를 증설하거나, 노드를 추가해야 합니다. 가장 쉬운 방법은 **노드 상태를 확인하여 Allocated resources 부분의 각 CPU와 메모리 요청(Request)에 대한 퍼센티지를 확인**할 수 있습니다.
+
+
+
+**워크로드(Workload) 이슈**
+
+애플리케이션 자체 모니터링을 언급하지는 않았지만, **애플리케이션 프로세스 다운을 모니터링하는 부분이 있을 수 있습니다.** 파드에 적절한 라이브니스 프로브(liveness probe)가 설정되어 있는 경우, 혹은 OOMKilled되는 경우는 컨테이너의 재시작 횟수(Restart Count)가 지속적으로 증가하는지 모니터링해 볼 수 있습니다.
+
+파드에서 한 가지 더 이야기 하고 싶은 것은 퍼시스턴트 볼륨(PV, Persistent Volume)입니다. **특정 애플리케이션은 PV의 용량 부족으로 문제가 될 수 있습니다.** 
+
+한편, 퍼시스턴트 볼륨은 파드가 실행 중인 노드에 마운트되므로, (파일시스템 모니터링이 동적으로 반영된다면) **노드의 파일시스템 모니터링으로 가능합니다**
+
+-----
+
+# Devops 인프라 환경 구축 - 1. 전체 구조
+
+
+
+이번에 Devops role을 맡아서 인프라를 처음부터 구축해볼 기회가 있었습니다.
+
+어떤 방식으로 인프라를 구성하였는지 공유 하고 싶어서 이렇게 글을 씁니다.
+
+전체적인 구조는 아래와 같습니다.
+
+![](https://github.com/MinJunKimKR/photo_repo/blob/master/photos/CAPA%20SERVER-K8S%20%E1%84%80%E1%85%AE%E1%84%8C%E1%85%A9%E1%84%83%E1%85%A9.jpg?raw=true)
+
+하나하나 설명을 해보겠습니다
+
+
+
+### Local
+
+제일위에 주황색으로 표시된 부분이 local에서 코드로 관리하는 부분입니다.
+
+레포지토리는 크게 3가지로 구성되어있습니다.
+
+1. Application
+
+   Backend, Frontend와 같은 service에 대해 작성하는 레포입니다.
+
+   이곳에서 서비스 개발을 한 코드가 있고 docker file로 만든뒤에
+
+   Docker file로 만든다음에 ECR에 PUSH합니다.
+
+2. CDK
+
+   CDK 코드로 AWS리소스를 관리합니다.
+
+   AWS console로 리소스를 생성 및 관리하니 개수가 늘어날수록 부담이 커졌습니다.
+
+   하지만 CDK를 사용하니 자바스크립트 코드로 리소스를 관리할수 있다는점이 편해서 채택했습니다
+
+3. K8S manifest
+
+   운영 및 관리를 위해서 Helm을 사용하였습니다.
+
+   yaml로 관리할 경우, development, staging, production과 같이 다중 stage환경으로 구성하려할때
+
+   관리가 힘들지만, helm의 경우 helm chart를 이용해서 보다 간편하게 관리할수있어서 채택하게 되었습니다.
+
+   
+
+### AWS
+
+가운데에 주황색 테두리로 표시되어있는 영역입니다.
+
+리소스들은 aws console에 접속해서 직접 만드는것이 아닌 CDK를 사용해서 CouldFormation으로 관리됩니다.
+
+
+
+- CouldFormation
+- VPC
+- ECR
+  - Docker image화 되어있는 application 서비스가 Push되어집니다.
+  - local registry와 고민했지만 namespace를 나눠서 development를 구성하는게 도입에 이득이라 생각했습니다.
+- EKS
+  - ECR에서 image를 pull해서 k8s환경을 구축합니다.
+  - 1개의 클러스터에서 네임스페이스를 나눠서 쓰는 방식을 채택하였습니다.
+    - 기본적으로 트래픽이 많지 않으며 초기 도입이기에 미니멀하게 시작하고 싶었기 때문입니다.
+  - ELB와 연결되어서 외부트래픽을 받습니다.
+- RDS
+  - Prodction과 Staging DB를 분리하였습니다.
+  - ID와 PW는 CDK에서 생성해서 Sceret master에서 확인할수 있습니다.
+
+- ELB
+  - Kong ingress controller를 통해서 생성됩니다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
