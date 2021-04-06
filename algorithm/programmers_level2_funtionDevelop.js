@@ -36,26 +36,6 @@ const job2 = {
   speeds: [1, 1, 1, 1, 1, 1],
 };
 // [1, 3, 2]
-const solution = (progresses, speeds) => {
-  const answer = [];
-  const remain = progresses.map((process) => {
-    return 100 - process;
-  });
-  const remainTerm = [];
-  for (const key in progresses) {
-    if (progresses.hasOwnProperty(key)) {
-      const process = progresses[key];
-      remainTerm.push(Math.ceil((100 - process) / speeds[key]));
-    }
-  }
-
-  console.log('remainTerm :', remainTerm);
-
-  return answer;
-};
-
-console.log(solution(job1.progresses, job1.speeds));
-
 class Stack {
   constructor(items) {
     if (items) {
@@ -75,6 +55,7 @@ class Stack {
     }
     return false;
   }
+
   push(item) {
     this._arr.push(item);
     this.top += 1;
@@ -118,19 +99,53 @@ class Queue {
     }
     return firstItem;
   }
+  top() {
+    return this.inbox.top;
+  }
+  size() {
+    return this.inbox.size();
+  }
+  peek() {
+    return this.inbox.peek();
+  }
+  getter() {
+    return this.inbox._arr;
+  }
+  setter(array) {
+    this.inbox = new Stack(array);
+  }
 }
 
-const stack = new Stack([1, 2]);
-stack.push('123');
+const calReaminTerm = (termCount, queue) => {
+  const queueItems = queue.getter();
+  return queueItems.map((item) => item - termCount);
+};
 
-console.log(stack);
-console.log(stack.peek());
-console.log(stack.pop());
-console.log(stack.size());
-console.log(stack);
-console.log('==========');
-const queue = new Queue([1, 2, 3]);
-console.log(queue.inqueue(213));
-console.log(queue);
-console.log(queue.deqeue());
-console.log(queue);
+const solution = (progresses, speeds) => {
+  const answer = [];
+  const remainTerm = [];
+  for (const key in progresses) {
+    if (progresses.hasOwnProperty(key)) {
+      const process = progresses[key];
+      remainTerm.push(Math.ceil((100 - process) / speeds[key]));
+    }
+  }
+
+  const remainQueue = new Queue(remainTerm);
+
+  let answerTop = -1;
+  while (remainQueue.top()) {
+    const firstItem = remainQueue.deqeue();
+    if (firstItem < 1) {
+      answer[answerTop] += 1;
+      continue;
+    } else {
+      answerTop += 1;
+      answer[answerTop] = 1;
+      remainQueue.setter(calReaminTerm(firstItem, remainQueue));
+    }
+  }
+  return answer;
+};
+
+console.log(solution(job2.progresses, job2.speeds));
