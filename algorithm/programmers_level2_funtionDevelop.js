@@ -84,11 +84,11 @@ class Queue {
     this.outbox = new Stack();
   }
 
-  inqueue(item) {
+  enqueue(item) {
     this.inbox.push(item);
     return true;
   }
-  deqeue() {
+  dequeue() {
     const inboxSize = this.inbox.size();
     for (let i = 0; i < inboxSize; i++) {
       this.outbox.push(this.inbox.pop());
@@ -131,18 +131,18 @@ const solution = (progresses, speeds) => {
     }
   }
 
-  const remainQueue = new Queue(remainTerm);
+  const remaenqueue = new Queue(remainTerm);
 
   let answerTop = -1;
-  while (remainQueue.top()) {
-    const firstItem = remainQueue.deqeue();
+  while (remaenqueue.top()) {
+    const firstItem = remaenqueue.dequeue();
     if (firstItem < 1) {
       answer[answerTop] += 1;
       continue;
     } else {
       answerTop += 1;
       answer[answerTop] = 1;
-      remainQueue.setter(calReaminTerm(firstItem, remainQueue));
+      remaenqueue.setter(calReaminTerm(firstItem, remaenqueue));
     }
   }
   return answer;
