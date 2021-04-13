@@ -1503,7 +1503,7 @@ remainTerm 배열에 각 Process의 남은 (100-현재 진행률) 에서 해당�
   }
 ```
 
-
+`const remainQueue = new Queue(remainTerm);` 여기서 
 
 
 
