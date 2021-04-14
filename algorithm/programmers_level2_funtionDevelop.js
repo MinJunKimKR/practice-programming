@@ -99,14 +99,14 @@ class Queue {
     }
     return firstItem;
   }
+  peek() {
+    return this.inbox.peek();
+  }
   top() {
     return this.inbox.top;
   }
   size() {
     return this.inbox.size();
-  }
-  peek() {
-    return this.inbox.peek();
   }
   getter() {
     return this.inbox._arr;
