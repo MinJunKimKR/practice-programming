@@ -130,26 +130,37 @@ function solution(s) {
   let minimumLength = 0;
   const stack = new Stack();
   const halfLegnth = Math.ceil(s.length / 2);
-  //글자 단위로 queue에 넣기;
-  const arrString = s.split("");
-  console.log(queue.get());
-  console.log(queue.dequeue());
-  console.log(queue.get());
   //1부터 중간 값까지.
+
   for (let cuttingSize = 1; cuttingSize < halfLegnth; cuttingSize++) {
-    const queue = new Queue(arrString);
+    const arrString = [];
+
+    for (let i = 0; i < s.length; i += cuttingSize) {
+      arrString.push(s.substr(i, cuttingSize));
+    }
+    console.log(arrString);
     let overlapNum = 0;
-    let zipString = "";
-    //queue로 loop while()
-    while (queue.size() > 0) {}
-    //dequeue
+    let overlapStr = "";
+    let zipStr = "";
+    const queue = new Queue(arrString);
+    while (queue.size() > 0) {
+      const stringPart = queue.dequeue();
+      if (zipStr === "") {
+        overlapNum = 1;
+        overlapStr = stringPart;
+        continue;
+      }
+      if (stringPart === overlapStr) {
+        overlap += 1;
+      }
+    }
     //기준 문자가 있으면 비교
     //없으면 insert
     //같으면 overlap 1증가
-    //다르면 zipstring += `${overlap}${기준문자}`
+    //다르면 zipstr += `${overlap}${기준문자}`
     //기준문자 = '', overlap = 0'
-    //zipstring.legth 가 minimumLength보다 작으면
-    // minimumLength = zipstring.legnth
+    //zipstr.legth 가 minimumLength보다 작으면
+    // minimumLength = zipstr.legnth
   }
   return answer;
 }
