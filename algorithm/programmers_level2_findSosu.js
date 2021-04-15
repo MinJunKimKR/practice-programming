@@ -47,6 +47,7 @@ const test = {
   },
 };
 
+//재귀함수
 function makeNumbers(baseNum, cuttedNums, resultNums) {
   const thisTermCount = cuttedNums.length;
   if (thisTermCount === 0) return;
@@ -59,6 +60,7 @@ function makeNumbers(baseNum, cuttedNums, resultNums) {
   }
 }
 
+//소수구하기
 function isDecimalNumbers(num) {
   const harfOfNum = Math.ceil(num / 2);
   if (num < 2) {
@@ -74,9 +76,7 @@ function solution(numbers) {
   const arrNumber = numbers.split("");
   const numCollector = [];
   makeNumbers("", arrNumber, numCollector);
-  const uniqueNumCollector = [...new Set(numCollector)];
-  console.log(uniqueNumCollector);
-  console.log(uniqueNumCollector.filter((num) => isDecimalNumbers(num)));
+  const uniqueNumCollector = [...new Set(numCollector)]; //중복제거
   const decimalNums = uniqueNumCollector.filter((num) => isDecimalNumbers(num));
   return decimalNums.length;
 }
