@@ -406,11 +406,11 @@ function solution(n, lost, reserve) {
 
 쉽게 생각할수 있는것을 **프링글스**를 연상하시면 편합니다
 
-![프링글스 이미지 검색결과](https://lh3.googleusercontent.com/proxy/eRuf6SKoBPc9rmZ90c8LPBDt3G5rnMwYYPv3oA0egM-pGtdpJS8AGgPTWMp1eDUTTBpIV-tS_qWcEmWk7leeP9NtSHpQslthyRURKdmOapl_VMoiyto)
+
 
 위에는 뚫려있고, 위에서 부터 가져올수 있으며 반대로는 뺄수없는 형태를 **스택구조** 라고합니다
 
-이것을 **FILO**(First In Las Out) 혹은 **LIFO**(Last In First Out) 혹은 **선입선출** 이라고 합니다
+이것을 **FILO**(First In Last Out) 혹은 **LIFO**(Last In First Out) 혹은 **후입선출** 이라고 합니다
 
 
 
@@ -1035,6 +1035,133 @@ return results.filter( result => result == true).length;//정상적인 스킬트
 
 
 
+자료구조에서 **스택과 함께 가장 많이 볼수있는 선형구조** 입니다.
+
+**스택이 한쪽이 막혀있는 프링글스**를 생각하신다면, **큐는 놀이동산에서 기다리는 줄**을 생각하시면 이해하기가 수월합니다.
+
+![](https://img.hankyung.com/photo/201411/AA.9241943.1.jpg)
+
+> 혹시 스택에 관하여 개념이 헷갈리시는분은 전에 써놓은 스택에 대한 글을 읽어보시는걸 추천드립니다
+>
+> https://burning-camp.tistory.com/66
+
+
+
+큐는 **FIFO(First In First Out)** 혹은 **LILO(Last In Last Out)** 혹은 **선입선출**이라고 합니다
+
+즉, 스택이랑 다르게 **먼저 들어간게 먼저 나오는 구조**입니다
+
+
+
+큐에는 몇가지 대표적인 행동(함수)가 있습니다
+
+- **Enqueue** : 큐의 맨뒤에 data를 넣는다 (대기줄 맨끝에서 기다린다)
+- **Dequeue** : 큐의 맨앞에 data를 뺴낸다  (대기줄 맨 앞에서 입장한다)
+- **peek** : 큐의 맨위의 data 를 조회한다 (대기줄 맨 앞을 살펴본다)
+
+이해를 돕기 위해 아래의 이미지를 보시면 좋습니다!
+
+
+
+![](https://blackpudding.netlify.app/queue_animation-1093184755f30dff7b81fd507208c14b.gif)
+
+
+
+이제 큐를 실제로 구현해 보도록 하겠습니다
+
+큐는 2개의 스택을 이용해서 구현할수 있는데 먼저 아래의 코드를 보겠습니다.
+
+```javascript
+
+class Queue {
+  constructor(items) {
+    if (items) {
+      this.inbox = new Stack(items);
+    } else {
+      this.inbox = new Stack();
+    }
+    this.outbox = new Stack();
+  }
+
+  enqueue(item) {
+    this.inbox.push(item);
+    return true;
+  }
+  dequeue() {
+    const inboxSize = this.inbox.size();
+    for (let i = 0; i < inboxSize; i++) {
+      this.outbox.push(this.inbox.pop());
+    }
+    const firstItem = this.outbox.pop();
+    for (let i = 0; i < inboxSize - 1; i++) {
+      this.inbox.push(this.outbox.pop());
+    }
+    return firstItem;
+  }
+  peek() {
+    return this.inbox.peek();
+  }
+ }	
+```
+
+
+
+Queue는 2개의 스택으로 만들어진다고 말씀드렸는데 아래와 같은 용도로 쓰여집니다.
+
+- Inbox(오리지널) - 실제 데이터가 들어가 있는 스택
+
+- Outbox(임시) - Dequeue에서 쓰일 임시 스택
+
+
+
+큐는 선입선출, 즉 Inbox 스택의 맨앞(프링글스통 맨아래의 감자칩)의 데이터를 뽑아내야하는데(Dequeue) 이것을 구현하기 위해서 입니다.
+
+1. Indox = [1,2,3,4]의 스택이 들어있습니다. -> Inbox = [1,2,3,4] | Outbox = []
+
+2. Inbox의 데이터 수만큼 pop해서 Outbox에 넣습니다. -> Inbox = [] | Outbox = [4,3,2,1]
+
+   이때 **Outbox는 Inbox의 데이터가 역순으로 들어가게 됩니다**.
+
+3. Outbox에서 pop을 합니다. **이 pop을 한 데이터가 큐의 가장 맨앞의 데이터 입니다** -> Inbox = [] | Outbox = [4,3,2] | data : 1
+
+4. 그리고 Outbox의 데이터 수만큼 pop해서 Inbox에 넣습니다. ->  Inbox = [2,3,4] | Outbox = [] | data : 1
+
+   이때 **원래의 데이터에서 맨앞의 데이터만 없는 형태가 됩니다.**
+
+5. **Dequeue 성공!**
+
+
+
+상상을 해보면 좀더 이해가 쉽습니다.
+
+**꽉차있는 프링글스 통의 맨 밑의 감자칩**이 먹고 싶다면 비어있는 **프링글스통을** 하나 더 준비합니다.
+
+이후 꽉차있는 프링글스 통에 있는 감자칩을 **꺼꾸로 비어있는 통에다 전부다 붓습니다.**
+
+이후 **부어진 감자칩의 맨위에걸 하나 집어먹고** 다시 반대로 **원래 있던 통에 쏟아 넣으면 맨앞의 감자칩만 없게됩니다**
+
+
+
+한번 직접 구현해 보신다면 이해가 훨씬 쉬울테니 겁먹지 마세요 ㅎㅎ
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1139,7 +1266,7 @@ class Queue {
     this.outbox = new Stack();
   }
 
-  inqueue(item) {
+  queue(item) {
     this.inbox.push(item);
     return true;
   }
@@ -1185,9 +1312,7 @@ const solution = (progresses, speeds) => {
       remainTerm.push(Math.ceil((100 - process) / speeds[key]));
     }
   }
-
   const remainQueue = new Queue(remainTerm);
-
   let answerTop = -1;
   while (remainQueue.top()) {
     const firstItem = remainQueue.deqeue();
@@ -1264,17 +1389,141 @@ class Stack {
 }
 ```
 
- stack에 관한 설명은 다른글을 참고해주세요!
-
-https://burning-camp.tistory.com/66
-
-https://burning-camp.tistory.com/67
+> stack에 관한 설명은 다른글을 참고해주세요!
+>
+> https://burning-camp.tistory.com/66
+>
+> https://burning-camp.tistory.com/67
 
 저는 이번에 다른방식으로 Stack을 만들었습니다.
 
 
 
-큐를 구현을 하려면 2개의 스택이 필요합니다.
+이제 2개의 스택을 이용해서 큐를 구현 해보도록 하겠습니다.
+
+```javascript
+class Queue {
+  constructor(items) {
+    if (items) {
+      this.inbox = new Stack(items);
+    } else {
+      this.inbox = new Stack();
+    }
+    this.outbox = new Stack();
+  }
+
+  enqueue(item) {
+    this.inbox.push(item);
+    return true;
+  }
+  dequeue() {
+    const inboxSize = this.inbox.size();
+    for (let i = 0; i < inboxSize; i++) {
+      this.outbox.push(this.inbox.pop());
+    }
+    const firstItem = this.outbox.pop();
+    for (let i = 0; i < inboxSize - 1; i++) {
+      this.inbox.push(this.outbox.pop());
+    }
+    return firstItem;
+  }
+  peek() {
+    return this.inbox.peek();
+  }
+  top() {
+    return this.inbox.top;
+  }
+  size() {
+    return this.inbox.size();
+  }
+  getter() {
+    return this.inbox._arr;
+  }
+  setter(array) {
+    this.inbox = new Stack(array);
+  }
+}
+```
+
+> 스택 2개로 큐를 구현하는 개념은 이전에 쓴 게시물을 참고해 주시면 좋습니다!
+>
+> https://burning-camp.tistory.com/72
+
+
+
+기본적인 enqueue, dequeue 외에도 필요한 function 몇개를 더 선언해서 사용하였습니다
+
+
+
+이제 만들어 놓은 큐를 사용해서 문제를 풀어보도록 하겠습니다.
+
+```javascript
+const solution = (progresses, speeds) => {
+  const answer = [];
+  const remainTerm = [];
+  for (const key in progresses) {
+    if (progresses.hasOwnProperty(key)) {
+      const process = progresses[key];
+      remainTerm.push(Math.ceil((100 - process) / speeds[key]));
+    }
+  }
+  
+  .
+  .
+  .
+}
+```
+
+
+
+여기서 눈여겨 봐야하는 소스는 `remainTerm.push(Math.ceil((100 - process) / speeds[key]));` 입니다.
+
+remainTerm 배열에 각 Process의 남은 (100-현재 진행률) 에서 해당하는  speed로 나눠서 몇번의 term뒤에 100이 초과 되는지를 구합니다.
+
+여기서 주의할점은 3. 33333 인 경우 4번째에 100을 초과함으로 올림처리를 해줘야 합니다.
+
+위의 소스가 돌아가면 remainTerm 배열에는 [2,3,4] 와 같이 각 프로세스에서 몇번의 사이클 이후에 100이 넘어가는지를 알수있게됩니다.
+
+```javascript
+ .
+ .
+ .
+  const remainQueue = new Queue(remainTerm);
+  let answerTop = -1;
+  while (remainQueue.top()) {
+    const firstItem = remainQueue.deqeue();
+    if (firstItem < 1) {
+      answer[answerTop] += 1;
+      continue;
+    } else {
+      answerTop += 1;
+      answer[answerTop] = 1;
+      remainQueue.setter(calReaminTerm(firstItem, remainQueue));
+    }
+  }
+```
+
+`const remainQueue = new Queue(remainTerm);` 여기서 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
