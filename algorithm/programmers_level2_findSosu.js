@@ -40,6 +40,11 @@ const test = {
     input: "123",
     output: 2,
   },
+
+  4: {
+    input: "7843",
+    output: 12,
+  },
 };
 
 function makeNumbers(baseNum, cuttedNums, resultNums) {
@@ -49,7 +54,6 @@ function makeNumbers(baseNum, cuttedNums, resultNums) {
     const firstNum = cuttedNums.shift();
     const thisTermNum = `${baseNum}${firstNum}`;
     resultNums.push(Number(thisTermNum));
-    // resultNums.push(thisTermNum);
     makeNumbers(thisTermNum, cuttedNums, resultNums);
     cuttedNums.push(firstNum);
   }
@@ -60,7 +64,7 @@ function isDecimalNumbers(num) {
   if (num < 2) {
     return false;
   }
-  for (let i = 2; i < harfOfNum; i++) {
+  for (let i = 2; i <= harfOfNum; i++) {
     if (num % i === 0) return false;
   }
   return true;
@@ -72,50 +76,11 @@ function solution(numbers) {
   makeNumbers("", arrNumber, numCollector);
   const uniqueNumCollector = [...new Set(numCollector)];
   console.log(uniqueNumCollector);
-  console.log(isDecimalNumbers(41));
   console.log(uniqueNumCollector.filter((num) => isDecimalNumbers(num)));
   const decimalNums = uniqueNumCollector.filter((num) => isDecimalNumbers(num));
   return decimalNums.length;
 }
 
-// function solution(numbers) {
-//   console.log(`numbers : ${numbers}`);
-//   const allNumbers = getAllNumbers(numbers.split(""));
-//   console.log(allNumbers);
-//   return allNumbers.filter((v) => isPrime(v)).length;
-// }
-
-// function makeNumbers(numString, numsArr, arr) {
-//   console.log("=======start make number=======");
-//   const length = numsArr.length; //2  1
-//   console.log(length);
-//   if (length === 0) return; //23
-//   for (let i = 0; i < length; i++) { //2  1
-//     const target = numsArr.shift();  2 / 31
-//     console.log(`target : ${target}`);// 2
-//     const newNumString = numString + target;  2
-//     console.log(`newNumString : ${newNumString}`); //12
-//     const num = Number(newNumString);
-//     arr.push(num);//[12,13,3,2,2]
-//     makeNumbers(newNumString, numsArr, arr);//2, 31
-//     numsArr.push(target);231 312 3 12
-//     console.log(`numsArr : ${numsArr}`);
-//   }
-//   console.log("=======done=======");
-// }
-// function getAllNumbers(numsArr) {
-//   const arr = [];
-//   makeNumbers("", numsArr, arr);
-//   return Array.from(new Set(arr));
-// }
-
-// function isPrime(num) {
-//   for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
-//     if (num % i === 0) return false;
-//   }
-//   return num > 1;
-// }
-const testCase = 2;
+const testCase = 4;
 const result = solution(test[testCase].input);
 console.log(result);
-// console.log(result === solution(test[testCase].output));
