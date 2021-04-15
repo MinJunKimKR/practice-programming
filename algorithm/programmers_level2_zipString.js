@@ -1,4 +1,3 @@
-
 class Stack {
   constructor(items) {
     if (items) {
@@ -75,58 +74,100 @@ class Queue {
   }
 }
 
-// const testCase = {
-//   1: {
-//     q: "aabbaccc",
-//     a: 7,
-//   },
-//   2: { q: "ababcdcdababcdcd", a: 1 },
-//   3: { q: "abcabcdede", a: 8 },
-//   4: { q: "abcabcabcabcdededededede", a: 14 },
-//   5: { q: "xababcdcdababcdcd", a: 17 },
-// };
+const testCase = {
+  1: {
+    q: "aabbaccc",
+    a: 7,
+  },
+  2: { q: "ababcdcdababcdcd", a: 9 },
+  3: { q: "abcabcdede", a: 8 },
+  4: { q: "abcabcabcabcdededededede", a: 14 },
+  5: { q: "xababcdcdababcdcd", a: 17 },
+};
 
 function solution(s) {
   var answer = 0;
-  let minimumLength = 0;
-  const stack = new Stack();
   const halfLegnth = Math.ceil(s.length / 2);
-  //1부터 중간 값까지.
-
-  for (let cuttingSize = 1; cuttingSize < halfLegnth; cuttingSize++) {
-    const arrString = [];
-
+  console.log(halfLegnth);
+  let minimumLength = 0;
+  for (let cuttingSize = 1; cuttingSize <= halfLegnth; cuttingSize++) {
+    let previousStr = "";
+    let overlapCount = 1;
+    let strZip = "";
     for (let i = 0; i < s.length; i += cuttingSize) {
-      arrString.push(s.substr(i, cuttingSize));
-    }
-    console.log(arrString);
-    let overlapNum = 0;
-    let overlapStr = "";
-    let zipStr = "";
-    const queue = new Queue(arrString);
-    while (queue.size() > 0) {
-      const stringPart = queue.dequeue();
-      if (zipStr === "") {
-        overlapNum = 1;
-        overlapStr = stringPart;
+      const strPart = s.substr(i, cuttingSize);
+      console.log(strPart);
+      if (previousStr === "") {
+        previousStr = strPart;
         continue;
       }
-      if (stringPart === overlapStr) {
-        overlap += 1;
+      if (previousStr === strPart) {
+        overlapCount++;
         continue;
       }
-       zipStr=`${zipStr}${overlap}${overlapStr}` //zipstr이 overlapStr이랑 항상 같으므로 이걸 
-       console.log(`zip : ${zipStr}`)
+      strZip += `${overlapCount === 1 ? "" : overlapCount}${previousStr}`;
+      overlapCount = 1;
+      previousStr = strPart;
     }
-    //기준 문자가 있으면 비교
-    //없으면 insert
-    //같으면 overlap 1증가
-    //다르면 zipstr += `${overlap}${기준문자}`
-    //기준문자 = '', overlap = 0'
-    //zipstr.legth 가 minimumLength보다 작으면
-    // minimumLength = zipstr.legnth
+    strZip += `${overlapCount === 1 ? "" : overlapCount}${previousStr}`;
+    console.log(`strZip : ${strZip}`);
+    if (minimumLength === 0 || minimumLength > strZip.length) {
+      minimumLength = strZip.length;
+    }
   }
-  return answer;
+  console.log(`minimumLength : ${minimumLength}`);
+  return minimumLength;
 }
 
-// console.log(solution(testCase[1].q));
+const testNum = 5;
+const result = solution(testCase[testNum].q);
+console.log(testCase[testNum].a);
+console.log(result == testCase[testNum].a);
+
+// function solution(s) {
+//   var answer = 0;
+//   let minimumLength = 0;
+//   const stack = new Stack();
+//   const halfLegnth = Math.ceil(s.length / 2);
+//   //1부터 중간 값까지.
+
+//   for (let cuttingSize = 1; cuttingSize < halfLegnth; cuttingSize++) {
+//     const arrString = [];
+
+//     for (let i = 0; i < s.length; i += cuttingSize) {
+//       arrString.push(s.substr(i, cuttingSize));
+//     }
+//     console.log(arrString);
+//     let overlapNum = 0;
+//     let overlapStr = "";
+//     let zipStr = "";
+//     const queue = new Queue(arrString);
+//     while (queue.size() > 0) {
+//       console.log("----------------------");
+//       const stringPart = queue.dequeue();
+//       console.log(`stringPart : ${stringPart}`);
+//       console.log(`overlapStr : ${overlapStr}`);
+//       if (overlapStr === "") {
+//         console.log("===set overlapStr ===");
+//         overlapNum++;
+//         overlapStr = stringPart;
+//         continue;
+//       }
+//       if (stringPart === overlapStr) {
+//         overlapNum++;
+//         console.log(`===count number ${overlapNum}===`);
+//         continue;
+//       }
+//       zipStr += `${overlapNum === 1 ? "" : overlapNum}${overlapStr}`;
+//       console.log(`zipStr : ${zipStr}`);
+//       overlapNum = 1;
+//       overlapStr = stringPart;
+//     }
+//     zipStr += `${overlapNum === 1 ? "" : overlapNum}${overlapStr}`;
+//     console.log(`zipStr : ${zipStr}`);
+//     if (minimumLength > zipStr.length || minimumLength === 0) {
+//       minimumLength = zipStr.length;
+//     }
+//   }
+//   return minimumLength;
+// }
