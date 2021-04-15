@@ -1,0 +1,154 @@
+Question 1 of 18SQLReport an issue  
+Which of the following statements are true for the database index?
+
+(Select all acceptable answers.)
+
+
+It causes performance degradation of the INSERT operation
+It always improves the speed of the UPDATE operation
+It can improve the speed of the SELECT operation
+It is very useful on data with low cardinality/uniqueness
+It requires additional storage space
+Submit & next	Question time remaining: 
+
+
+
+Question 2 of 18LINUXReport an issue  
+
+The following output is the result of ls -l .
+
+-rw-r--r-- 1 user group 42496 Jan 14 17:13  report.txt
+-rw-r--r-- 1 user group 44280 Jan 14 17:14  README.txt
+drwxrwxr-x 2 user group 4096  Jan 14 00:00  archive
+Fill in the missing parts of the command to move report.txt to the archive directory, as well as to rename it to current.txt
+
+ report.txt 
+current.txt
+
+ report.txt 
+archive/
+current.txt
+
+
+
+
+Node.js 12   
+
+A project folder contains two files that are listed below. Fill in the blanks in these two files so that, when main.js is invoked with a temperature in Fahrenheit, the same temperature in Celsius is appended to log.txt.
+
+utility.js
+
+.toCelsius = (fahrenheit) => { 
+  return (fahrenheit-32) * 5/9; 
+}
+main.js
+
+const fs = require('fs');
+const utility = require('
+');
+
+fs.appendFile('log.txt', 
+(process.argv[2]) + "\n",
+ (err) => { if (err) throw err; });
+For example, when "node main.js 68" is executed, "20" should be appended to the log.txt.
+
+
+
+SQLite 3.28   
+
+Agents and their offices are defined with the following tables:
+
+AGENTS
+ID	NAME	OFFICEID
+1	Zoe	1
+2	Hazel	2
+3	Bella	2
+4	Mary	2
+5	Skylar	null
+ 
+
+OFFICES
+ID	ADDRESS	DIRECTORID
+1	New York	1
+2	San Francisco	2
+3	Chicago	null
+
+For each SQL query, specify the number of rows it should return.
+
+SELECT name FROM agents JOIN offices ON agents.officeId = offices.Id;
+▲▼
+ 
+
+SELECT name FROM agents LEFT JOIN offices ON agents.officeId = offices.Id;
+▲▼
+ 
+
+
+
+
+Users of an online bulletin board are kept in table users:
+
+TABLE users
+  id INTEGER PRIMARY KEY NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  passwordHash VARCHAR(60) NOT NULL
+Site admins need to be able to ban users. Write a statement that will alter the table and add a column named banned with the following properties:
+
+The type must be integer.
+The default value is 0.
+The only allowed values are 0 and 1.
+See the example case for more details.
+
+
+-- Suggested testing environment:
+-- http://sqlite.online/
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  passwordHash VARCHAR(60) NOT NULL                   
+);
+
+INSERT INTO users(id, email, passwordHash) VALUES(1, 'mike@acme.com', '12345678');
+INSERT INTO users(id, email, passwordHash) VALUES(2, 'steve@acme.com', '87654321');
+
+-- Insert answer here
+
+SELECT * FROM users;
+
+-- Expected output:
+-- id    email             passwordHash    banned
+-- ----------------------------------------------
+-- 1     mike@acme.com     12345678        0
+-- 2     steve@acme.com    87654321        0
+
+
+alter table users ADD banned INTEGER(1) not null default '0';
+alter table users ADD CONSTRAINT banned_check CEHCK banned IN(0,1);
+SELECT * FROM users;
+
+fail
+
+
+
+
+class Book {
+  constructor(private basePrice: number) {}
+
+  finalPrice(): number {
+    return this.basePrice * 2;
+  }
+}
+
+class TaxableBook extends Book {
+  constructor(basePrice: number, private taxRate: number) {
+    super(basePrice);
+  }
+  finalPrice(): number {
+    return this.taxRate * super.finalPrice();
+  }
+}
+
+console.log(new TaxableBook(10, 2).finalPrice()); //should print 40
+
+
