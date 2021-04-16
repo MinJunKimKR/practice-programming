@@ -84,33 +84,69 @@ const test = {
 
 function solution(tickets) {
   var answer = [];
-  function findRoute(remainTickets, lastRoute, route) {
-    const copyRoute = JSON.parse(JSON.stringify(route));
-    copyRoute.push(lastRoute);
+  function findRoute(remainTickets, destination, route) {
+    const copyRoute = route.slice();
+    copyRoute.push(destination);
     if (remainTickets.length === 0) {
-      //마지막
       answer.push(copyRoute);
       return;
     }
 
     const nextTicket = remainTickets
-      .filter((remainTickets) => lastRoute === remainTickets[0])
+      .filter((ticket) => destination === ticket[0])
       .sort((a, b) => {
         return a[1] > b[1] ? 1 : -1;
       });
-    const nextTicketCount = nextTicket.length;
-    if (nextTicketCount < 1) {
+    if (nextTicket.length < 1) {
+      //이게 아님
       return 0;
     }
-    for (let i = 0; i < nextTicketCount; i++) {
+    for (let i = 0; i < nextTicket.length; i++) {
       const nextRemainTickets = remainTickets.filter(
-        (remainTickets) => remainTickets != nextTicket[i]
-      );
+        (remainTicket) => remainTicket != nextTicket[i]
+      ); //다음 목적지를 가지고 있는 티켓가져오기(목적지에 해당하는 티켓을 제외)
+
       findRoute(nextRemainTickets, nextTicket[i][1], copyRoute);
     }
   }
   findRoute(tickets, "ICN", []);
   return answer[0];
 }
+
+// function solution(tickets) {
+//   var answer = [];
+//   DFS(tickets, "ICN", ["ICN"]);
+//   console.log(answer.sort());
+//   return answer.sort()[0];
+
+//   function DFS(remainTicket, start, str) {
+//     console.log(
+//       "DFS remainTicket,start,str : [" +
+//         remainTicket +
+//         "] || [" +
+//         start +
+//         "] || [" +
+//         str +
+//         "]"
+//     );
+//     if (remainTicket.length == 0) {
+//       console.log(str + "\n");
+//       answer.push(str);
+//     }
+//     for (var i in remainTicket) {
+//       if (remainTicket[i][0] == start) {
+//         let tmp = remainTicket.slice(); //배열복사
+//         console.log("tmp : ", tmp);
+//         tmp.splice(i, 1);
+//         console.log("tmp : ", tmp);
+//         let route = str.slice(); //배열복사
+//         console.log("str : ", str);
+//         console.log("tmp2 : ", tmp2);
+//         route.push(remainTicket[i][1]); //이번회차 남은 티켓중 도착지
+//         DFS(tmp, remainTicket[i][1], route);
+//       }
+//     }
+//   }
+// }
 
 console.log("result : ", solution(test[2].input));
