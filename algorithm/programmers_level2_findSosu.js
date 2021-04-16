@@ -48,6 +48,10 @@ const test = {
 };
 
 //재귀함수
+/*
+  baseNum : 맨앞에 마킹될 숫자
+  cuttedNum : 
+*/
 function makeNumbers(baseNum, cuttedNums, resultNums) {
   const thisTermCount = cuttedNums.length;
   if (thisTermCount === 0) return;
@@ -73,12 +77,12 @@ function isDecimalNumbers(num) {
 }
 
 function solution(numbers) {
-  const arrNumber = numbers.split("");
-  const numCollector = [];
+  const arrNumber = numbers.split(""); //전달받은 숫자 분해
+  const numCollector = []; //숫자조합을 입력받을 배열
   makeNumbers("", arrNumber, numCollector);
   const uniqueNumCollector = [...new Set(numCollector)]; //중복제거
-  const decimalNums = uniqueNumCollector.filter((num) => isDecimalNumbers(num));
-  return decimalNums.length;
+  const decimalNums = uniqueNumCollector.filter((num) => isDecimalNumbers(num)); //중복제거된 숫자조합에서 소수만 뽑아내기
+  return decimalNums.length; //소수집합의 수
 }
 
 const testCase = 4;
