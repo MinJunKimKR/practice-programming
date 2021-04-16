@@ -26,32 +26,63 @@ tickets의 각 행 [a, b]는 a 공항에서 b 공항으로 가는 항공권이 �
 const test = {
   1: {
     input: [
-      ["ICN", "JFK"],
-      ["HND", "IAD"],
-      ["JFK", "HND"],
+      ['ICN', 'JFK'],
+      ['HND', 'IAD'],
+      ['JFK', 'HND'],
     ],
-    output: ["ICN", "JFK", "HND", "IAD"],
+    output: ['ICN', 'JFK', 'HND', 'IAD'],
   },
   2: {
     input: [
-      ["ICN", "SFO"],
-      ["ICN", "ATL"],
-      ["SFO", "ATL"],
-      ["ATL", "ICN"],
-      ["ATL", "SFO"],
+      ['ICN', 'SFO'],
+      ['ICN', 'ATL'],
+      ['SFO', 'ATL'],
+      ['ATL', 'ICN'],
+      ['ATL', 'SFO'],
     ],
-    output: ["ICN", "ATL", "ICN", "SFO", "ATL", "SFO"],
+    output: ['ICN', 'ATL', 'ICN', 'SFO', 'ATL', 'SFO'],
   },
   3: {
     input: [
-      ["ICN", "ABC"],
-      ["ICN", "BBC"],
-      ["BBC", "ICN"],
+      ['ICN', 'ABC'],
+      ['ICN', 'BBC'],
+      ['BBC', 'ICN'],
     ],
 
-    output: ["ICN", "BBC", "ICN", "ABC"],
+    output: ['ICN', 'BBC', 'ICN', 'ABC'],
   },
 };
+
+function solution(tickets) {
+  var answer = [];
+  function findRoute(remainTickets, destination, route) {
+    const copyRoute = route.slice();
+    copyRoute.push(destination);
+    if (remainTickets.length === 0) {
+      answer.push(copyRoute);
+      return;
+    }
+
+    const nextTicket = remainTickets
+      .filter((ticket) => destination === ticket[0])
+      .sort((a, b) => {
+        return a[1] > b[1] ? 1 : -1;
+      });
+    if (nextTicket.length < 1) {
+      //이게 아님
+      return 0;
+    }
+    for (let i = 0; i < nextTicket.length; i++) {
+      const nextRemainTickets = remainTickets.filter(
+        (remainTicket) => remainTicket != nextTicket[i]
+      ); //다음 목적지를 가지고 있는 티켓가져오기(목적지에 해당하는 티켓을 제외)
+
+      findRoute(nextRemainTickets, nextTicket[i][1], copyRoute);
+    }
+  }
+  findRoute(tickets, 'ICN', []);
+  return answer[0];
+}
 
 // function findPath(remainTickets, tripRaoute) {
 //   if (remainTickets.length === 0) return;
@@ -81,37 +112,6 @@ const test = {
 //   findPath(tickets, answer);
 //   return answer;
 // }
-
-function solution(tickets) {
-  var answer = [];
-  function findRoute(remainTickets, destination, route) {
-    const copyRoute = route.slice();
-    copyRoute.push(destination);
-    if (remainTickets.length === 0) {
-      answer.push(copyRoute);
-      return;
-    }
-
-    const nextTicket = remainTickets
-      .filter((ticket) => destination === ticket[0])
-      .sort((a, b) => {
-        return a[1] > b[1] ? 1 : -1;
-      });
-    if (nextTicket.length < 1) {
-      //이게 아님
-      return 0;
-    }
-    for (let i = 0; i < nextTicket.length; i++) {
-      const nextRemainTickets = remainTickets.filter(
-        (remainTicket) => remainTicket != nextTicket[i]
-      ); //다음 목적지를 가지고 있는 티켓가져오기(목적지에 해당하는 티켓을 제외)
-
-      findRoute(nextRemainTickets, nextTicket[i][1], copyRoute);
-    }
-  }
-  findRoute(tickets, "ICN", []);
-  return answer[0];
-}
 
 // function solution(tickets) {
 //   var answer = [];
@@ -149,4 +149,4 @@ function solution(tickets) {
 //   }
 // }
 
-console.log("result : ", solution(test[2].input));
+console.log('result : ', solution(test[2].input));
