@@ -1505,7 +1505,338 @@ remainTerm 배열에 각 Process의 남은 (100-현재 진행률) 에서 해당�
 
 `const remainQueue = new Queue(remainTerm);` 여기서 
 
+큐에 만들어놓은 남은 term이 들어있는 array를 넣어줍니다.
 
+
+
+그리고 맨앞의 텀수를 꺼내서 0이하인지(종료되었는지) 확인합니다.
+
+`const firstItem = remainQueue.deqeue();
+    if (firstItem < 1) {`
+
+만일 0이하 ( 종료 ) 라면 answer의 [answerTop]칸에 1을 더해줍니다.
+
+여기서 answerTop의 위치는 종료가된 프로세스가 있을때, 최초로 1개가 카운트 되서 들어가 집니다.
+
+
+
+만일 종료가 되지 않았다면 (큐의 맨 앞의 진행 텀이 1번 이상이라면)
+
+answerTop => 큐의 맨앞의 term이 0이 되었을때 한번에 몇개가 끝나는지.
+
+ answer[answerTop] = 1; -> 현재 빠져있는 `firstItem` 의 남은 term 만큼 뒤의 모든 프로새스 term을 뺄꺼기 때문에
+
+현재 있는 firstItem을 카운트 해줍니다
+
+` remainQueue.setter(calReaminTerm(firstItem, remainQueue));` 이 부분을 통해서 현재 queue에 들어있는 
+
+모든 요소를 현재 firstItem에 들어있는 proccess term을 진행시킵니다.
+
+
+
+즉, [2,1,3,4] 일경우
+
+-> first item : 2   queue: [1,2,3]
+
+-> 2만큼 진행 queue: [-1,0,1]
+
+-> 다시 while로 반복하면서 0 이하인 요소들을 없애가면서 +1
+
+-> answer[0] = 3 || queue : [1]
+
+
+
+위와 같은 과정을 거쳐서 횟수를 구합니다.
+
+-----
+
+
+
+## 후기
+
+이번 문제는 큐라는 자료구조를 제대로 이해하고 있는지를 물어보는 문제 같았습니다.
+
+위에서는 stack 부터 queue까지 전부다 구현했지만
+
+사실 array.shift(), array.pop(), array.push() 이 3개로 queue와 stack을 쓸수가 있습니다.
+
+따라서 큐와 스택을 반드시 구현해야하는 상황이 아니라면 위의 3개의 함수를 사용해서 구현하는것도 방법이라고 생각했습니다 ㅎㅎ
+
+-----
+
+# 프로그래머스[lv.3] [DFS/BFS] - 여행경로
+
+
+
+## 문제설명
+
+주어진 항공권을 모두 이용하여 여행경로를 짜려고 합니다. 항상 "ICN" 공항에서 출발합니다.
+
+항공권 정보가 담긴 2차원 배열 tickets가 매개변수로 주어질 때, 방문하는 공항 경로를 배열에 담아 return 하도록 solution 함수를 작성해주세요.
+
+##### 제한사항
+
+- 모든 공항은 알파벳 대문자 3글자로 이루어집니다.
+- 주어진 공항 수는 3개 이상 10,000개 이하입니다.
+- tickets의 각 행 [a, b]는 a 공항에서 b 공항으로 가는 항공권이 있다는 의미입니다.
+- 주어진 항공권은 모두 사용해야 합니다.
+- 만일 가능한 경로가 2개 이상일 경우 알파벳 순서가 앞서는 경로를 return 합니다.
+- 모든 도시를 방문할 수 없는 경우는 주어지지 않습니다.
+
+##### 입출력 예
+
+| tickets                                                      | return                                     |
+| ------------------------------------------------------------ | ------------------------------------------ |
+| [["ICN", "JFK"], ["HND", "IAD"], ["JFK", "HND"]]             | ["ICN", "JFK", "HND", "IAD"]               |
+| [["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL","SFO"]] | ["ICN", "ATL", "ICN", "SFO", "ATL", "SFO"] |
+
+##### 입출력 예 설명
+
+예제 #1
+
+["ICN", "JFK", "HND", "IAD"] 순으로 방문할 수 있습니다.
+
+예제 #2
+
+["ICN", "SFO", "ATL", "ICN", "ATL", "SFO"] 순으로 방문할 수도 있지만 ["ICN", "ATL", "ICN", "SFO", "ATL", "SFO"] 가 알파벳 순으로 앞섭니다.
+
+----
+
+## 해결법
+
+### 🚧 notice
+
+이 문제는 재귀함수를 이용해서 푸는 문제입니다.
+
+만일 재귀함수에 대한 개념이 아직 안잡히셨다면, 재귀함수 문제를 먼저 풀고 오시기를 바랍니다.
+
+```javascript
+const test = {
+  1: {
+    input: [
+      ['ICN', 'JFK'],
+      ['HND', 'IAD'],
+      ['JFK', 'HND'],
+    ],
+    output: ['ICN', 'JFK', 'HND', 'IAD'],
+  },
+  2: {
+    input: [
+      ['ICN', 'SFO'],
+      ['ICN', 'ATL'],
+      ['SFO', 'ATL'],
+      ['ATL', 'ICN'],
+      ['ATL', 'SFO'],
+    ],
+    output: ['ICN', 'ATL', 'ICN', 'SFO', 'ATL', 'SFO'],
+  },
+  3: {
+    input: [
+      ['ICN', 'ABC'],
+      ['ICN', 'BBC'],
+      ['BBC', 'ICN'],
+    ],
+
+    output: ['ICN', 'BBC', 'ICN', 'ABC'],
+  },
+};
+
+//TestCase -----------------------------------
+
+function solution(tickets) {
+  var answer = [];
+  function findRoute(remainTickets, destination, route) {
+    const copyRoute = route.slice();
+    copyRoute.push(destination);
+    if (remainTickets.length === 0) {
+      answer.push(copyRoute);
+      return;
+    }
+
+    const nextTicket = remainTickets
+      .filter((ticket) => destination === ticket[0])
+      .sort((a, b) => {
+        return a[1] > b[1] ? 1 : -1;
+      });
+    if (nextTicket.length < 1) {
+      return 0;
+    }
+    for (let i = 0; i < nextTicket.length; i++) {
+      const nextRemainTickets = remainTickets.filter(
+        (remainTicket) => remainTicket != nextTicket[i]
+      ); //다음 목적지를 가지고 있는 티켓가져오기(목적지에 해당하는 티켓을 제외)
+
+      findRoute(nextRemainTickets, nextTicket[i][1], copyRoute);
+    }
+  }
+  findRoute(tickets, 'ICN', []);
+  return answer[0];
+}
+```
+
+
+
+알고리즘의 단골문제 DFS/BFS입니다.
+
+먼저 제한사항을 살펴 보겠습니다
+
+> - 주어진 항공권은 모두 사용해야 합니다.
+> - 만일 가능한 경로가 2개 이상일 경우 알파벳 순서가 앞서는 경로를 return 합니다.
+> - 모든 도시를 방문할 수 없는 경우는 주어지지 않습니다.
+
+즉, 항공권을 모두 사용한 시점이 '종료' 시점이 되며
+
+가능한경로가 2개이상 구해질수도 있다는것을 의미합니다.
+
+
+
+````javascript
+  function findRoute(remainTickets, destination, route) {
+    const copyRoute = route.slice();
+    copyRoute.push(destination);
+    if (remainTickets.length === 0) {
+      answer.push(copyRoute);
+      return;
+    }
+
+````
+
+먼저 findRoute를 만듭니다.
+
+- reaminTicket: 남은티켓
+
+- destination: 도착지
+
+- route : 나아가는 경로
+
+이 3가지를 매개변수로 받을겁니다. 그리고 재귀 함수이기 때문에 종료조건을 반드시 상단애 위치시켜줘야합니다.
+
+**여기서 종료조건은 reaminTicket 즉, 더이상 남은 티켓이 없을때 함수를 종료 시킵니다.**
+
+`const copyRoute = route.slice();` 는 배열을 깊은복사를 시키기위해 사용합니다.
+
+그리고, destination(티켓의 도착지 이자 다음 티켓의 출발지)를 route에 push해줍니다(경로추가)
+
+
+
+```javascript
+    const nextTicket = remainTickets
+      .filter((ticket) => destination === ticket[0])
+      .sort((a, b) => {
+        return a[1] > b[1] ? 1 : -1;
+      });
+    if (nextTicket.length < 1) {
+      return 0;
+    }
+```
+
+남은 티켓이 있다면, 현재까지 남은 티켓중에, 출발지가 destination(전 티켓의 도착지) 인것을 filter로 뽑아낸다음에
+
+sort로 알파벳순으로 정렬을 해줍니다.
+
+그후 이 배열을 nextTicket에 넣습니다.
+
+
+
+즉, 도착지(destication)가 ICN고 남은 티켓이 ["ICN", "BBB"], ["ICN", "AAA"], ["CCC", "BBB"]하면
+
+filter를 거친 시점에서 ["ICN", "BBB"], ["ICN", "AAA"] 이남고,
+
+sort로 ["ICN", "AAA"] ,["ICN", "BBB"]의 순으로 nextTicket에 들어갑니다.
+
+
+
+이때, nextTicket이 없다면 역시 함수를 종료시킵니다.
+
+**이 종료가 뜻하는 바는 남은 티켓이 있지만 갈수있는 티켓이 없다는 의미로 경로가 잘못됨을 의미합니다.**
+
+
+
+```javascript
+    for (let i = 0; i < nextTicket.length; i++) {
+      const nextRemainTickets = remainTickets.filter(
+        (remainTicket) => remainTicket != nextTicket[i]
+      ); //다음 목적지를 가지고 있는 티켓가져오기(목적지에 해당하는 티켓을 제외)
+
+      findRoute(nextRemainTickets, nextTicket[i][1], copyRoute);
+    }
+```
+
+
+
+이제 nextTicket을 가지고 반복을 합니다.
+
+그리고 다음 회차를 위한 남은 Tickets을 정리해야하는데,
+
+받은 remainTickets에서 다음에 해당하는 티켓( nextTicket )을 제외하고 담습니다.
+
+
+
+**이렇게 되면 remainTickets에서 다음목적지에 해당하는 티켓을 (제외) 하고 다음 함수를 실행하게 됩니다**
+
+
+
+이 과정을 반복하면, 과정마다 **다음에 해당하는 티켓을 제외하고 실행**을 하게되며,
+
+이것을 통해 점점 **티켓의 수가 줄어들게 되는것 입니다.**
+
+
+
+이제, 다음티켓을 제외한 다음 티켓인 nextRemainTickets을 매개변수로 넣고,
+
+`nextTicket[i][1]` 을 도착지로 삼고, 현재 위치를 새로 푸시한 copyRoute를 전달해줍니다.
+
+
+
+이 과정을 재귀로 넘어갈때마다
+
+1. 남은티켓이 있는지?
+2. 다음에 갈 티켓이 있는지?
+3. 남은 티켓중에 다음에갈 티켓을 빼고 나머지 티켓으로 반복 -> 티켓이 1장 없어짐
+
+
+
+의 과정을 거칩니다.
+
+
+
+```javascript
+  findRoute(tickets, "ICN", []);
+  return answer[0];
+}
+```
+
+재귀함수가 다 만들어 졌으니 초기값인 ticket 들과 출발지인 ICN 그리고 루트를 저장할 빈배열을 초기 매개변수로 주고 실행합니다.
+
+
+
+재귀함수가 동작하면서 구해진 값들은 answer에 push가 되고, 알파벳순으로 가장앞의 결과만을 return 하면 되므로 
+
+answer의 0번째 배열을 return 함으로서 끝이 납니다.
+
+
+
+----
+
+## 후기
+
+처음해보는 DFS, BFS인데 아직도 시간복잡도애 관한 개념이 강하게 잡히지 않아서 다소 어렵다 생각했습니다.
+
+특히나 재귀함수는 익숙해질때 까지는 매번 할때마다 어려울것 같습니다 ㅎㅎ
+
+
+
+----
+
+
+
+
+
+
+
+
+
+그렇기 때문에 아직 스택과 큐 자료구조 개념이 없으시다면, 먼저 선행공부가 필요한 문제라고 생각됩니다.
 
 
 

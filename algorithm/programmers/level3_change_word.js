@@ -71,4 +71,4 @@ console.log(
   solution(test["1"].input.begin, test["1"].input.target, test["1"].input.words)
 );
 
-console.log(isOneWordDiff("123", "152"));
+console.log(isOneWordDiff("123", "125"));
