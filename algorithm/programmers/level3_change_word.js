@@ -57,13 +57,39 @@ function isOneWordDiff(baseWord, tagetWord) {
   return sameWords === baseWord.length - 1 ? true : false;
 }
 
-function findTarget() {}
-
 function solution(begin, target, words) {
   var answer = 0;
-  if (words.indexOf(begin) === -1 || words.indexOf(target) === -1) {
+  if (words.indexOf(target) === -1) {
     return 0;
   }
+
+  function findTarget(target, remainWords, baseWord, steps) {
+    console.log("remainWords : ", remainWords);
+    console.log("steps : ", steps);
+    if (target === baseWord) {
+      console.log("========done============");
+      answer = steps;
+      return;
+    }
+    const arrDiffwords = [];
+    for (let i = 0; i < remainWords.length; i++) {
+      const targetWord = remainWords[i];
+      if (isOneWordDiff(baseWord, targetWord)) {
+        arrDiffwords.push(targetWord);
+      }
+    }
+    if (arrDiffwords.length === 0) {
+      return;
+    }
+    for (let i = 0; i < arrDiffwords.length; i++) {
+      const nextWord = arrDiffwords[i];
+      const nextRemainWords = remainWords.filter((word) => {
+        return word !== nextWord;
+      });
+      findTarget(target, nextRemainWords, nextWord, steps + 1);
+    }
+  }
+  findTarget(target, words, begin, 0);
   return answer;
 }
 
@@ -71,4 +97,4 @@ console.log(
   solution(test["1"].input.begin, test["1"].input.target, test["1"].input.words)
 );
 
-console.log(isOneWordDiff("123", "125"));
+// console.log(isOneWordDiff("123", "125"));
