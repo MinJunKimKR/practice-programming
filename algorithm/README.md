@@ -1842,6 +1842,194 @@ answer의 0번째 배열을 return 함으로서 끝이 납니다.
 
 
 
+# 프로그래머스[lv.2] [해시] - 위장
+
+###### 문제 설명
+
+스파이들은 매일 다른 옷을 조합하여 입어 자신을 위장합니다.
+
+예를 들어 스파이가 가진 옷이 아래와 같고 오늘 스파이가 동그란 안경, 긴 코트, 파란색 티셔츠를 입었다면 다음날은 청바지를 추가로 입거나 동그란 안경 대신 검정 선글라스를 착용하거나 해야 합니다.
+
+| 종류 | 이름                       |
+| ---- | -------------------------- |
+| 얼굴 | 동그란 안경, 검정 선글라스 |
+| 상의 | 파란색 티셔츠              |
+| 하의 | 청바지                     |
+| 겉옷 | 긴 코트                    |
+
+스파이가 가진 의상들이 담긴 2차원 배열 clothes가 주어질 때 서로 다른 옷의 조합의 수를 return 하도록 solution 함수를 작성해주세요.
+
+##### 제한사항
+
+- clothes의 각 행은 [의상의 이름, 의상의 종류]로 이루어져 있습니다.
+- 스파이가 가진 의상의 수는 1개 이상 30개 이하입니다.
+- 같은 이름을 가진 의상은 존재하지 않습니다.
+- clothes의 모든 원소는 문자열로 이루어져 있습니다.
+- 모든 문자열의 길이는 1 이상 20 이하인 자연수이고 알파벳 소문자 또는 '_' 로만 이루어져 있습니다.
+- 스파이는 하루에 최소 한 개의 의상은 입습니다.
+
+##### 입출력 예
+
+| clothes                                                      | return |
+| ------------------------------------------------------------ | ------ |
+| [["yellowhat", "headgear"], ["bluesunglasses", "eyewear"], ["green_turban", "headgear"]] | 5      |
+| [["crowmask", "face"], ["bluesunglasses", "face"], ["smoky_makeup", "face"]] | 3      |
+
+##### 입출력 예 설명
+
+예제 #1
+headgear에 해당하는 의상이 yellow_hat, green_turban이고 eyewear에 해당하는 의상이 blue_sunglasses이므로 아래와 같이 5개의 조합이 가능합니다.
+
+```
+1. yellow_hat
+2. blue_sunglasses
+3. green_turban
+4. yellow_hat + blue_sunglasses
+5. green_turban + blue_sunglasses
+```
+
+예제 #2
+face에 해당하는 의상이 crow_mask, blue_sunglasses, smoky_makeup이므로 아래와 같이 3개의 조합이 가능합니다.
+
+```
+1. crow_mask
+2. blue_sunglasses
+3. smoky_makeup
+```
+
+-----
+
+## 해결법
+
+```javascript
+function solution(clothes) {
+  let answer = 1;
+  const clotheList = {};
+  for (let i = 0; i < clothes.length; i++) {
+    const clotheInfo = clothes[i];
+    if (!clotheList[clotheInfo[1]]) {
+      clotheList[clotheInfo[1]] = [];
+    }
+    clotheList[clotheInfo[1]].push(clotheInfo[0]);
+  }
+  for (const type in clotheList) {
+    if (clotheList.hasOwnProperty(type)) {
+      const items = clotheList[type];
+      answer = answer * (items.length + 1);
+    }
+  }
+  return answer - 1;
+}		
+```
+
+
+
+먼저 문제에서 포인트를 한번 찾아봅니다.
+
+제가 주의깊게 본 문구는 아래와 같습니다.
+
+> 스파이는 하루에 최소 한 개의 의상은 입습니다.
+
+그리고 경우의 수를 확인을 해보면 각종류당 1개만 입는 선택지 부터 전부다 입는 선택지 까지 있는것을 확일 할수있습니다.
+
+> 1. yellow_hat
+> 2. blue_sunglasses
+> 3. green_turban
+> 4. yellow_hat + blue_sunglasses
+> 5. green_turban + blue_sunglasses
+
+여기서 모든 경우의 수를 구하는 방법은 각 옷의 개수를 전부 곱하는것입니다. 
+
+즉, `hat : 3개, shirt: 4개 라면 12개`가 두개를 조합해서 입는 총 개수 입니다.
+
+
+
+하지만 고민을 했던 부분은 바로 **옷을 안입는 경우도 있다는것입니다.**
+
+그래서 따로 처리를 해줘야 하나 고민을 하던중에 좋은방법을 찾았습니다.
+
+
+
+바로, **옷을 안입는 경우도 추가해주는 것입니다.**
+
+무슨말이냐면 **모자가 4종류라면 모자를 안쓰는 경우까지 총 5개**로 생각해주는것입니다.
+
+그리고 모든 경우에 수에서 모두 다 안쓰는 경우만 빼주면(-1) 되는겁니다.
+
+
+
+```javascript
+function solution(clothes) {
+  let answer = 1;
+  const clotheList = {};
+  for (let i = 0; i < clothes.length; i++) {
+    const clotheInfo = clothes[i];
+    if (!clotheList[clotheInfo[1]]) {
+      clotheList[clotheInfo[1]] = [];
+    }
+    clotheList[clotheInfo[1]].push(clotheInfo[0]);
+  }
+```
+
+먼저 clothes를 입력을 받고, 정리된 clothes를 저장할 clotheList를 만듭니다.
+
+이후 입력받은 `clothes.length` 를 기준으로 반복을 해줍니다.
+
+
+
+이때, 각 clothe의 정보를 `clotheInfo`에 저장하고, `clotheList` 에 clothes type key값으로 배열에 push합니다.
+
+만일 key값이 없다면 빈배열을 할당해줍니다.
+
+
+
+이 과정을 거치게 되면 다음과 같은 object가 생성됩니다
+
+```json
+{
+  headgear: [ 'yellowhat', 'green_turban' ],
+  eyewear: [ 'bluesunglasses' ],
+  face: [ 'crow_mask', 'blue_sunglasses', 'smoky_makeup' ]
+}
+```
+
+
+
+이제 만들어진 object를 사용해서 답을 구해봅시다,.
+
+```javascript
+ for (const type in clotheList) {
+    if (clotheList.hasOwnProperty(type)) {
+      const items = clotheList[type];
+      answer = answer * (items.length + 1);
+    }
+  }
+  return answer - 1;
+}
+```
+
+object의 key를 기준으로 loop를 해주면서 answer에 값을 곱해줍니다.
+
+이때, **안입는것을 포함한 수를 곱해주는게 포인트 입니다.**
+
+
+
+`answer = answer * (items.length + 1);`  이 부분이 옷의 종류의 개수 + 안입는 경우 를 해준다음에 기존의 경우의 수와 곱해서 
+
+총 경우의 수를 구하는 부분입니다.
+
+`return answer - 1;` 이후에 모두 안입는 경우를 제외시켜서 답을 구합니다.
+
+
+
+----
+
+## 후기
+
+옷을 안입는것을 추가 한다는 발상의 전환이 필요했던 문제였습니다.
+
+사실 이 발상만 할수 있다면 쉽게 풀수 있는 문제 같습니다.
+
 
 
 

@@ -3,28 +3,28 @@
 const test = {
   1: {
     input: [
-      ['yellowhat', 'headgear'],
-      ['bluesunglasses', 'eyewear'],
-      ['green_turban', 'headgear'],
+      ["yellowhat", "headgear"],
+      ["bluesunglasses", "eyewear"],
+      ["green_turban", "headgear"],
     ],
     output: 5,
   },
   2: {
     input: [
-      ['crow_mask', 'face'],
-      ['blue_sunglasses', 'face'],
-      ['smoky_makeup', 'face'],
+      ["crow_mask", "face"],
+      ["blue_sunglasses", "face"],
+      ["smoky_makeup", "face"],
     ],
     output: 3,
   },
   3: {
     input: [
-      ['yellowhat', 'headgear'],
-      ['bluesunglasses', 'eyewear'],
-      ['green_turban', 'headgear'],
-      ['crow_mask', 'face'],
-      ['blue_sunglasses', 'face'],
-      ['smoky_makeup', 'face'],
+      ["yellowhat", "headgear"],
+      ["bluesunglasses", "eyewear"],
+      ["green_turban", "headgear"],
+      ["crow_mask", "face"],
+      ["blue_sunglasses", "face"],
+      ["smoky_makeup", "face"],
     ],
     output: 3,
   },
@@ -70,4 +70,4 @@ function solution(clothes) {
 //   );
 // }
 
-console.log(solution(test['3'].input));
+console.log(solution(test["3"].input));
