@@ -28,29 +28,6 @@
 //   console.log(result);
 // })(123456798);
 
-//자바스크립트는 비동기 -> 필요함 (모든)
-//프론트 -> 리액트 -> 자바스크립트
-// 백앤드 ->노드 ->자바스크립트
-
-// function fnc(param) {
-//   // console.log('fnc param : ', param);
-//   param = param + 'fun';
-//   return param;
-// }
-
-// console.log(fnc(123));
-
-// function fnc2(callback) {
-//   //함수
-//   console.log('call back');
-//   callback();
-// }
-
-// // callback  = function () {
-// /*console.log('33333');
-//     return 'abc';
-//   }
-//   */
 // console.log(
 //   fnc2(function () {
 //     console.log('33333');
@@ -80,14 +57,15 @@ async function first() {
 async function second() {
   console.log(2);
 }
+
 (async () => {
   await first();
   await second();
 })();
 
-function square(x, callback) {
-  setTimeout(callback, 100, x * x);
-}
+// function square(x, callback) {
+//   setTimeout(callback, 100, x * x);
+// }
 
 // square(2, firstCallback);
 
