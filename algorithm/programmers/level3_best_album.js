@@ -31,36 +31,36 @@ pop 장르는 3,100회 재생되었으며, pop 노래는 다음과 같습니다.
 const test = {
   1: {
     input: {
-      genres: ["classic", "pop", "classic", "classic", "pop"],
+      genres: ['classic', 'pop', 'classic', 'classic', 'pop'],
       plays: [500, 600, 150, 800, 2500],
     },
     output: [4, 1, 3, 0],
   },
   2: {
     input: {
-      genres: ["A", "B", "C"],
+      genres: ['A', 'B', 'C'],
       plays: [1, 2, 3],
     },
     output: [2, 1, 0],
   },
 };
 
-function solution(genres, plays) {
-  const answer = [];
-  const albumList = genres.map((genre, index) => {
-    return {
-      genres: genre,
-      no: index,
-      play: plays[index],
-    };
-  });
-  console.log(albumList);
-  const albumRank = [];
-  albumList.forEach((albumInfo) => {
-    if(albumRank.find((album)=>{}))
-});
-  return answer;
-}
+// function solution(genres, plays) {
+//   const answer = [];
+//   const albumList = genres.map((genre, index) => {
+//     return {
+//       genre: genre,
+//       no: index,
+//       play: plays[index],
+//     };
+//   });
+//   console.log(albumList);
+//   const albumRank = [];
+//   albumList.forEach((albumInfo) => {
+//     if (albumRank.find((album) => album.genre)) console.log(albumInfo);
+//   });
+//   return answer;
+// }
 
 // function solution(genres, plays) {
 //   const answer = [];
@@ -106,5 +106,5 @@ function solution(genres, plays) {
 //   return answer;
 // }
 
-const testCase = test["1"].input;
+const testCase = test['1'].input;
 console.log(solution(testCase.genres, testCase.plays));
