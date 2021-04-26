@@ -27,7 +27,7 @@ function solution(numbers, target) {
   var answer = 0;
 
   function calNums(numbers, sumNum) {
-    const newNumbers = JSON.parse(JSON.stringify(numbers));
+    const newNumbers = numbers.slice();
     if (newNumbers.length === 0) {
       if (sumNum === target) {
         answer++;
