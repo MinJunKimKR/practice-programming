@@ -46,16 +46,12 @@ const test = {
 
 function solution(citations) {
   let answer = 0;
+  let count = 0;
   const sortedCitations = citations.sort((a, b) => a - b);
   const maximumCitation = sortedCitations[sortedCitations.length - 1];
-  console.log(maximumCitation);
-  let count = 0;
-  while (true) {
+  while (count < maximumCitation) {
     count++;
-    if (count > maximumCitation) break;
     const hIndex = citations.filter((citation) => citation >= count).length;
-    // console.log("hIndex : ", hIndex);
-    // console.log("count : ", count);
     if (hIndex >= count) {
       answer = count;
     }
@@ -63,7 +59,7 @@ function solution(citations) {
   return answer;
 }
 
-const testCase = test["1"].input;
+const testCase = test["3"].input;
 console.log(solution(testCase.citations));
 
 // function solution(citations) {
