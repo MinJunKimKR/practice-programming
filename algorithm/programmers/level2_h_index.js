@@ -52,9 +52,7 @@ function solution(citations) {
   while (count < maximumCitation) {
     count++;
     const hIndex = citations.filter((citation) => citation >= count).length;
-    if (hIndex >= count) {
-      answer = count;
-    }
+    answer = hIndex >= count ? count : answer;
   }
   return answer;
 }
