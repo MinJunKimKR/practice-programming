@@ -39,6 +39,22 @@ const test = {
     ],
     output: 4,
   },
+  4: {
+    input:[[0, 1], [1, 2], [500, 6]],
+    output: 3,
+  },
+  5: {
+    input:[[0, 10]],
+    output: 10,
+  },
+  6: {
+    input:[[0, 10], [4, 10], [15, 2], [5, 11]] ,
+    output: 15,
+  },
+  7: {
+    input:[[24, 10], [28, 39], [43, 20], [37, 5], [47, 22], [20, 47], [15, 34], [15, 2], [35, 43], [26, 1]],
+    output: 72,
+  },
 };
 
 function solution(jobs) {
@@ -51,7 +67,8 @@ function solution(jobs) {
     console.log("processTime : ", processTime);
     console.log("totalReqTime : ", totalReqTime);
     jobs.sort((a, b) => {
-      if (b[0] > processTime || a[0] > processTime) return 0;
+      if(a[0] > processTime ) return 1
+      if(b[0] > processTime ) return -1
       return a[1] - b[1];
     }); //정렬 알고리즘
     console.log("정렬된 jobs : ", jobs);
@@ -68,5 +85,5 @@ function solution(jobs) {
   return parseInt(totalReqTime / jobCount);
 }
 
-const testCase = test["3"].input;
-console.log(solution(testCase));
+const testCase = test["7"].input;
+console.log('result : ', solution(testCase));
