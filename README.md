@@ -19,6 +19,9 @@ usually solve algoritm in [Programmers](https://programmers.co.kr/) and [LeetCod
 #### [Kubernetes](https://kubernetes.io/ko/docs/concepts/overview/what-is-kubernetes/)
 
 #### [NestJS](https://nestjs.com/)
+Now, I'm studying from the the basic again for filling of lack. 
+
+You can see my code in this repository 👉 [Nomad-Nest Repository](https://github.com/MinJunKimKR/nomad-nest)
 
 ### Javascript
 
