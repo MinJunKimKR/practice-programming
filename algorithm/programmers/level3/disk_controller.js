@@ -62,26 +62,19 @@ function solution(jobs) {
   let totalReqTime = 0;
   const jobCount = jobs.length;
   while (jobs.length > 0) {
-    console.log("----------------");
-    console.log("jobs : ", jobs);
-    console.log("processTime : ", processTime);
-    console.log("totalReqTime : ", totalReqTime);
     jobs.sort((a, b) => {
       if(a[0] > processTime ) return 1
       if(b[0] > processTime ) return -1
       return a[1] - b[1];
     }); //정렬 알고리즘
-    console.log("정렬된 jobs : ", jobs);
     if (jobs[0][0] > processTime) {
       processTime += 1;
       continue;
     }
     const thisJob = jobs.shift();
-    console.log("thisJob : ", thisJob);
     processTime += thisJob[1]; //시간 흐름
     totalReqTime += processTime - thisJob[0];
   }
-  console.log("totalReqTime : ", totalReqTime);
   return parseInt(totalReqTime / jobCount);
 }
 
