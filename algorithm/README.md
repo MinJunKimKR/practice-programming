@@ -1840,6 +1840,8 @@ answer의 0번째 배열을 return 함으로서 끝이 납니다.
 
 
 
+-----
+
 
 
 # 프로그래머스[lv.2] [해시] - 위장
@@ -1971,7 +1973,7 @@ function solution(clothes) {
   }
 ```
 
-먼저 clothes를 입력을 받고, 정리된 clothes를 저장할 clotheList를 만듭니다.
+먼저 clothes를 입력을 받고, 정리된 clothes를 저장할 clotheList를 만듭니다.
 
 이후 입력받은 `clothes.length` 를 기준으로 반복을 해줍니다.
 
@@ -2032,17 +2034,194 @@ object의 key를 기준으로 loop를 해주면서 answer에 값을 곱해줍니
 
 
 
+----
+
+# 프로그래머스[lv.3] [힙] - 디스크 컨트롤러
+
+###### 문제 설명
+
+하드디스크는 한 번에 하나의 작업만 수행할 수 있습니다. 디스크 컨트롤러를 구현하는 방법은 여러 가지가 있습니다. 가장 일반적인 방법은 요청이 들어온 순서대로 처리하는 것입니다.
+
+예를들어
+
+```
+- 0ms 시점에 3ms가 소요되는 A작업 요청
+- 1ms 시점에 9ms가 소요되는 B작업 요청
+- 2ms 시점에 6ms가 소요되는 C작업 요청
+```
+
+와 같은 요청이 들어왔습니다. 이를 그림으로 표현하면 아래와 같습니다.
+![Screen Shot 2018-09-13 at 6.34.58 PM.png](https://grepp-programmers.s3.amazonaws.com/files/production/b68eb5cec6/38dc6a53-2d21-4c72-90ac-f059729c51d5.png)
+
+한 번에 하나의 요청만을 수행할 수 있기 때문에 각각의 작업을 요청받은 순서대로 처리하면 다음과 같이 처리 됩니다.
+![Screen Shot 2018-09-13 at 6.38.52 PM.png](https://grepp-programmers.s3.amazonaws.com/files/production/5e677b4646/90b91fde-cac4-42c1-98b8-8f8431c52dcf.png)
+
+```
+- A: 3ms 시점에 작업 완료 (요청에서 종료까지 : 3ms)
+- B: 1ms부터 대기하다가, 3ms 시점에 작업을 시작해서 12ms 시점에 작업 완료(요청에서 종료까지 : 11ms)
+- C: 2ms부터 대기하다가, 12ms 시점에 작업을 시작해서 18ms 시점에 작업 완료(요청에서 종료까지 : 16ms)
+```
+
+이 때 각 작업의 요청부터 종료까지 걸린 시간의 평균은 10ms(= (3 + 11 + 16) / 3)가 됩니다.
+
+하지만 A → C → B 순서대로 처리하면
+![Screen Shot 2018-09-13 at 6.41.42 PM.png](https://grepp-programmers.s3.amazonaws.com/files/production/9eb7c5a6f1/a6cff04d-86bb-4b5b-98bf-6359158940ac.png)
+
+```
+- A: 3ms 시점에 작업 완료(요청에서 종료까지 : 3ms)
+- C: 2ms부터 대기하다가, 3ms 시점에 작업을 시작해서 9ms 시점에 작업 완료(요청에서 종료까지 : 7ms)
+- B: 1ms부터 대기하다가, 9ms 시점에 작업을 시작해서 18ms 시점에 작업 완료(요청에서 종료까지 : 17ms)
+```
+
+이렇게 A → C → B의 순서로 처리하면 각 작업의 요청부터 종료까지 걸린 시간의 평균은 9ms(= (3 + 7 + 17) / 3)가 됩니다.
+
+각 작업에 대해 [작업이 요청되는 시점, 작업의 소요시간]을 담은 2차원 배열 jobs가 매개변수로 주어질 때, 작업의 요청부터 종료까지 걸린 시간의 평균을 가장 줄이는 방법으로 처리하면 평균이 얼마가 되는지 return 하도록 solution 함수를 작성해주세요. (단, 소수점 이하의 수는 버립니다)
+
+##### 제한 사항
+
+- jobs의 길이는 1 이상 500 이하입니다.
+- jobs의 각 행은 하나의 작업에 대한 [작업이 요청되는 시점, 작업의 소요시간] 입니다.
+- 각 작업에 대해 작업이 요청되는 시간은 0 이상 1,000 이하입니다.
+- 각 작업에 대해 작업의 소요시간은 1 이상 1,000 이하입니다.
+- 하드디스크가 작업을 수행하고 있지 않을 때에는 먼저 요청이 들어온 작업부터 처리합니다.
+
+##### 입출력 예
+
+| jobs                     | return |
+| ------------------------ | ------ |
+| [[0, 3], [1, 9], [2, 6]] | 9      |
+
+##### 입출력 예 설명
+
+문제에 주어진 예와 같습니다.
+
+- 0ms 시점에 3ms 걸리는 작업 요청이 들어옵니다.
+- 1ms 시점에 9ms 걸리는 작업 요청이 들어옵니다.
+- 2ms 시점에 6ms 걸리는 작업 요청이 들어옵니다.
+
+----
+
+## 해결법
+
+```javascript
+function solution(jobs) {
+  let processTime = 0;
+  let totalReqTime = 0;
+  const jobCount = jobs.length;
+  while (jobs.length > 0) {
+    jobs.sort((a, b) => {
+      if(a[0] > processTime ) return 1
+      if(b[0] > processTime ) return -1
+      return a[1] - b[1];
+    });
+    if (jobs[0][0] > processTime) {
+      processTime += 1;
+      continue;
+    }
+    const thisJob = jobs.shift();
+    processTime += thisJob[1]; 
+    totalReqTime += processTime - thisJob[0];
+  }
+  return parseInt(totalReqTime / jobCount);
+}	
+```
+
+이번에도 포인트 되는 문항을 먼저 한번 확인해 보겠습니다
+
+> 하드디스크가 작업을 수행하고 있지 않을 때에는 먼저 요청이 들어온 작업부터 처리합니다.
+
+이말은 만일에 작업의량이 많다 하더라도, 작업이 없는 상태라면 들어온것을 먼저 처리한다는 뜻입니다.
 
 
 
+이제, 그러면 어떻게 하면 평균시간이 적게 걸릴지를 생각을 해봐야하는데, 위에 문제를 참고해보면
+
+평균시간이 가장 적게 나올수 있는 방법은 `현재 시점에서 처리할수 있는 작업중에 작업소요시간이 가장 적은것을 먼저 처리` 하면 됩니다.
+
+즉, **항상 정렬을해서 현재 시점에서 가장 작업시간이 적은것을 우선 처리하면 된다는 뜻입니다.**
 
 
 
+그럼 이제 소스를 하나씩 분석하겠습니다.
 
 
 
+```javascript
+function solution(jobs) {
+  let processTime = 0;
+  let totalReqTime = 0;
+  const jobCount = jobs.length;
+  while (jobs.length > 0) {
+```
+
+먼저 processTime이라는 현재 진행시간을 나타낼 변수를 하나 선언합니다.
+
+그리고 totalReqTime이라는 요청시간 (요청 도착시간부터 요청이 완료될때 까지 걸린시간의합) 을 저장할 변수도 선업합니다.
+
+마지막으로 평균을 구할때 사용할 job의 갯수도 정의해줍니다.
+
+그리고 while문을 사용해서, job이 전부 없어질때 까지 반복시켜 줍니다
 
 
 
+```javascript
+    jobs.sort((a, b) => {
+      if(a[0] > processTime ) return 1
+      if(b[0] > processTime ) return -1
+      return a[1] - b[1];
+    }); //정렬 알고리즘
+```
+
+여기에서 로직의 핵심적인 부분인 sort가 나옵니다.
+
+먼저, a와 b를 비교하기 앞서서 현재 진행시간 보다 작업이 들어오는것이 나중이면,
+
+무조건 뒤로 가도록 sort합니다.
+
+그리고 현재 진행할수 있는 작업중에 소요시간이 **짧은 작업을 먼저 앞에 오도록 sort합니다**
+
+위의 작업이 끝나게 된다면, 현재 진행할수 있는 작업이 있다면 배열의 앞순서로 오게되고,
+
+그안에서 또다시 작업시간이 짧은 순대로 정렬하게됩니다.
+
+```javascript
+    if (jobs[0][0] > processTime) {
+      processTime += 1;
+      continue;
+    }
+    const thisJob = jobs.shift();
+    processTime += thisJob[1]; //시간 흐름
+    totalReqTime += processTime - thisJob[0];
+  }
+```
+
+하지만 위와같이 항상 작업을 할수있는게 아닐수도 있기 때문에
+
+가장 맨앞에 있는 작업이 지금 실행시킬수 없다면 시간을 1 증가시키고 다시 loop를 실행합니다.
 
 
+
+아니라면, 작업의 맨앞의 배열을 shift해서 `thisJob`에 넣습니다.
+
+이후 작업의 소요시간 만큼 시간이 지날것이기 때문에` processTime`에 더해주고
+
+그리고 작업이 처음 입력받은 시간을 뺴서 작업이 처리될때 까지 걸린시간을 더해줍니다.
+
+```javascript
+  return parseInt(totalReqTime / jobCount);
+}
+```
+
+이후 모든 loop가 끝나게 된다면, 작업의 총수를 나눈뒤, 소수점을 버립니다.
+
+이로서 작업의 총 평균 소요시간을 구할수 있게됩니다
+
+
+
+----
+
+## 후기
+
+힙문제지만, 힙을 사용하지 않고 sort로 풀었기에 이게 맞나 싶긴합니다;;
+
+다음 힙 문제도 풀어보면서 다른 답은없는지 찾아봐야 겠습니다.
