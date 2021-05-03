@@ -35,12 +35,11 @@ function solution(operations) {
         const arrOperation = operation.split(" ")
         if(arrOperation[0] === 'I'){
             doubleQueue.push(arrOperation[1])
-            doubleQueue.sort((a,b) =>{
+           doubleQueue.sort((a,b) =>{
                 if(Number(a)>Number(b)) return -1
                 if(Number(a)<Number(b))return 1
                 return 0
-            })
-            console.log(doubleQueue);
+            }) 
             return
         }
         if(arrOperation[1] === '1'){
