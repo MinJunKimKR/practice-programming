@@ -11,9 +11,30 @@ const test = {
     }
 }
 
-
 function solution(name) {
-    var answer = 0;
+    let answer = 0;
+    const splitedName = name.split("");
+    console.log(splitedName);
+    let defaultName = name.split("").map(a =>"A")
+    console.log(defaultName);
+    let cusorPosition = 0;
+    const asciiA = "A".charCodeAt();
+    const asciiZ = "Z".charCodeAt();
+
+    console.log("J".charCodeAt()-"A".charCodeAt())
+    console.log("Z".charCodeAt()-"J".charCodeAt() +1)
+    
+    while(defaultName.join("") !== name){
+        const asciiThisAlpa = splitedName[cusorPosition].charCodeAt()
+        answer = answer + (asciiThisAlpa - asciiA) <= (asciiZ - asciiThisAlpa + 1 ) ? asciiThisAlpa - asciiA : asciiZ - asciiThisAlpa + 1
+        defaultName[cusorPosition] = splitedName[cusorPosition]
+        
+    }
+    
+    
+    
+    //알파벳이 N보다 작을경우, 앞에서 부터 카운트,
+    // 아니면 뒤에서 부터 카운트 해준다.
     return answer;
 }
 
