@@ -15,3 +15,71 @@ App module 은 root module과 같음
 Controller: URL을 가져오고 함수를 실행함(마치 express의 라우터 처럼)
 
 Provider : 
+
+
+
+Nest는 콘트롤러를 비지닉스 로직이랑 구분을 짓는다
+
+컨트롤러는 URL을 가져오고 function을 reuturn 부분이다
+
+하지만 서비스에서 실제로 돌아가는 비지니스 로직을 구현한다
+
+
+
+App module에서는 모든 모듈을 import할것이다.
+
+
+
+```javascript
+@Controller('movies')
+export class MoviesController {
+  @Get()
+  getAll() {
+    return 'movies';
+  }
+  @Get('/:id')
+  getOne(@Param('id') movieId: string) {
+    return `one movie id: ${movieId}`;
+  }
+  @Post()
+  create() {
+    return 'This will create a movie';
+  }
+  @Delete('/:id')
+  remove(@Param('id') movieId: string) {
+    return `this will delete a movie with the id : ${movieId}`;
+  }
+  @Patch('/:id')
+  path(@Param('id') movieId: string) {
+    return `this will patch a movie with the id : ${movieId}`;
+  }
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
