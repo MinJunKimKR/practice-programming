@@ -85,11 +85,19 @@ export class MoviesController {
 
 
 
+```javascript
+export class Movie {
+  id: number;
+  title: string;
+  year: number;
+  genres: string[];
+}
+
+```
 
 
 
-
-
+여기서 interface 나 type이 아닌 class를 사용한 이유는 컴파일을 거치게 되면 어차피 class가 되기 때문에 바로 class로 써서 사용한것이다.
 
 
 
