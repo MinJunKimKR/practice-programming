@@ -59,9 +59,17 @@ export class MoviesController {
 
 
 
+@Param('') : controller에서 :/id 와 같이 parameter를 받아서 funciton에서 사용할때 쓰이는 decorator
 
 
 
+@Body(): 바디로 넘어온 값을 사용할때 쓰이는 decorator
+
+```
+  path(@Param('id') movieId: string, @Body() updateData) {
+```
+
+위와같이 Decorator를 중복으로 사용할수도 있다.
 
 
 
