@@ -14,6 +14,8 @@ App module 은 root module과 같음
 
 Controller: URL을 가져오고 함수를 실행함(마치 express의 라우터 처럼)
 
+즉, URL를 매핑하고, 리퀘스트를 받고, Query를 넘기거나 Body등을 넘김
+
 Provider : 
 
 
@@ -70,6 +72,14 @@ export class MoviesController {
 ```
 
 위와같이 Decorator를 중복으로 사용할수도 있다.
+
+@Param() : 쿼리스트링을 사용할수 있다.
+
+
+
+### Single-responsibility principle
+
+하나의 module, class 혹은 function이 하나의 기능은 꼭 책임져야한다.
 
 
 
