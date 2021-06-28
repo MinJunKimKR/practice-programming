@@ -101,11 +101,82 @@ export class Movie {
 
 
 
+`throw new NotFoundException(`Movie with Id : ${id} not found`);`
+
+nest에는 이미 만들어둔 error exception handler가 존재한다.
+
+```javascript
+    this.movies.push({ ...movie, ...updateData }); //2개의 배열을 1개의 배열로 만들어서 push 하는 소스 
+
+```
 
 
 
+### DTO
+
+Data Transfer Object(데이터 전송 객체)
+
+타입등을 부여하기 위해 만들어 줘야한다
+
+하지만 DTO를 만든다음 타입으로 사용을 해준다고 해서  곧바로 validation까지 해주지는 않는다.
+
+그렇다면 DTO는 왜 사용을 하는것일까?
+
+정답은 바로 프로그래머로서 코드를 더 간결하게 만들수 있게 해주기 때문이다.
+
+또한. NestJS가 Validation을 해줄수 있게 만들어 줄수도 있다.
 
 
+
+```javaj
+import { IsNumber, IsString } from 'class-validator';
+
+export class CreateMovieDto {
+  @IsString()
+  readonly title: string;
+  @IsNumber()
+  readonly year: number;
+  @IsString({ each: true })
+  readonly genres: string[];
+}
+
+```
+
+Class-validator를 사용해주면 DTO에 validation 기능도 추가해 줄수 있다.
+
+또한  Array의 경우 each를 사용해주면 각 요소가 string인지를 확인을 해줄수 있는 옵션도 제공을 해주고 있다.
+
+
+
+### Entity와 DTO차이
+
+**Entity와 DTO를 분리해서 관리해야 하는 이유**는 **DB Layer와 View Layer 사이의 역할을 분리 하기 위해서**다.
+
+**Entity 클래스**는 **실제 테이블과 매핑**되어 만일 **변경되게 되면 여러 다른 클래스에 영향**을 끼치고, **DTO 클래스**는 **View와 통신하며 자주 변경**되므로 **분리 해주어야** 한다.
+
+결국 DTO는 Domain Model 객체를 그대로 두고, 복사하여 다양한 Presentation Logic을 추가한 정도로 사용하며 **Domain Model 객체는 Persistent만을 위해서 사용**해야한다.
+
+**즉, Entity는 DB와 1:1매칭이 되는 Class이지만, DTO의 경우 통신간의 Data의 형태를 정의한것임으로 Entity와는 다르게 수시로 변경이 될수 있다. 이것을 위해서 2개를 서로 분리한것이다.**
+
+---
+
+
+
+`app.useGlobalPipes(new ValidationPipe());`
+
+main.ts에 사용할시에 몇가지 좋은 옵션을 사용할수 있다.
+
+ `whitelist: true, forbidNonWhitelisted: true`
+
+두가지 옵션을 적용해주면 데코레이터가 없다면 문제가 있다는 내용을 알려준다,
+
+`transform: true,` 옵션은 URL등에 ID가 만일에 123일경우 String 123이 되는데, 이것을 자동으로 Number로 바꿔주는 역할을 한다.
+
+ (실제 타입)
+
+
+
+이러한 부분이 express로 쓰는것보다 nest와 같은 프레임워크를 썼을때 얻을수 있는 이득이다
 
 
 
