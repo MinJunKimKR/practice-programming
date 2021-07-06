@@ -180,3 +180,46 @@ main.ts에 사용할시에 몇가지 좋은 옵션을 사용할수 있다.
 
 
 
+```javascript
+export class UpdateMovieDto {
+  @IsString()
+  readonly title?: string;
+  @IsNumber()
+  readonly year?: number;
+  @IsString({ each: true })
+  readonly genres?: string[];
+}
+
+```
+
+기존에 CreateDto를 기준으로 복사해서 쓰는것 대신에 
+
+Nest의 부분타입을 쓸것이다 (Partial Type)
+
+`npm i @nestjs/mapped-types`
+
+Mapped-types는 탕비을 변환시키고 사용할수 있게하는 패키지 인데, nest에서 제공해주는 패키지이다
+
+https://www.npmjs.com/package/@nestjs/mapped-types
+
+이건 DTO를 변환하는것을 도와줌
+
+
+
+```javascript
+export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
+
+```
+
+UpdateMoviceDto는 CreateMovieDto와 동일함. 단, 전부 필수사항이 아니라는것이 다름
+
+
+
+
+
+
+
+
+
+
+
