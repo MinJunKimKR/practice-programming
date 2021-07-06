@@ -288,7 +288,36 @@ Controller에서는 Service에서 구현한 비지니스 로직은 constructor�
 
 한마디로, 개발자가 직접 하나씩 import해주는것이 아닌 nest가 
 
-알아서 import해주는것을 의존성 주입이라고 한다
+알아서 import해주는것을 의존성 주입이라고 한다 
+
+
+
+
+
+nest는 express위에서 돌아가기 때문에 원한다면
+
+controller에서 response나 request객체를 사용할수있다.
+
+```javascript
+@Get()
+  getAll(@Req() req, @Res() res): Movie[] {
+    return this.movieService.getAll();
+  }
+```
+
+이렇게 express로 바로 접근하는건 별로 좋진않다.
+
+하지만 nest에서는 express말고도 fastify위에서 돌아가는데 
+
+그렇기에 fastify 같은 다른 라이브러리와 호환이 된다.
+
+fastify는 express와 비슷하게 존재하는데 2배빠름
+
+
+
+또한, Nest에서 쓰이는 방식으로 사용한다면 추후에 express에서 fastify로 전환을 해도 문제가 생기지 않겠지만, 만일에 위에 나와있는것 처럼
+
+express방식을 사용을하게 된다면 나중에 fastify방식으로 전환한다면 에러가 발생할것이다.
 
 
 
