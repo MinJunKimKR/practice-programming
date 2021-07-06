@@ -215,6 +215,97 @@ UpdateMoviceDto는 CreateMovieDto와 동일함. 단, 전부 필수사항이 아�
 
 
 
+module들은 controller와 service만을 가지고 있어야함.
+
+그렇기 떄문에 현재 app.module에 있는 controllers와 providers를 
+
+movies.module로 옮겨줄것임
+
+```javascript
+import { Module } from '@nestjs/common';
+import { MoviesController } from './movies/movies.controller';
+import { MoviesService } from './movies/movies.service';
+import { MoviesModule } from './movies/movies.module';
+
+@Module({
+  imports: [MoviesModule],
+  controllers: [MoviesController],
+  providers: [MoviesService],
+})
+export class AppModule {}
+
+```
+
+현재는 `nest g mo ` 를 사용해서 movies모듈을 만들어져 있는 상태.
+
+- [ ] ```javascript
+  import { Module } from '@nestjs/common';
+  import { MoviesModule } from './movies/movies.module';
+  
+  @Module({
+    imports: [MoviesModule],
+    controllers: [],
+    providers: [],
+  })
+  export class AppModule {}
+  
+  ```
+
+
+
+```javascript
+import { Module } from '@nestjs/common';
+import { MoviesController } from './movies.controller';
+import { MoviesService } from './movies.service';
+
+@Module({
+  controllers: [MoviesController],
+  providers: [MoviesService],
+})
+export class MoviesModule {}
+
+```
+
+
+
+이처럼 app.module에 전부다 import하는 것이 아닌 각각의 module에 import한다음에 app.module에는 각각의 module만 import하는
+
+방식으로 개발을 한다. 그렇다면 app.module에는 언제 povider와 controller를 import하는걸까?
+
+App의 기본적인 페이지를 보여주고자 할때(루트위치) 추가해준다.
+
+
+
+Dependency injhection 이라는 개념이 있다.
+
+Controller에서는 Service에서 구현한 비지니스 로직은 constructor로 가져온다음에 this.00.00() 의 방식으로 가져와서 쓰는데, 이것은 타입을 지정해준것이다.
+
+즉, import를 안쓰고 쓰고 있다는 것인데, 여기서는 Class만 impoert해서 사용하고 있다.
+
+즉, 차입을 추가하는것만으로도 작동하게 해준다.
+
+이것을 Depenency inject라고 한다.
+
+한마디로, 개발자가 직접 하나씩 import해주는것이 아닌 nest가 
+
+알아서 import해주는것을 의존성 주입이라고 한다
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
