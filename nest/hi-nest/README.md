@@ -393,6 +393,10 @@ describe : 테스트를 설명해 주는것
 
 
 
+Nest의 장점 떄문에 movie service 에 접근할수있음
+
+
+
 
 
 
