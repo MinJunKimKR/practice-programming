@@ -321,6 +321,98 @@ express방식을 사용을하게 된다면 나중에 fastify방식으로 전환�
 
 
 
+Nest에서 제공하는 test
+
+```json
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+```
+
+
+
+watch 로 실행하게 되면 새로운 테스트를 만들어 낼때마다
+
+그 테스트가 실행이 된다
+
+
+
+Jest
+
+
+
+`spec.ts` 가 붙은 파일들이 있다.
+
+이것은 테스트를 포함하고 있다.
+
+
+
+nest에서는 jest가 .spec.ts파일들을 찾아볼수 있도록 설정되어있다.
+
+
+
+유닛테스팅 : 모든 function을 따로 테스트 하는것
+
+서비스에서 분리된 유닛을 테스트 하는것
+
+-> getAll()과 같은 function을 검사하는것
+
+E2e : 모든 시스템을 검사하는것
+
+-> 어떤페이지로 가면 특정페이지가 나와야 하는 경우 사용한다.
+
+사용자 관점에서 보는 사용자 스토리와 같음
+
+사용자가 취할만한 액션들을 처음부터 검사하는것을 말한다.
+
+
+
+```javascript
+describe('MoviesService', () => {
+  let service: MoviesService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [MoviesService],
+    }).compile();
+
+    service = module.get<MoviesService>(MoviesService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+});
+```
+
+describe : 테스트를 설명해 주는것
+
+ beforeEach : 테스트를 실행하기 전에 실행되는것
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
