@@ -387,13 +387,21 @@ describe('MoviesService', () => {
 });
 ```
 
-describe : 테스트를 설명해 주는것
+describe : 테스트를 설명해 주는것\
+
+afterEach : 
 
  beforeEach : 테스트를 실행하기 전에 실행되는것
+
+afterAll : 안에는 데이터베이스를 깨끗하게 정리해주는(모두 지우는) function을 넣을수있다
+
+beforeAll : 
 
 It : 테스트 할 요소를 정의한다.
 
 expect : 테스트해서 나와야할 값을 정의하여 테스트한다.
+
+
 
 
 
@@ -411,21 +419,97 @@ Nest의 장점 떄문에 movie service 에 접근할수있음
 
 
 
+E2E
+
+Spec.ts 파일같은 경우는 모두 해당파일의 유닛 테스트를 위한것이다.
+
+어떨떄는 1개를 테스트 해야하고 가끔은 2개를 테스트 해야하는 비밀번호 생성, 저장 funciton과 같은 경우에는 유닛 테스트가 다소 어려울수 있다
+
+여기서 e2e가 등장함
 
 
 
 
 
+```javascript
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
+import { AppModule } from './../src/app.module';
+
+describe('AppController (e2e)', () => {
+  let app: INestApplication;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  it('/ (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect('Hello World!');
+  });
+});
+
+```
 
 
 
+`supertest` 라는 라이브러리가 들어가 있다는점이 유닛테스트와는 다소 다르다
 
+/Get으로 요청을 보내고, 응답을 받는다.
 
+따라서 controll, service등을 전부다 아우르는 내용이다.
 
+```javascript
+  it('/movies (GET)', () => {
+    return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
+  });
+```
 
+위와 같은 내용으로 /movies의 url에 요청을 받을수가 있는데,
 
+`app.getHttpServer()` 라고 되어있는 부분은 localhost:3000과 같은 부분을 대체하여준다
 
+```javascript
+  describe('/movies', () => {
+    it('GET', () => {
+      return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
+    });
+  });
+```
 
+위와 같은 내용으로 리펙토링을 할수있다
+
+또한 post 와 delete를 넣어서 다음과 같이 하나의 큰 흐름의 e2e테스트를 만들어 볼수 있다.
+
+```javascript
+  describe('/movies', () => {
+    it('GET', () => {
+      return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
+    });
+    it('POST', () => {
+      return request(app.getHttpServer())
+        .post('/movies')
+        .send({
+          title: 'Test',
+          year: 2000,
+          genres: ['action'],
+        })
+        .expect(201);
+    });
+    it('DELECT', () => {
+      return request(app.getHttpServer()).delete('/movies').expect(404);
+    });
+  });
+});
+```
 
 
 
