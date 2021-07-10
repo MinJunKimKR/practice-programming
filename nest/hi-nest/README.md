@@ -168,7 +168,7 @@ main.ts에 사용할시에 몇가지 좋은 옵션을 사용할수 있다.
 
  `whitelist: true, forbidNonWhitelisted: true`
 
-두가지 옵션을 적용해주면 데코레이터가 없다면 문제가 있다는 내용을 알려준다,
+두가지 옵션을 적용해주면 데코레이터가 없다면 문제가 있다는 에러를 알려준다,
 
 `transform: true,` 옵션은 URL등에 ID가 만일에 123일경우 String 123이 되는데, 이것을 자동으로 Number로 바꿔주는 역할을 한다.
 
