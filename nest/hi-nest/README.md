@@ -513,6 +513,84 @@ describe('AppController (e2e)', () => {
 
 
 
+
+
+```javascript
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+```
+
+테스트를 할때 매번 새로운 app applicaiton을 만든다.
+
+여기서 만드는 app application은 test를 위한것이다.
+
+즉, 브라우저로 들어갈수있는 실제 application과는 다르다.
+
+```javascript
+  describe('/movies/:id', () => {
+    it.todo('GET');
+    it.todo('POST');
+    it.todo('PETCH');
+  });
+```
+
+또한 jest에서는 todo라는 기능을 제공하는데, 앞으로 작성해야하는 test들을 미리 만들어 놓을수있다.
+
+
+
+`beforeAll` 는 `beforeEach` 와는 다르게 모든 각각의 테스트 이전에 실행되는것이 아니다.
+
+무슨말이냐면, 특정 데이터 베이스를 테스트중에 만든다고 한다면,
+
+baforeEach는 각테스트마다 생성하기 떄문에 항상 비어있게되지만, beforeAll같은 경우에는 1번만 실행되므로, 데이터 베이스를 유지한상태 즉, app application을 매번 초기화 하지않도 테스트를 진행할수있다.
+
+
+
+하지만, 여기서 문제가 발생을 한다.
+
+테스트에서 Movie객체를 create한다음 get을 해도,  만들어진 객체를 찾을수 없다라고 나온다.
+
+
+
+이유는 main.ts 에서
+
+```javascript
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+```
+
+위와 같이 transform을 사용해서 string인 url에 들어가는 id를 number로 변경해주기 때문이다.
+
+하지만 e2e test에서는 어떠한가? 
+
+```javascript
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+```
+
+위에서 보는바와 같이 어떤 pipe도 태우지 않았다.
+
+이점이 test를 할때 가장 주의해야하는 점중에 하나다.
+
+바로, 실제 어플리케이션 환경을 그대로 적용시켜주어야지 제대로된 테스트 결과를 받을수 있다는 것이다.
+
+
+
 
 
 
