@@ -1,36 +1,78 @@
 
 
+### 데코레이터
+
+[데코레이터 개념](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841)
+
+[데코레이터 개념 2](https://ui.toast.com/weekly-pick/ko_20200102)
+
+데코레이터는 함수를 명시적으로 수정하지 않고도 확장하거나 기능확장을 시킬수 있는 방법이다.
+
+함수를 일급 시민으로서의 기능을 지원하는 모든 언어는 데코레이터를 구현할 수 있다(예를 들어, 자바스크립트는 함수를 변수에 할당하거나 다른 함수에 인자로 전달할 수 있다).
+
+```javascript
+//자바스크립트의 객체는 속성이 있고, 각 속성은 값을 가지고 있다.
+
+const oatmeal = {
+  viscosity: 20,
+  flavor: 'Brown Sugar Cinnamon',
+};
+//그러나 각 속성은 값 외에도 화면 밖에 숨겨진 정보들이 있는데, 이런 정보들이 각 속성이 //어떻게 작동할지를 정의한다. 이것을 속성 설명자라고 한다.
+
+console.log(Object.getOwnPropertyDescriptor(oatmeal, 'viscosity'));
+
+/*
+{
+  configurable: true,
+  enumerable: true,
+  value: 20,
+  writable: true
+}
+*/
+```
+
+- `구성 가능(configurable)`은 속성 유형을 변경하거나, 객체에서 속성을 삭제할 수 있는지를 결정한다.
+- `열거 가능(enumerable)`은 `Object.keys(oatmeal)`를 호출하거나 `for` 루프에서 사용할 때처럼 객체의 속성을 열거할 때 속성을 표시할지 여부를 제어한다.
+- `쓰기 가능(writable)`은 할당 연산자 `=`를 통해 속성값을 변경할 수 있는지를 제어한다.
+- `값(value)`은 접근할 때 표시되는 속성의 정적 값이다. 속성 설명자 중에 유일하게 쉽게 볼 수 있고, 주로 우리가 관심을 두고 보는 부분이다. 함수를 포함한 모든 자바스크립트의 값이 올 수 있으며, 이 속성은 속성을 자신이 속한 객체의 메소드로 만든다.
+
+@ 문자와 함께 함수위에 사용함으로서 원하는 데코레이터를 적용할수 있다.
+
+데코레이터 작성하는 법
+
+JS 데코레이터 함수에는 세 가지 인자가 전달된다.
+
+1. `target`은 현재 인스턴스 객체의 클래스이다.
+2. `key`는 데코레이터를 적용할 속성 이름이다(문자열).
+3. `descriptor`는 해당 속성의 설명자 객체이다.
+
+----
 
 
-데코레이터는 클래스를 위해서 움직인다.
 
-App module 은 root module과 같음
+### module
 
+App module 은 root module과 같다.
 
+따라서, 어플리케이션을 구현하게 된다면,  provider와 controller를 전부
 
-인증을 담당하는 어플리케이션이 있다면 user모듈인것이다
+app module에 import하는것이 아닌, 각각의 모듈을 만들어서 그곳에 import를 한다.
 
+예를 들어서, 인증을 담당하는 어플리케이션이 있다면 user module 이라는것을 만들고,
 
+그곳에 필요한 controller와 provider를 추가하여서 module을 구성해주고, 해당 module을
 
-Controller: URL을 가져오고 함수를 실행함(마치 express의 라우터 처럼)
-
-즉, URL를 매핑하고, 리퀘스트를 받고, Query를 넘기거나 Body등을 넘김
-
-Provider : 
-
-
-
-Nest는 콘트롤러를 비지닉스 로직이랑 구분을 짓는다
-
-컨트롤러는 URL을 가져오고 function을 reuturn 부분이다
-
-하지만 서비스에서 실제로 돌아가는 비지니스 로직을 구현한다
+app module에 import하여서 사용한다.
 
 
 
-App module에서는 모든 모듈을 import할것이다.
+### controller
 
+URL을 가져오고 함수를 실행합니다 (마치 express의 라우터 처럼)
 
+즉, URL를 매핑하고, 리퀘스트를 받고, Query를 넘기거나 Body등을 넘기는 역할을 합니다.
+
+실직적인 비지니스 로직은 service에서 구현한다.
 
 ```javascript
 @Controller('movies')
@@ -63,8 +105,6 @@ export class MoviesController {
 
 @Param('') : controller에서 :/id 와 같이 parameter를 받아서 funciton에서 사용할때 쓰이는 decorator
 
-
-
 @Body(): 바디로 넘어온 값을 사용할때 쓰이는 decorator
 
 ```
@@ -77,13 +117,29 @@ export class MoviesController {
 
 
 
+
+
+### Provider
+
+provider의 주요 개념은 종속성으로 주입할수 있다는 것이 중요하다.
+
+controller는 HTTP 요청을 처리하고 더 복잡한 작업을 provider 위임해야 한다.
+
+
+
+즉, Controller에서 HTTP요청을 처리하여 필요한 Service를 호출한다.
+
+이후 호출된 Service에서는 비지니스 로직을 통하여 필요한 연산을 진행하여 값을 return 해준다.
+
+이러한 방법의 장점은,Controller는 라우팅 처리만 신경을 쓰면되고, Provider는 기능구현만 신경을 쓰면 된다는 장점이 있다.
+
+
+
+
+
 ### Single-responsibility principle
 
-하나의 module, class 혹은 function이 하나의 기능은 꼭 책임져야한다.
-
-
-
-
+하나의 module, class 혹은 function이 하나의 기능은 꼭 책임져야한다는 개념이다.
 
 ```javascript
 export class Movie {
@@ -95,11 +151,11 @@ export class Movie {
 
 ```
 
-
-
 여기서 interface 나 type이 아닌 class를 사용한 이유는 컴파일을 거치게 되면 어차피 class가 되기 때문에 바로 class로 써서 사용한것이다.
 
 
+
+### NotFoundException
 
 `throw new NotFoundException(`Movie with Id : ${id} not found`);`
 
