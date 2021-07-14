@@ -387,6 +387,410 @@ class SuperVIPDiscount: VIPDiscount {
 
 **이제, 우리는 ‘수정’과는 별개로 ‘확장’ 된 모습을 볼 수 있습니다.**
 
+###  Liskov Substitution Principle (리스코프 치환원칙:LSP)
+
+> 하위 클래스는 반드시 상위클래스와 대체 가능 해야 한다. 
+
+이 원칙이 지향하는 것은 하위클래스가 상위 클래스의 자리를 에러 없이 맡을 수 있는지 확인하는 것 입니다.
+
+**만약, 코드가 스스로 자신의 클래스 타입을 확인한다면, 그건 정말로 원칙을 위반 한 것입니다.** 
+
+우리의 예제를 살펴보도록 합시다.
+
+```javascript
+function AnimalLegCount(a: Array<Animal>) {
+    for(int i = 0; i <= a.length; i++) {
+        if(typeof a[i] == Lion)
+            return LionLegCount(a[i]);
+        if(typeof a[i] == Mouse)
+            return MouseLegCount(a[i]);
+        if(typeof a[i] == Snake)
+            return SnakeLegCount(a[i]);
+    }
+}
+
+AnimalLegCount(animals);
+```
+
+위와 같은 것이 LSP 원칙을 위한한 모습입니다. (또한 OCP를 위반한 것이기도 합니다.)
+
+위 코드는 모든 Animal 타입을 알아야 하고, leg-counting 기능과 연관된 것을 호출해야합니다.
+
+무슨 말이냐면 
+
+`if(typeof a[i] == Lion)` 이 부분이 먼저 문제가 되는데,
+
+a에 해당하는 타입들을 하위 funtion인 AnimalLegCount에서 다 알아야 합니다.
+
+마치 아래와 같이 말이죠
+
+```javascript
+//...
+class Pigeon extends Animal { //새로 추가된 class
+        
+}
+const animals[]: Array<Animal> = [
+    //...,
+    new Pigeon(); //새로 추가된 동물
+]
+function AnimalLegCount(a: Array<Animal>) {
+    for(int i = 0; i <= a.length; i++) {
+        if(typeof a[i] == Lion)
+            return LionLegCount(a[i]);
+        if(typeof a[i] == Mouse)
+            return MouseLegCount(a[i]);
+         if(typeof a[i] == Snake)
+            return SnakeLegCount(a[i]);
+        if(typeof a[i] == Pigeon)//새로 추가된 조건문
+            return PigeonLegCount(a[i]);//새로운 legCount 함수
+    }
+}
+AnimalLegCount(animals);
+```
+
+이 함수가 LSP를 따르게 만드는 것은, 우리가 Steve Fenton가 필수조건으로 말한 LSP의 요구사항을 따르는 것 입니다.
+
+
+
+이제 LSP를 따르도록 수정을 해보면 다음과 같습니다.
+
+```javascript
+function AnimalLegCount(a: Array<Animal>) {
+    for(let i = 0; i <= a.length; i++) {
+        a[i].LegCount();
+    }
+}
+AnimalLegCount(animals);
+```
+
+`AnimalLegCount()`는 전달된 **Animal의 타입에 대해서는 관심이 없고**, 오직 다리의 숫자를 세는 것에만 관심이 있습니다.
+
+그렇기 때문에 기존의 `if(typeof a[i] == Snake)` 와 같은 조건문이 없어진다.
+
+**파라미터는 Animal 타입**(Animal 클래스나 Animal의 하위 클래스)이어야만 한다는 것이 위 코드에서 알 수 있는 전부입니다.
+
+**Animal 클래스는 이제 `LegCount()` 메소드만 구현/정의 하기만 하면 됩니다.**
+
+```javascript
+class Animal {
+    //...
+    LegCount();
+}
+```
+
+그리고 하위 클래스들은 LegCount()메소드를 구현해야만 하죠.
+
+```javascript
+//...
+class Lion extends Animal{
+    //...
+    LegCount() {
+        //...
+    }
+}
+//...
+```
+
+Lion 클래스 타입의 argument가 `AnimalLegCount()` 메소드로 전달 될 때, `LegCount()`는 lion이 갖고 있는 다리의 숫자를 반환 할 것입니다.
+
+`MouseLegCount(a[i])` 와 같이 기존의 animal 마다 다리의 수를 세는 function을 추가로 만들어 주지 않아도 됩니다.
+
+
+
+### Interface Segregation Principle (인터페이스 분리 원칙 : ISP)
+
+> 클라이언트의 세분화된 내용과 같은 세분화된 인터페이스를 만들자.
+
+> 클라이언트는 사용되지 않는 인터페이스에 의존하도록 강요해서는 안된다.
+
+이 원칙은 커다란 인터페이스의 구현에 관한 단점을 다룹니다. 아래의 Shape 인터페이스를 보세요.
+
+```javascript
+interface Shape {
+    drawCircle();
+    drawSquare();
+    drawRectangle();
+}
+```
+
+이 인터페이스는 Squares와 circles, rectangles를 그립니다. 
+
+Shape 인터페이스를 구현하고 있는 클래스 Circle, Square, Rectangle는 반드시 메소드 `drawCircle()`, `drawSquare()`,`drawRectangle()`를 정의해야 합니다.
+
+```javascript
+class Circle implements Shape {
+    drawCircle(){
+        //...
+    }
+    drawSquare(){
+        //...
+    }
+    drawRectangle(){
+        //...
+    }    
+}
+class Square implements Shape {
+    drawCircle(){
+        //...
+    }
+    drawSquare(){
+        //...
+    }
+    drawRectangle(){
+        //...
+    }    
+}
+class Rectangle implements Shape {
+    drawCircle(){
+        //...
+    }
+    drawSquare(){
+        //...
+    }
+    drawRectangle(){
+        //...
+    }    
+}
+```
+
+위의 코드를 보면 꽤 재밌습니다.
+
+ **클래스 Rectangle은 쓰이지 않는 메소드들(`drawCircle()`과 `drawSquare()`)을 구현하고 있습니다.** 
+
+마찬가지로 Square 또한 사용되지않는 `drawCircle()`과 `drawRactangle()`을, 
+
+Circle 클래스는 `drawSquare()`, `drawSquare()`를 구현하고 있습니다.
+
+만약 우리가 drawTriangle()과 같은 다른 메소드를 Shape 인터페이스에 추가 한다면 아래와 같을겁니다.
+
+```
+interface Shape {
+    drawCircle();
+    drawSquare();
+    drawRectangle();
+    drawTriangle();
+}
+```
+
+클래스는 반드시 신규 메소드를 구현해야 하며, 그렇지 않으면 오류가 발생합니다.
+
+
+**클라이언트(여기서는 Rectangle, Circle, Square)는 필요하치 않거나 사용되지 않는 메소드에 의존하도록 강요해선 안됩니다.**
+
+또한, ISP는 다음과 같이 명시하고 있습니다. 
+
+> ‘인터페이스는 꼭 하나의 일을 해야 하며, 추가적인 행위 그룹은 반드시 다른 인터페이스로 분리되어 추상화 되어야 한다.’ 
+
+라고 말이에요.
+
+Shape 인터페이스를 ISP 원칙을 따르도록 만드는 것은 행위(action)를 다른 인터페이스로 분리하는 것을 말합니다.
+
+```javascript
+interface Shape {
+draw();
+}
+
+interface ICircle {
+    drawCircle();
+}
+interface ISquare {
+    drawSquare();
+}
+interface IRectangle {
+    drawRectangle();
+}
+interface ITriangle {
+    drawTriangle();
+}
+
+class Circle implements ICircle {
+    drawCircle() {
+        //...
+    }
+}
+class Square implements ISquare {
+    drawSquare() {
+        //...
+    }
+}
+class Rectangle implements IRectangle {
+    drawRectangle() {
+        //...
+    }    
+}
+class Triangle implements ITriangle {
+    drawTriangle() {
+        //...
+    }
+}
+class CustomShape implements Shape {
+   draw(){
+      //...
+   }
+}
+```
+
+**ICircle 인터페이스는 오직 circle을 그리는 일**만 하고 있으며, 
+
+**Shape는 그외의 도형**들을 그리는 것을 다루고 있습니다. 
+
+
+
+### Dependency Inversion Principle (의존성 역전 원칙 : DIP)
+
+의존(종속)은 구**체가 아닌 추상과 이뤄져야 한다.**
+
+> **A. 고수준(High-Level)의 모듈은 저수준(Low-Level)의 모듈에 의존하면 안된다**. 둘다 추상화에 의존해야한다.  
+>
+> **B. 추상은 세부사항(Details)에 의존해서는 안된다.** 세부사항은 추상에 의존해야 한다.
+
+ 시작하기전, **우리는 의존성 주입(Dependency Injection) 과 관련된 일들에 대해서 명확히** 알아야 합니다.
+
+아래의 코드는 **고수준의 구성요소(Component)가 저수준의 구성요소에 따라 행동하는 모습의 예시**입니다.
+
+아래의 코드에서는 **HttpService가 저수준의 컴포넌트이고, Http는 고수준의 컴포넌트** 입니다. 
+
+아래의 설계는 DIP A를 위반하였습니다.
+
+(DIP A - 고수준의 모듈은 저수준의 모듈에 의존해선 안된다. 반드시 추상화에 의존 해야한다.)
+
+```javascript
+class XMLHttpService extends XMLHttpRequestService {}
+
+class Http {
+    constructor(private xmlhttpService: XMLHttpService) { }
+    get(url: string , options: any) {
+        this.xmlhttpService.request(url,'GET');
+    }
+    post() {
+        this.xmlhttpService.request(url,'POST');
+    }
+    //...
+}
+```
+
+상위 코드의 Http 클래스는 `XMLhttpService` 클래스에 의존하도록 되어있습니다. 
+
+`constructor(private xmlhttpService: XMLHttpService) { }`
+
+간혹, `xmlHttpService` 외에 다른 Http 연결 서비스를 사용 하고 싶을 수도 있습니다.
+
+이럴때, 코드를 편집하기 위해서는 **모든 Http 인스턴스(사용중인)를 고려하여 조심스레 수정**해야합니다. 이는 OCP 원칙 위반이기도 합니다.
+
+따라서 **‘Connection 인터페이스’를 만들어, 사용중인 Http 서비스 타입들에 대해 덜 신경 써야합니다**. 
+
+```javascript
+interface Connection {
+    request(url: string, opts:any);
+}
+```
+
+request 메소드를 갖고 있는 Connection 인터페이스를 이용하여 Http를 개선 할 수 있습니다. 
+
+Connection 인터페이스 타입의 **Argument를 Http 클래스로 전송**합니다.
+
+```javascript
+class Http {
+constructor(private httpConnection: Connection) { }
+
+    get(url: string , options: any) {
+        this.httpConnection.request(url,'GET');
+    }
+    post() {
+        this.httpConnection.request(url,'POST');
+    }
+    //...
+}
+```
+
+Http에 전달된 서비스 유형에 관계없이 **네트워크 연결 유형을 알지 않고도 쉽게 네트워크에 연결**할 수 있습니다. 
+
+
+
+이제 `XMLHttpService` 클래스를 다시 구현하여 **Connection 인터페이스를 구현할 수 있습니다.**
+
+```javascript
+class XMLHttpService implements Connection {
+    const xhr = new XMLHttpRequest();
+    //...
+    request(url: string, opts:any) {
+        xhr.open();
+        xhr.send();
+    }
+}
+```
+
+많은 **Http Connection 타입을 만들고 Http 클래스에 에러**와 같은 야단법석한 일들은 피해서 전송 할 수 있습니다. 
+
+```javascript
+class NodeHttpService implements Connection {
+    request(url: string, opts:any) {
+        //...
+    }
+}
+class MockHttpService implements Connection {
+    request(url: string, opts:any) {
+        //...
+    }    
+}
+```
+
+우리는 **고수준의 모듈과 저수준의 모듈**이 추상에 의존하고 있음을 볼 수 있습니다. 
+
+
+
+Http 클래스(고수준의 모듈)은 **Connection 인터페이스(추상)에 의존**하고 있으며, 
+
+```javascript
+class Http {
+constructor(private httpConnection: Connection) { }
+
+    get(url: string , options: any) {
+        this.httpConnection.request(url,'GET');
+    }
+```
+
+-> Connection Interface에는 request function이 구성되어 있습니다.
+
+그렇기 때문에 추상화(같은 interface기 때문에 funtion이 있다)로 구현한다.
+
+
+
+Http 서비스 타입들(저수준의모듈)또한 **Connection 인터페이스에 의존**하고 있습니다.
+
+```javascript
+class XMLHttpService implements Connection {
+    const xhr = new XMLHttpRequest();    
+		//...
+    request(url: string, opts:any) {
+        xhr.open();
+        xhr.send();
+    }
+}
+```
+
+->  `class Http` 와 같은 interface를 사용하여서 구현함으로, request가 존재하며, 직접적으로 Http에서 의존하지 않고 `connection interface` 통해서 의존하기 때문에 추상화가 이루어진다.
+
+또한, 여기서 DIP는 **Liskov Substitution Principle을 위반하지 않도록 합니다.** 
+
+(Connection 유형 `Node-XML-MockHttpService`는 상위 유형 `Connection`을 대체 할 수 있습니다.)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -395,16 +799,33 @@ class SuperVIPDiscount: VIPDiscount {
 
 
 
+### Exceptionfilter
+
+[문서링크](https://docs.nestjs.kr/exception-filters)
+
+Nest에는 애플리케이션 전체에서 처리되지 않은 모든 예외를 처리하는 **예외 레이어**가 내장되어 있습니다
+
+#### Throwing standard exceptions
+
+Nest는 `@nestjs/common` 패키지에서 노출된 내장 `HttpException` 클래스를 제공합니다
+
+일반적인 HTTP REST/GraphQL API 기반 애플리케이션의 경우 특정 오류 조건이 발생할 때 **표준 HTTP 응답객체를 보내는 것이 가장 좋습니다.**
+
+#### Built-in HTTP exceptions
+
+Nest는 기본 **`HttpException`에서 상속되는 표준 예외 집합을 제공**합니다. 이들은 `@nestjs/common` 패키지에서 노출되며 **가장 일반적인 HTTP 예외중 대부분**을 나타냅니다.
+
+> 자세한 내용은 상단의 nest 문서링크를 참고하여 주세요
+
 ### NotFoundException
 
-`throw new NotFoundException(`Movie with Id : ${id} not found`);`
-
-nest에는 이미 만들어둔 error exception handler가 존재한다.
-
 ```javascript
-    this.movies.push({ ...movie, ...updateData }); //2개의 배열을 1개의 배열로 만들어서 push 하는 소스 
-
+    if (!movie) {
+      throw new NotFoundException(`Movie with Id : ${id} not found`);
+    }
 ```
+
+----
 
 
 
@@ -414,17 +835,15 @@ Data Transfer Object(데이터 전송 객체)
 
 타입등을 부여하기 위해 만들어 줘야한다
 
-하지만 DTO를 만든다음 타입으로 사용을 해준다고 해서  곧바로 validation까지 해주지는 않는다.
+하지만 DTO를 만든 다음 타입으로 사용을 해준다고 해서 알아서 곧바로 validation까지 해주지는 않는다.
 
-그렇다면 DTO는 왜 사용을 하는것일까?
+**그렇다면 DTO는 왜 사용을 하는것일까?**
 
-정답은 바로 프로그래머로서 코드를 더 간결하게 만들수 있게 해주기 때문이다.
+바로 프로그래머로서 **코드를 더 간결하게 만들수 있게 해주기 때문이다.**
 
-또한. NestJS가 Validation을 해줄수 있게 만들어 줄수도 있다.
+또한. **NestJS가 Validation을 해줄수 있게 만들어 줄수도 있다.**
 
-
-
-```javaj
+```javascript
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateMovieDto {
@@ -438,9 +857,25 @@ export class CreateMovieDto {
 
 ```
 
-Class-validator를 사용해주면 DTO에 validation 기능도 추가해 줄수 있다.
+**Class-validator**를 사용해주면 **DTO에 validation 기능도 추가**해 줄수 있다.
+
+[class-validator 문서링크](https://docs.nestjs.com/pipes#class-validator)
 
 또한  Array의 경우 each를 사용해주면 각 요소가 string인지를 확인을 해줄수 있는 옵션도 제공을 해주고 있다.
+
+
+
+### Movie Entity
+
+```javascript
+export class Movie {
+  id: number;
+  title: string;
+  year: number;
+  genres: string[];
+}
+
+```
 
 
 
@@ -452,7 +887,9 @@ Class-validator를 사용해주면 DTO에 validation 기능도 추가해 줄수 
 
 결국 DTO는 Domain Model 객체를 그대로 두고, 복사하여 다양한 Presentation Logic을 추가한 정도로 사용하며 **Domain Model 객체는 Persistent만을 위해서 사용**해야한다.
 
-**즉, Entity는 DB와 1:1매칭이 되는 Class이지만, DTO의 경우 통신간의 Data의 형태를 정의한것임으로 Entity와는 다르게 수시로 변경이 될수 있다. 이것을 위해서 2개를 서로 분리한것이다.**
+**즉, Entity는 DB와 1:1매칭이 되는 Class이지만, DTO의 경우 통신간의 Data의 형태를 정의한것임으로 Entity와는 다르게 수시로 변경이 될수 있다. **
+
+**이것을 위해서 비슷해 보이는 Entity와 DTO를 서로 분리한것이다.**
 
 ---
 
