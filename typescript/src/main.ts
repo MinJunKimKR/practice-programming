@@ -193,3 +193,32 @@ console.log("result : ", result);
 
 //하지만 문제점이 있다
 //const result = addId<string>(user); 이와 같이 써도, generic이기 떄문에 오류를 만들어내지 않는다.
+
+//--------------------------Enum---------------------------------
+
+// const statuses = {
+//   notStarted: 0,
+//   inProgress: 1,
+//   done: 2,
+// };
+
+// console.log(statuses.inProgress);
+
+enum StatusEnum { //Enum을 뒤에 추가를 해줘야지 interface혹은 class랑 구분이 된다.
+  NotStarted = "notStarted",
+  InProgress = "inProgress",
+  Done = "done",
+  // NotStarted,
+  // InProgress,
+  // Done,
+} // 0에서 부터 증가한다.
+
+interface Task {
+  id: string;
+  status: StatusEnum; //enum을 interface에서 사용하는 방법
+}
+
+let notStartedStatus: StatusEnum = StatusEnum.NotStarted;
+notStartedStatus = StatusEnum.InProgress;
+
+console.log(StatusEnum.Done);

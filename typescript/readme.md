@@ -228,6 +228,8 @@ const dragonsTag: MaybePopularTag = "dragon"; // null도 허용됨
 
 
 
+## Enum
+
 
 
 
