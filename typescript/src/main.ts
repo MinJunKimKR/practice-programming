@@ -153,7 +153,7 @@ class User implements UserInterfaceForClass {
 const userClass = new User("Min", "jun");
 console.log(userClass.getFullName()); //private로 되어있는 firstName등에는 접근이 바로 불가능하다.
 
-class Admin extends User {} //User에 있는 구조가 상속되어서 사용이 가능하다ㄹ
+class Admin extends User {} //User에 있는 구조가 상속되어서 사용이 가능하다
 
 //----------------------Generic ------------------
 const addId = <T extends Object>(obj: T) => {
