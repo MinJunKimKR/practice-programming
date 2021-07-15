@@ -140,6 +140,96 @@ const user4: IUserFunction = {
 
 ## 타입과 유니온
 
+타입은 아래와 같이 선언과 사용할수 있다.
+
+```javascript
+type ID = string;
+
+interface UserInterface {
+  id: ID;
+  // id :string;
+  name: string;
+  age: number;
+}
+
+
+const userUnion: UserInterface = {
+  age: 123,
+  id: "22",
+  name: "abc",
+};
+
+
+```
+
+그렇다면 interface에서 그냥 string으로도 같은 역할을 할수있는데 왜 굳이 string을 ID라는 type으로 바꿔서 사용하는 것일까?
+
+
+
+이유는 좀더 명확하고, ID라는 타입을 지정함으로서 공통적으로 쓰는 ID는 모두 같은 자료형을 사용된다는것을
+
+확신할수 있게된다.
+
+또한, Union이라는 것과도 함께쓸수 있는데, 다음 소스를 봐보자
+
+
+
+```javascript
+type PopularTag = string;
+type MaybePopularTag = PopularTag | null;
+
+const popularTags: PopularTag[] = ["123", "bus"];
+// const popularTags: string[] = ["123", "bus"];
+//string으로 적는것과 type으로 정의하는것과 결론적으로는 같지만,
+//게발 구조적으로 무엇을 원하는지 확실히 알수있게되며 한눈에 보기에 명확해진다.
+
+const dragonsTag: MaybePopularTag = "dragon"; // null도 허용됨
+// const dragonsTag: MaybePopularTag = ["dragon"]; 에러가 발생한다.
+
+```
+
+위와 같이 union을 사용해서 `type MaybePopularTag = PopularTag | null;` 이런 방식으로 타입을 사용할수 있고,
+
+변수 선언등에서 사용할수있다.
+
+그냥 string과 같은 기본 타입을 사용해도 되지만, 커스텀 타입을 지정후 사용함으로서 좀더 안정성을 높일수 있는것이다.
+
+
+
+## Any/void/nenver/unknown
+
+
+
+
+
+
+
+
+
+## Typescript with DOM
+
+
+
+
+
+
+
+## Classes in Typescript
+
+
+
+[싱글턴 패턴](https://yamoo9.gitbook.io/typescript/classes/singleton)
+
+
+
+## Generic
+
+
+
+
+
+
+
 
 
 
