@@ -2,6 +2,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: './tsconfig.json',
+    tsconfigRootDir: __dirname, //https://stackoverflow.com/questions/64933543/parsing-error-cannot-read-file-tsconfig-json-eslint
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
