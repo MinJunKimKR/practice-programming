@@ -73,6 +73,36 @@ https://www.npmjs.com/package/tsconfig-paths
 
 
 
+----
+
+# Nest-MS
+
+[참고 유튜브 강의 링크](https://www.youtube.com/watch?v=IsubcKdZPyE&list=PLYnmjTxyfjZrV-N2Qcg4HrDIOvgT81h6G&index=2&t=136s)
+
+`nest new admin -g` 를 하게되면 -g 옵션 때문에 git repository가 생성이 안된다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
