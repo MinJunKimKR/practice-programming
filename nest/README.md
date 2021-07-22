@@ -127,6 +127,13 @@ export class ProductController {
 
 ## TypeORM
 
+```
+mysql.server start
+mysql -uroot -p   
+```
+
+위의 명령어로 설치한 mysql을 local에서 실행시킨다음 로그인할수있다.
+
 `$ npm install --save @nestjs/typeorm typeorm mysql2` cli를 통해서
 
 Typeorm을 먼저 설치하여주자.
@@ -213,9 +220,58 @@ export class ProductModule {}
 
 
 
+```javascript
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Product } from './product.entity';
+
+@Injectable()
+export class ProductService {
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
+
+  async all(): Promise<Product[]> {
+    return this.productRepository.find();
+  }
+
+  async create(data): Promise<Product> {
+    return this.productRepository.save(data);
+  }
+}
+
+```
+
+위와 같이 product를 가져오는 `all(), create(data)` 를 만들고,
+
+typeorm을 이용해서 db에 붙어서 사용하자
 
 
 
+```javascript
+import { Body, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { ProductService } from './product.service';
+
+@Controller('product')
+export class ProductController {
+  constructor(private productService: ProductService) {}
+
+  @Get()
+  all() {
+    return this.productService.all();
+  }
+  @Post()
+  creat(@Body('title') title: string, @Body('image') image: string) {
+    return this.productService.create({ title, image });
+  }
+}
+
+```
+
+위에서 만들어 놓은 service를 controller에 사용한다.
 
 
 
