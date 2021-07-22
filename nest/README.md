@@ -218,7 +218,7 @@ export class ProductModule {}
 
 이제, `nest g s product` 를 이용해서 service를 생성하도록 하자
 
-
+## CRUD
 
 ```javascript
 import { Injectable } from '@nestjs/common';
@@ -241,14 +241,11 @@ export class ProductService {
     return this.productRepository.save(data);
   }
 }
-
 ```
 
 위와 같이 product를 가져오는 `all(), create(data)` 를 만들고,
 
 typeorm을 이용해서 db에 붙어서 사용하자
-
-
 
 ```javascript
 import { Body, Post } from '@nestjs/common';
@@ -268,16 +265,164 @@ export class ProductController {
     return this.productService.create({ title, image });
   }
 }
-
 ```
 
 위에서 만들어 놓은 service를 controller에 사용한다.
 
+나머지 CRUD를 구현하자면 아래와 같다
+
+```javascript
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Product } from './product.entity';
+
+@Injectable()
+export class ProductService {
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
+
+  async all(): Promise<Product[]> {
+    return this.productRepository.find();
+  }
+
+  async create(data): Promise<Product> {
+    return this.productRepository.save(data);
+  }
+
+  async get(id: string): Promise<Product> {
+    return this.productRepository.findOne(id);
+  }
+
+  async update(id, data): Promise<any> {
+    return this.productRepository.update(id, data);
+  }
+  async delete(id): Promise<any> {
+    return this.productRepository.delete(id);
+  }
+}
+
+```
+
+**Product.controller.ts**
+
+```javascript
+import { Body, Delete, Param, Post } from '@nestjs/common';
+import { Put } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { ProductService } from './product.service';
+
+@Controller('product')
+export class ProductController {
+  constructor(private productService: ProductService) {}
+
+  @Get()
+  async all() {
+    return this.productService.all();
+  }
+  @Post()
+  async create(@Body('title') title: string, @Body('image') image: string) {
+    return this.productService.create({ title, image });
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.productService.get(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body('title') title: string,
+    @Body('image') image: string,
+  ) {
+    return this.productService.update(id, { title, image });
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return this.productService.delete(id);
+  }
+}
+
+```
+
+**Product.service.ts**
+
+```javascript
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
+  //api/product ...
+  app.enableCors({
+    origin: 'http://localhost:4200',
+  });
+  await app.listen(8000);
+}
+```
+
+**app.module.ts**
+
+에서 `setGlobalPrefix`로 URL에 고정 문자를 추가해 주고
+
+`app.enableCors({
+    origin: 'http://localhost:4200',
+  });` 옵션을 써서 cors설정을 열어 놓자
 
 
 
+### Main 생성
+
+`nest new main -g` 명령어로 app을 만든다.
+
+`nest g co product`, `nest g mo product`, `nest g s product`
+
+로 Product에 대한 요소를 만들자.
 
 
+
+### MongoDB 추가
+
+[Nest mongodb document Link](https://docs.nestjs.kr/techniques/mongodb)
+
+` npm install --save @nestjs/mongoose mongoose`
+
+
+
+```javascript
+@Module({
+  imports: [
+  MongooseModule.forRoot('mongodb://127.0.0.1:27017/nest_main', {
+      autoCreate: true,
+    }),
+    ProductModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+```
+
+**app.module.ts**
+
+
+
+```javascript
+import { Prop, Schema } from '@nestjs/mongoose';
+
+@Schema()
+export class Product {
+  @Prop()
+  id: number;
+  @Prop()
+  title: string;
+  @Prop()
+  image: string;
+  @Prop()
+  likes: string;
+}
+```
 
 
 
