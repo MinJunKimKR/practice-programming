@@ -8,4 +8,6 @@ export class Product {
   title: string;
   @Column()
   image: string;
+  @Column({ default: 0 })
+  likes: number;
 }
