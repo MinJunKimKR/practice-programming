@@ -424,6 +424,118 @@ export class Product {
 }
 ```
 
+**product.model.ts**
+
+위의 소스와 같이 mongodb schema를 생성해주는 model을 만들어준다
+
+이제 mongoDB를 사용할 main의 service를 만들어 주도록 한다
+
+```javascript
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Product } from './product.model';
+
+@Injectable()
+export class ProductService {
+    constructor(
+        @InjectModel(Product.name)
+    ){
+
+    }
+}
+
+```
+
+위와 같이 service에 mongodb model을 inject 해준다.
+
+`Product.name` 에서 보는것과 같이 'Product' 라고 직접 string으로 입력하는것이 아닌 Model의 name속성을 사용한다.
+
+`    MongooseModule.forFeature([{ name: Product.name, schema: productSchema }]),`
+
+Product.model.ts파일의 `name : 'Products'` 라고 되어있던 소스를 위와 같이 변경해준다.
+
+
+
+
+
+[Model find( ) documentation Link](https://mongoosejs.com/docs/api.html#model_Model.find)
+
+```javascript
+@Injectable()
+export class ProductService {
+  constructor(
+    @InjectModel(Product.name)
+    private readonly productModel: Model<Product>,
+  ) {}
+  async all() {
+    return this.productModel.find().exec();
+  }
+}
+
+```
+
+**Product.service.ts**
+
+`@InjectModel(Product.name)
+    private readonly productModel: Model<Product>`
+
+위의 코드를 이용해서 mongo model을 inject해서 service에서 사용할수 있도록 한다.
+
+`this.productModel.find().exec();` 의 코드를 사용해서 위에서 inject했던 Product Model을 사용해서 find와 exec를 사용해서 mongoDB의 데이터를 가져올수 있다.
+
+
+
+```javascript
+@Controller('product')
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
+  @Get()
+  async all() {
+    return this.productService.all();
+  }
+}
+```
+
+위의 코드로  Service를 constructor에 service를 넣어서 사용할수있다.
+
+
+
+ncu -u
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,14 +1,19 @@
-import { Body, Delete, Param, Post } from '@nestjs/common';
+import { Body, Delete, Inject, Param, Post } from '@nestjs/common';
 import { Put } from '@nestjs/common';
 import { Controller, Get } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('product')
 export class ProductController {
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    @Inject('PRODUCT_SERVICE') private client: ClientProxy,
+  ) {}
 
   @Get()
   async all() {
+    this.client.emit('hello', 'Hello from Rabbit MQ');
     return this.productService.all();
   }
   @Post()
