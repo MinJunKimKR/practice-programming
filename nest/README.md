@@ -669,9 +669,7 @@ export class ProductController {
 
 이제, Rabbit MQ를 사용해서 MicroService를 구현을 할것이다.
 
-
-
-방금 우리가 만들어 놨던 Main service의 main.ts를 수정해 줘야한다.
+따라서 상단의 nestJS MIcroservice 공식문서에서 RabbitMQ 탭으로 들어가서 제공해주는 소스를 이용해서 방금 우리가 만들어 놨던 Main service의 main.ts를 수정해 줘야한다.
 
 **main.ts**
 
@@ -705,77 +703,250 @@ bootstrap();
 
 
 
+### RabbitMQ
 
+이제, RabbitMQ를 사용해볼건데 그 이전에 MQ의 뜻은 Message Queue라는 뜻이다.
 
+이번 예제에서는 마이크로 서비스간 통신을 Queue를 통해서 할것이기에 RabbitMQ가 채택되었다.
 
+좀더 자세한 내용은 좋은 블로그 글을 대신해서 첨부한다.
 
+[RabbitMQ에 대해](https://nesoy.github.io/articles/2019-02/RabbitMQ)
 
 
 
+이제, [Cloudamqp](https://www.cloudamqp.com/) 을 사용해서 RabbitMQ를 사용해볼것이다.
 
+회원가입을 한뒤에 cluster를 만들어 주도록 하자.
 
+> 자세한 가입및 생성 절차는 원본 유튜브 강의 영상을 참고해 주기를 바랍니다.
 
 
 
+이제 생성된 rabbitMQ의 url을 소스에서 사용해주도록 하자
 
 
-ncu -u
 
-39:37
+**main.ts**
 
+```javascript
+import { NestFactory } from '@nestjs/core';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { AppModule } from './app.module';
 
+async function bootstrap() {
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [
+          'amqps://???:????@dingo.rmq.cloudamqp.com/??',
+        ],
+        queue: 'main_queue',
+        queueOptions: {
+          durable: false,
+        },
+      },
+    },
+  );
+  await app.listen();
+}
+```
 
+위와같이 cloudamqp에서 생성된 URL을 사용해서 Listening할수 있도록 만들어 주었다.
 
+이제, 다른곳에서 Message를 Publish하게되면 방금 만든 코드를 통하여 **rabbitMQ를 거쳐서 Main service로 message가 오게 됩니다.**
 
 
 
+이제, Main service에 rabbitMQ를 적용했으니 admin service에도 적용을 시키자
 
 
 
+### admin service
 
+아까 main service에서 현재 listening을 하고 있기 때문에, message를 MQ를 통해서 publish할수 있도록 Module에 추가해 줘야한다.
 
 
 
+**product.module.ts**
 
+```javascript
+import { Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProductController } from './product.controller';
+import { Product } from './product.entity';
+import { ProductService } from './product.service';
 
+@Module({
+  imports: [
+    ClientsModule.register([
+      {
+        name: 'PRODUCT_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [
+          'amqps://???:????@dingo.rmq.cloudamqp.com/??',
+          ],
+          queue: 'main_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
+      },
+    ]),
+    TypeOrmModule.forFeature([Product]),
+  ],
+  controllers: [ProductController],
+  providers: [ProductService],
+})
+export class ProductModule {}
 
+```
 
+ 만들어 놓은 queue에 메세지를 보낼수 있도록 module을 등록해 줍니다.
 
 
 
+이제, Controller에 기존 service에 message가 잘 전송되는지를 확인하기 위하여 간단한 기능을 추가해 줍니다.
 
 
 
+**product.controller.ts**
 
+```javascript
+.
+.
+.
+import { ProductService } from './product.service';
+import { ClientProxy } from '@nestjs/microservices';
 
+@Controller('product')
+export class ProductController {
+  constructor(
+    private productService: ProductService,
+    @Inject('PRODUCT_SERVICE') private client: ClientProxy,
+  ) {}
 
+  @Get()
+  async all() {
+    this.client.emit('hello', 'Hello from Rabbit MQ');
+    return this.productService.all();
+  }
 
+.
+.
+.
 
+```
 
+`    @Inject('PRODUCT_SERVICE') private client: ClientProxy,
+  ) {}` 소스를 사용해서, queue에 메세지 전달이 가능하도록 **PRODUCT_SERVICE** 를 inject합니다.
 
+이때 PRODUCT_SERVICE라는 이름은 product.module.ts에서 name에 입력한 그 이름입니다.
 
+`this.client.emit('hello', 'Hello from Rabbit MQ');`
 
+위와 같은 코드를 추가해서 Get요청을 보내면, Client로 등록되어있는 queue에 'Hello from Rabbit MQ' 라는 메세지를 보내는 코드를 추가했습니다.
 
 
 
+이제, **admin service에서** /api/product로 get요청을 보내게 되면 queue를 통해서 아까 만들어 놓은 **main service** 로 메세지가 전달될 것입니다.
 
+그러면 이제, main service로 가서 정말 메세지가 잘 전달 되었는지 console에 출력해보는 코드를 추가하겠습니다.
 
 
 
+**product.controller.ts**
 
+```javascript
+import { Controller, Get } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
+import { ProductService } from './product.service';
 
+@Controller('product')
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
+  @Get()
+  async all() {
+    return this.productService.all();
+  }
+  @EventPattern('hello')
+  async hello(data: string) {
+    console.log(data);
+  }
+}
 
+```
 
+`@EventPattern('hello')` 을 통해서 어떤 pattern의 메세지를 받을지 지정할수 있습니다.
 
+위에서, 패턴은 hello로 되어있었음으로 동일하게 지정합니다.
 
+이후 들어온 data를 그대로 출력하는 코드를 추가합니다.
 
 
 
+이제 admin과 main양쪽 서버를 run한 다음에
 
+main 에서 정말로 admin에서 보낸 message가 잘 출려되는지 get요청을 보내보겠습니다.
 
 
 
+성공했습니다!
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+잊ㅔ
