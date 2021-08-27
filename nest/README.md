@@ -897,19 +897,206 @@ main 에서 정말로 admin에서 보낸 message가 잘 출려되는지 get요�
 
 성공했습니다!
 
+----
+
+## Queue와 REST요청 같이 받기
+
+main Service에서 RabbitMQ를 통해서 message받는것을 일전에 만들었다.
+
+그렇다면, queue와 연결괸 서비스는 rest요청을 받지 못하는것일까?
+
+아니다! 2가지 방법으로 전부 받을수 있도록 만들수 있다.
 
 
 
+먼저 main.ts파일을 그대로 복사한 listener.ts파일을 만든다.
+
+이후, main.ts에서는 예전에 사용했던대로 rest요청을 받을수있도록,
+
+Listener.ts에는 이번에 만든 rabbitMQ를 통해 메세지를 받을수 있도록 각각 분리한다
 
 
 
+**Main.ts**
+
+```javascript
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
+  app.enableCors({
+    origin: 'http://localhost:4200',
+  });
+  await app.listen(8001);
+}
+
+bootstrap();
+
+```
+
+**Listener.ts**
+
+```javascript
+import { NestFactory } from '@nestjs/core';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: [
+          
+          'amqps://???:????@dingo.rmq.cloudamqp.com/??',
+        ],
+        queue: 'main_queue',
+        queueOptions: {
+          durable: false,
+        },
+      },
+    },
+  );
+  app.listen();
+}
+
+bootstrap();
+
+```
 
 
 
+그리고 이제, nest-cli.json이라는 파일을 그대로 복사하여서 listener.json이라는 파일을 만들어준다.
+
+이후에 default 로 지정되어있는 main.ts파일이 아니라 우리가 방금 만들어준 listener.ts파일을 사용할것이기에 entryFile옵션을 추가해준다
 
 
 
+**listener.json**
 
+```javascript
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "entryFile" : "listener"
+}
+
+```
+
+이제 마지막으로 package.json 파일에 지금 만들어둔 rabbitMQ를 사용하는 
+
+listner로 서버를 run할수 있는 명령어를 추가해준다
+
+
+
+**Package.json**
+
+```javascript
+{
+.
+.
+.
+.
+    "listen": "nest start --watch --config listener.json",
+    .
+    .
+    .
+    
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
+
+```
+
+여기서 --config를 사용해서 default인 nest-cli파일이 아닌 방금 만들어준 listener,json파일을 config해서 사용하도록 옵션을 추가해 준다.
+
+
+
+이렇게 하면 rest와 rabbitMQ둘다 사용이 가능하게 만들수 있다!
+
+
+
+----
+
+## MongoDB CRUD
+
+
+
+이제 admin service에서 CRUD에 해당하는 요청을 수행하게 되면,
+
+controller에서 return으로 끝내는것이아닌, main에서 해당하는 이벤트를 처리할수 있게, rabbitMQ에 message를 전송하로 return 하는 방식으로 리팩토링 해보겠습니다.
+
+
+
+```javascript
+import { Body, Delete, Inject, Param, Post } from '@nestjs/common';
+import { Put } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { ProductService } from './product.service';
+import { ClientProxy } from '@nestjs/microservices';
+
+@Controller('product')
+export class ProductController {
+  constructor(
+    private productService: ProductService,
+    @Inject('PRODUCT_SERVICE') private client: ClientProxy,
+  ) {}
+
+  @Get()
+  async all() {
+    return this.productService.all();
+  }
+  @Post()
+  async create(@Body('title') title: string, @Body('image') image: string) {
+    // return this.productService.create({ title, image });
+    const product = await this.productService.create({ title, image });
+
+    this.client.emit('product_created', product);
+    return product;
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.productService.get(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body('title') title: string,
+    @Body('image') image: string,
+  ) {
+    // return this.productService.update(id, { title, image });;
+
+    await this.productService.update(id, { title, image });
+    const product = await this.productService.get(id);
+    this.client.emit('product_updated', product);
+    return product;
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    // return this.productService.delete(id);
+    await this.productService.delete(id);
+    this.client.emit('product_deleted', id);
+  }
+}
+
+```
+
+ 
 
 
 

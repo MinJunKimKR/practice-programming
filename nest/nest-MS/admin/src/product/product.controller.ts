@@ -13,12 +13,15 @@ export class ProductController {
 
   @Get()
   async all() {
-    this.client.emit('hello', 'Hello from Rabbit MQ');
     return this.productService.all();
   }
   @Post()
   async create(@Body('title') title: string, @Body('image') image: string) {
-    return this.productService.create({ title, image });
+    // return this.productService.create({ title, image });
+    const product = await this.productService.create({ title, image });
+
+    this.client.emit('product_created', product);
+    return product;
   }
 
   @Get(':id')
@@ -32,11 +35,26 @@ export class ProductController {
     @Body('title') title: string,
     @Body('image') image: string,
   ) {
-    return this.productService.update(id, { title, image });
+    // return this.productService.update(id, { title, image });;
+
+    await this.productService.update(id, { title, image });
+    const product = await this.productService.get(id);
+    this.client.emit('product_updated', product);
+    return product;
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
-    return this.productService.delete(id);
+    // return this.productService.delete(id);
+    await this.productService.delete(id);
+    this.client.emit('product_deleted', id);
+  }
+
+  @Post(':id/like')
+  async like(@Param('id') id: string) {
+    const product = await this.productService.get(id);
+    return this.productService.update(id, {
+      likes: product.likes + 1,
+    });
   }
 }
