@@ -19,7 +19,7 @@ const TVPresenter = ({ topRated, popular, airingToday, error, loading }) =>
           {topRated.map((show) => (
             <span key={show.id}>{show.name}</span>
           ))}
-        </Section>
+        </Section>  
       )}
       {popular && popular.length > 0 && (
         <Section title="Popular Shows">

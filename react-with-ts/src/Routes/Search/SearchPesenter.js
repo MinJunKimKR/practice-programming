@@ -61,12 +61,12 @@ const SearchPresenter = ({
           movieResults &&
           movieResults.length === 0 &&
           tvResults.length === 0 && (
-            <Message text={`Nothing found`} color="#95a5a6" />
+            <Message text={`Nothing found for`} color="#95a5a6" />
           )}
       </>
     )}
   </Container>
-);
+); 
 
 SearchPresenter.propTypes = {
   movieRsults: PropTypes.array,
