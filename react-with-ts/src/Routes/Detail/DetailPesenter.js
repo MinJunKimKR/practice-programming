@@ -153,15 +153,6 @@ const DetailPresenter = ({ result, error, loading }) =>
               src={`https://www.youtube.com/embed/${result.videos.results[0].key}`}
             ></YoutubeIframe>
           )}
-          {/* {console.log(result.videos.results.length)} */}
-          {/* {result.videos.results.length > 0
-            ? result.videos.results.map((vedio) => (
-                <YoutubeIframe
-                  key={vedio.key}
-                  src={`https://www.youtube.com/watch?v=${vedio.key}`}
-                ></YoutubeIframe>
-              ))
-            : ""} */}
         </Data>
       </Content>
     </Container>
