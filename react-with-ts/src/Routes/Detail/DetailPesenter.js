@@ -70,6 +70,23 @@ const Overview = styled.p`
   width: 50%;
 `;
 
+const YoutubeIframe = styled.iframe`
+  width: 100%;
+  height: 60vh;
+  margin: 20px 0px;
+`;
+
+const Imdb = styled.button`
+  all: unset;
+  border-style: solid;
+  border-color: gray;
+  border-width: 1.5px;
+  border-radius: 3px;
+  cursor: pointer;
+  color: yellow;
+  padding: 3px;
+`;
+
 const DetailPresenter = ({ result, error, loading }) =>
   loading ? (
     <>
@@ -117,8 +134,34 @@ const DetailPresenter = ({ result, error, loading }) =>
                     : `${genre.name} / `
                 )}
             </Item>
+            <Divider>•</Divider>
+            <Imdb
+              onClick={() =>
+                window.open(
+                  `https://www.imdb.com/title/${result.imdb_id}`,
+                  "_blank"
+                )
+              }
+            >
+              IMDB
+            </Imdb>
           </ItemContainer>
           <Overview>{result.overview}</Overview>
+          {result.videos.results.length > 0 && (
+            <YoutubeIframe
+              key={result.videos.results[0].key}
+              src={`https://www.youtube.com/embed/${result.videos.results[0].key}`}
+            ></YoutubeIframe>
+          )}
+          {/* {console.log(result.videos.results.length)} */}
+          {/* {result.videos.results.length > 0
+            ? result.videos.results.map((vedio) => (
+                <YoutubeIframe
+                  key={vedio.key}
+                  src={`https://www.youtube.com/watch?v=${vedio.key}`}
+                ></YoutubeIframe>
+              ))
+            : ""} */}
         </Data>
       </Content>
     </Container>
