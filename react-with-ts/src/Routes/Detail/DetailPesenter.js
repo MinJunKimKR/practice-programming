@@ -87,7 +87,7 @@ const Imdb = styled.button`
   padding: 3px;
 `;
 
-const DetailPresenter = ({ result, error, loading }) =>
+const DetailPresenter = ({ result, error, loading, isMovie }) =>
   loading ? (
     <>
       <Helmet>
@@ -134,17 +134,21 @@ const DetailPresenter = ({ result, error, loading }) =>
                     : `${genre.name} / `
                 )}
             </Item>
-            <Divider>•</Divider>
-            <Imdb
-              onClick={() =>
-                window.open(
-                  `https://www.imdb.com/title/${result.imdb_id}`,
-                  "_blank"
-                )
-              }
-            >
-              IMDB
-            </Imdb>
+            {isMovie && (
+              <>
+                <Divider>•</Divider>
+                <Imdb
+                  onClick={() =>
+                    window.open(
+                      `https://www.imdb.com/title/${result.imdb_id}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  IMDB
+                </Imdb>
+              </>
+            )}
           </ItemContainer>
           <Overview>{result.overview}</Overview>
           {result.videos.results.length > 0 && (
@@ -162,6 +166,7 @@ DetailPresenter.propTypes = {
   result: PropTypes.object,
   error: PropTypes.string,
   loading: PropTypes.bool.isRequired,
+  isMovie: PropTypes.bool.isRequired,
 };
 
 export default DetailPresenter;
