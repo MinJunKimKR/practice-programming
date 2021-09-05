@@ -932,3 +932,22 @@ Key를 사용하면 react에서 엘리멘트 들의 변화를 좀더 빠르게 �
 
   
 
+
+
+----
+
+
+
+https://googleads.g.doubleclick.net/pagead/id net::ERR_BLOCKED_BY_CLIENT
+
+
+
+https://velog.io/@gojaegaebal/210401-%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A7%80115%EC%9D%BC%EC%B0%A8-Youtube-api%EB%A1%9C-%EC%98%81%EC%83%81-%EA%B0%80%EC%A0%B8%EC%98%AC-%EB%95%8C-GET-https-googleads.g.doubleclick.netpageadid-netERRBLOCKEDBYCLIENT-%EB%B0%8F-Failed-to-load-resource-googleads.g.doubleclick.netpaged-%EC%97%90%EB%9F%AC-%EB%B0%9C%EC%83%9D-%EC%9D%B4%EC%9C%A0
+
+
+
+
+
+
+
+https://kss7547.tistory.com/36

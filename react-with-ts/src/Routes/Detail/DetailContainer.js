@@ -14,8 +14,13 @@ export default class extends React.Component {
       error: null,
       loading: true,
       isMovie: pathname.includes("/movie/"),
+      tabNumber: 0,
     };
   }
+
+  updateTabNumber = (tabNumber) => {
+    this.setState({ tabNumber });
+  };
 
   async componentDidMount() {
     const {
@@ -45,13 +50,15 @@ export default class extends React.Component {
 
   render() {
     console.log(this.state);
-    const { result, error, loading, isMovie } = this.state;
+    const { result, error, loading, isMovie, tabNumber } = this.state;
     return (
       <DetailPesenter
         result={result}
         error={error}
         loading={loading}
         isMovie={isMovie}
+        tabNumber={tabNumber}
+        updateTabNumber={this.updateTabNumber}
       />
     );
   }

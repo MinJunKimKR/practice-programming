@@ -7,7 +7,6 @@ const api = axios.create({
     language: "en-US",
   },
 });
-
 export const moviesApi = {
   nowPlaying: () => api.get("movie/now_playing"),
   upcoming: () => api.get("movie/upcoming"),
@@ -18,12 +17,10 @@ export const moviesApi = {
         append_to_response: "videos",
       },
     }),
-  search: (term) =>
-  {
+  search: (term) => {
     return api.get("search/movie", {
       params: { query: encodeURIComponent(term) },
-    })
-
+    });
   },
 };
 

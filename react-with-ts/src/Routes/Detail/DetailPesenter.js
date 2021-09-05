@@ -70,12 +70,6 @@ const Overview = styled.p`
   width: 50%;
 `;
 
-const YoutubeIframe = styled.iframe`
-  width: 100%;
-  height: 60vh;
-  margin: 20px 0px;
-`;
-
 const Imdb = styled.button`
   all: unset;
   border-style: solid;
@@ -87,7 +81,64 @@ const Imdb = styled.button`
   padding: 3px;
 `;
 
-const DetailPresenter = ({ result, error, loading, isMovie }) =>
+const Tab = styled.div`
+  color: white;
+  width: 80%;
+  height: 50px;
+  align-items: center;
+  background-color: black;
+  margin: 20px 0px;
+  box-shadow: 0px 1px 5px 2px rgb(0, 0, 0, 0.8);
+`;
+
+const List = styled.ul`
+  display: flex;
+  margin: 10px 0px;
+`;
+
+const ListItem = styled.li`
+  width: 50%;
+  height: 50px;
+  padding: 15px;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 5px solid
+    ${(props) => (props.current ? "#3498db" : "transparent")};
+  transition: border-bottom 0.5s ease-in-out;
+  justify-content: center;
+  align-items: center;
+`;
+
+const YoutubeIframe = styled.iframe`
+  width: 100%;
+  height: 50vh;
+`;
+
+const TabItem = styled.div``;
+
+const Production = styled.div`
+  width: 100%;
+  height: 30vh;
+  background-image: url(${(props) => props.bgImage});
+  background-repeat: no-repeat;
+  background-position: center center;
+`;
+
+const ProductionCountry = styled.div`
+  width: 100%;
+  align-items: center;
+  font-size: 15px;
+`;
+
+const DetailPresenter = ({
+  result,
+  error,
+  loading,
+  isMovie,
+  tabNumber,
+  updateTabNumber,
+}) =>
   loading ? (
     <>
       <Helmet>
@@ -151,12 +202,53 @@ const DetailPresenter = ({ result, error, loading, isMovie }) =>
             )}
           </ItemContainer>
           <Overview>{result.overview}</Overview>
-          {result.videos.results.length > 0 && (
-            <YoutubeIframe
-              key={result.videos.results[0].key}
-              src={`https://www.youtube.com/embed/${result.videos.results[0].key}`}
-            ></YoutubeIframe>
-          )}
+
+          <Tab>
+            <List>
+              <ListItem
+                onClick={() => updateTabNumber(0)}
+                current={tabNumber === 0}
+              >
+                {" "}
+                Youtube
+              </ListItem>
+              <ListItem
+                onClick={() => updateTabNumber(1)}
+                current={tabNumber === 1}
+              >
+                Company
+              </ListItem>
+            </List>
+            <TabItem>
+              {result.videos.results.length > 0 && tabNumber === 0 && (
+                <YoutubeIframe
+                  key={result.videos.results[0].key}
+                  src={`https://www.youtube.com/embed/${result.videos.results[0].key}`}
+                ></YoutubeIframe>
+              )}
+            </TabItem>
+            <TabItem>
+              {tabNumber === 1 && (
+                <>
+                  <ProductionCountry>
+                    Production Countries :
+                    {result.production_countries.length > 0 &&
+                      result.production_countries.map((contryInfo, index) =>
+                        result.production_countries.length - 1 === index
+                          ? ` ${contryInfo.name}`
+                          : ` ${contryInfo.name} •`
+                      )}
+                  </ProductionCountry>
+                  <Production
+                    bgImage={
+                      result.production_companies[0].logo_path &&
+                      `https://image.tmdb.org/t/p/w300${result.production_companies[0].logo_path}`
+                    }
+                  />
+                </>
+              )}
+            </TabItem>
+          </Tab>
         </Data>
       </Content>
     </Container>
@@ -167,6 +259,8 @@ DetailPresenter.propTypes = {
   error: PropTypes.string,
   loading: PropTypes.bool.isRequired,
   isMovie: PropTypes.bool.isRequired,
+  tabNumber: PropTypes.number.isRequired,
+  updateTabNumber: PropTypes.func.isRequired,
 };
 
 export default DetailPresenter;
