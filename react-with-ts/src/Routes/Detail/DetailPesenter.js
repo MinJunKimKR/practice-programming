@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import Helmet from "react-helmet";
 
 import styled from "styled-components";
@@ -68,23 +69,33 @@ const Overview = styled.p`
   opacity: 0.7;
   line-height: 1.5;
   width: 50%;
+  margin-bottom: 10px;
 `;
 
 const Imdb = styled.button`
   all: unset;
   border-style: solid;
-  border-color: gray;
+  border-color: #7f8c8d;
   border-width: 1.5px;
   border-radius: 3px;
   cursor: pointer;
-  color: yellow;
+  color: #f1c40f;
   padding: 3px;
+`;
+
+const Collection = styled.button`
+  all: unset;
+  background-color: black;
+  border-radius: 3px;
+  cursor: pointer;
+  color: white;
+  padding: 10px;
+  font-size: 17px;
 `;
 
 const Tab = styled.div`
   color: white;
   width: 80%;
-  height: 50px;
   align-items: center;
   background-color: black;
   margin: 20px 0px;
@@ -113,9 +124,14 @@ const ListItem = styled.li`
 const YoutubeIframe = styled.iframe`
   width: 100%;
   height: 50vh;
+  display: relative;
 `;
 
-const TabItem = styled.div``;
+const TabItem = styled.div`
+  width: 100%;
+  background-color: rgb(255, 255, 255, 0.2);
+  padding: 10px;
+`;
 
 const Production = styled.div`
   width: 100%;
@@ -203,13 +219,19 @@ const DetailPresenter = ({
           </ItemContainer>
           <Overview>{result.overview}</Overview>
 
+          {result.belongs_to_collection && (
+            <>
+              <Link to={`/collection/${result.belongs_to_collection.id}`}>
+                <Collection>Go to see all collections</Collection>
+              </Link>
+            </>
+          )}
           <Tab>
             <List>
               <ListItem
                 onClick={() => updateTabNumber(0)}
                 current={tabNumber === 0}
               >
-                {" "}
                 Youtube
               </ListItem>
               <ListItem

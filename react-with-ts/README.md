@@ -946,8 +946,53 @@ https://velog.io/@gojaegaebal/210401-%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A7%80115%EC%
 
 
 
-
-
-
-
 https://kss7547.tistory.com/36
+
+
+
+탭만들때 어떻게 할까를 고민하다가 container에서 로직을 구현하기 때문에,
+
+container에서 로직을 구현한다음에, present에서 전달해서 tab을 구현했다.
+
+
+
+Error: Helmet expects a string as a child of <title>. Did you forget to wrap your children in braces? ( <title>{``}</title> ) Refer to our API for more information.
+
+
+
+
+
+---
+
+
+
+[리액트 생명주기 도표](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
+
+### `constructor()`
+
+```
+constructor(props)
+```
+
+**메서드를 바인딩하거나 state를 초기화하는 작업이 없다면, 해당 React 컴포넌트에는 생성자를 구현하지 않아도 됩니다.**
+
+React 컴포넌트의 생성자는 해당 컴포넌트가 마운트되기 전에 호출됩니다. `React.Component`를 상속한 컴포넌트의 **생성자를 구현할 때에는 다른 구문에 앞서 `super(props)`를 호출해야 합니다. 그렇지 않으면 `this.props`가 생성자 내에서 정의되지 않아 버그로 이어질 수 있습니다.**
+
+-> 그래서 Detail에서는 사용하지만, Home이나 TV Container에서는 constructor가 없다.
+
+이유는상속하는 컴포넌트 생성자를 구현할 필요가 없기때문이다.
+
+
+
+### `componentDidMount()`
+
+```
+componentDidMount()
+```
+
+`componentDidMount()`는 컴포넌트가 마운트된 직후, 즉 트리에 삽입된 직후에 호출됩니다. DOM 노드가 있어야 하는 초기화 작업은 이 메서드에서 이루어지면 됩니다. **외부에서 데이터를 불러와야 한다면, 네트워크 요청을 보내기 적절한 위치입니다.**
+
+-> 그래서 api요청은 Did Mount에서 한다
+
+
+
