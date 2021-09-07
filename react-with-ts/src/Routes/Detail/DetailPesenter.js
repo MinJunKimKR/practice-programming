@@ -2,10 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Helmet from "react-helmet";
-
+import Slider from "react-slick";
 import styled from "styled-components";
+
 import Loader from "Components/Loader";
-import Message from "Components/Message";
+import Poster from "Components/Poster";
 
 const Container = styled.div`
   height: calc(100vh - 50px);
@@ -147,6 +148,29 @@ const ProductionCountry = styled.div`
   font-size: 15px;
 `;
 
+const StyledSlider = styled(Slider)`
+  .slick-slide div {
+    outline: none;
+  }
+`;
+
+const Message = styled.h1`
+  width: 100%;
+  color: white;
+  font-size: 18px;
+  text-align: center;
+`;
+
+const settings = {
+  dots: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 3,
+  arrows: false,
+  centerMode: true,
+};
+
 const DetailPresenter = ({
   result,
   error,
@@ -218,6 +242,34 @@ const DetailPresenter = ({
             )}
           </ItemContainer>
           <Overview>{result.overview}</Overview>
+          {!isMovie && result.seasons.length > 0 ? (
+            <>
+              <div>
+                <StyledSlider {...settings}>
+                  <div>
+                    <h3>1</h3>
+                  </div>
+                  <div>
+                    <h3>2</h3>
+                  </div>
+                  <div>
+                    <h3>3</h3>
+                  </div>
+                  <div>
+                    <h3>4</h3>
+                  </div>
+                  <div>
+                    <h3>5</h3>
+                  </div>
+                  <div>
+                    <h3>6</h3>
+                  </div>
+                </StyledSlider>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
 
           {result.belongs_to_collection && (
             <>
@@ -242,11 +294,13 @@ const DetailPresenter = ({
               </ListItem>
             </List>
             <TabItem>
-              {result.videos.results.length > 0 && tabNumber === 0 && (
+              {result.videos.results.length > 0 && tabNumber === 0 ? (
                 <YoutubeIframe
                   key={result.videos.results[0].key}
                   src={`https://www.youtube.com/embed/${result.videos.results[0].key}`}
                 ></YoutubeIframe>
+              ) : (
+                tabNumber === 0 && <Message>YouTube video is not found</Message>
               )}
             </TabItem>
             <TabItem>

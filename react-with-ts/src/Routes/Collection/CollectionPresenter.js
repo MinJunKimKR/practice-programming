@@ -6,7 +6,6 @@ import styled from "styled-components";
 import Loader from "Components/Loader";
 import Message from "Components/Message";
 import Poster from "Components/Poster";
-import Section from "Components/Section";
 
 const Container = styled.div`
   height: calc(100vh - 50px);
