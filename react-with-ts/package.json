@@ -25,6 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "homepage":"https://youthful-roentgen-f3c69e.netlify.app/",
   "eslintConfig": {
     "extends": [
       "react-app",
