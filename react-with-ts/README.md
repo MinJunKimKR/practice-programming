@@ -33,7 +33,7 @@ index.js파일을 넣고 header 파일을 굳이 import시키는 이유는
 
 App.js에서 `import Header from 'Components/Header'; `와 같이 import해주고 싶기 때문이다.
 
-```
+```react
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 const globalStyle = createGlobalStyle`
@@ -41,10 +41,28 @@ const globalStyle = createGlobalStyle`
 `;
 ```
 
-# router
+# React-router
 
-URL에 # 라고 나오는게 hash route를 쓰기 떄문임
-`<></>`로 깜싼이유는 1개의 child만 return 할수 있어서임
+URL에 # 라고 나오는게 hash route를 쓰기 떄문이다
+
+```react
+export default () => (
+  <Router>
+    <>
+      <Header />
+      <Switch>
+        <Route path="/" exact component={Home} />
+      </Switch>
+    </>
+  </Router>
+);
+```
+
+`<></>`로 깜싼이유는 리액트는 1개의 child만 return 할수 있어서다.
+
+위에서 보는것과 같이 Route tag로 지정을해주면, 어떤 component를 랜더링 해줄것지 지정해 줄수있다.
+
+
 
 ## Browser router
 
@@ -52,23 +70,48 @@ URL에 # 라고 나오는게 hash route를 쓰기 떄문임
 
 ## Hash router
 
-url이 이쁘진 않다.
+- url이 이쁘진 않다.
 
-웹이아닌 앱에 있다는 느낌을 준다
+- 웹이아닌 앱에 있다는 느낌을 준다
 
-Composition은 두개 이상의 라우트로 랜더링 하는 방법이다
 
--> 예를 들어 TV안에 tab 들이 있을떄 (/tv/popular)쓸수있다.
 
-이때 2개의 component가 전부 적합하기 때문에 둘다 랜더링이된다.
+## Composition
 
-Redirect 는 아무곳도 아닐떄 /으로 리다이렉트 시킬려고한다.
+composition은 두개 이상의 라우트로 랜더링 하는 방법이다
+
+예를 들어 TV안에 tab 들이 있다고가정해 보자
+
+```react
+export default () => (
+  <Router>
+    <>
+      <Header />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/tv"  component={Tv} />
+        <Route path="/tv/popular" render={()=><h1>Popular</h1>}/>
+      </Switch>
+    </>
+  </Router>
+);
+```
+
+만일 `/tv/popular`로 접근하면 어떻게 될까? 정답은 tv와 tv/popular **2개의 component가 전부 적합하기 때문에 둘다 랜더링**이된다.
+
+
+
+```react
+<Redirect from="*" to="/" />
+```
+
+위의 Redirect 태그는 매칭이 아무것도 안될때에는  `/`으로 리다이렉트 시킬려고한다.
 
 하지만 같은 route로 render를 하려고 하면 에러가 나는데 이는, 위에서 한것처럼 composition error가 나기 때문이다.
 
-이것을 해결해 주기위하여 **Switch를** 사용한다
+이것을 해결해 주기위하여 **Switch태그를** 사용한다
 
-switch는 1개의 ruote만 render되게 해준다.
+**switch는 1개의 ruote만 render되게 해준다.**
 
 # Component
 
@@ -81,6 +124,7 @@ component를 쓰는 이유는 어플리케이션의 부분부분을 캡슐화 �
 우선 component의 개념을 가진 folder를 만든후 html, css, js 다같이 넣어서 폴더별로 관리하는 방법이 있다.
 
 하지만 문제점은 css의 classname을 사용을 할때마다 기억해야하고, 중복이 되면안되며 쓸때마다 import해줘야 하기에 불편하다.
+
 그렇기에 global로 적용이 되는 css가 아닌 local적용이 되는 css를 만들어야 한다.
 
 ## css module
@@ -185,15 +229,23 @@ class App extends Component {
 
 # SC(Styled component) props를 전달하는법
 
+
+
+https://flatuicolors.com/palette/defo
+
 `border-bottom: 5px solid ${(props) => (props.current ? '#3498db' : 'transparent')}; `
 
 위와 같이 props를 SC내에서 사용할수 있으며, render를 할떄에
 
-`<Item current={true}>` 이와 같이 props값을 전달해 줄수 있다
+`<Item current={true}>` 이와 같이 props값을 전달해 줄수 있다.
+
+## withRouter
 
 withRouter는 다른 컴포넌트를 감싸는 컴포넌트다.
 
-```
+그리도 꼬한 Router에 정보를 전달해 준다.
+
+```react
 export default withRouter(() => (
   <Header>
     <List>
@@ -216,7 +268,7 @@ export default withRouter(() => (
 이는
 
 ```
-const HeaderC = () => (
+const Header = () => (
   <Header>
     <List>
       <Item current={true}>
@@ -231,12 +283,14 @@ const HeaderC = () => (
     </List>
   </Header>
 );
-export default withRouter(HeaderC);
+export default withRouter(Header);
 ```
 
-위와 같은형태이기에 props를 가질수 있게 된다.
+위와 같은형태이기에 **props를 가질수 있게 된다.**
 
-즉, WithRouter를 쓰면 router 에서 값을 가져와서 props에서 쓸수 있게된다.
+**즉, WithRouter를 쓰면 router 에서 값을 가져와서 props에서 쓸수 있게된다.**
+
+
 
 `(({ location: { pathname } }) ` 를 사용해서 spead를 하여 pathname을 가져오고,
 
@@ -256,7 +310,7 @@ export default withRouter(HeaderC);
 
 # Networking
 
-api.js 이라는 파일을 만들어서 api와 통신하는 코드를 몰아 넣을것이다.
+api.js 이라는 파일을 만들어서 **api와 통신하는 코드를 몰아 넣을것이다.**
 
 ## axios
 
@@ -303,13 +357,15 @@ export const tvApi = {
 
 # container
 
-클래스컴포넌트와 스테이트를 만들고 api에서 가져오는데 이것은 작은 프로젝트에서 사용할때 주로 쓰인다
+컨테이너는 **클래스컴포넌트와 스테이트를 만들고** api에서 가져오는데 이것은 작은 프로젝트에서 사용할때 주로 쓰인다
+
+
 
 ## 리액트 컨테이너 프리젠터 패턴
 
-- 컨테이너는 data를 가지고 state를 가지고, api를 불러온다.그리고 모든 로직을 처리함
-- 프리젠터는 데이터를 보여줌 하지만 state를 가지고 있지도 않고 단순한 함수형 컴포넌트임
-- 프리젠터는 스타일 컨테이더는 데이터임
+- **컨테이너는 data를 가지고 state를 가지고, api를 불러온다**.그리고 **모든 로직을 처리함**
+- **프리젠터는** **데이터를 보여줌 하지만 state를 가지고 있지도 않고 단순한 함수형 컴포넌트임**
+- **프리젠터는 스타일, 컨테이더는 데이터**임
 
 index.js는 모든곳에서 만들어져야함
 
@@ -348,7 +404,12 @@ export default class extends React.Component {
 
 위의 소스와 같이 가질수 있는 state들을 미리 정의를 해둔다
 나중에 여기에 모든 로직을 추가할것이다
-예를 들어서 에러 처리나 api전송과 같은 로직들은 container내부에서 처리하도록 한다
+
+예를 들어서 에러 처리나 api전송과 같은 로직들은 container내부에서 처리하도록 한다.
+
+그리고 난다음에 `render`에서 보이는것과 같이 `presenter`에 container에서 얻은 데이터를 전달아여 준다.
+
+
 
 ## Search container
 
@@ -390,16 +451,15 @@ Result에 넣을것이다.
 
 ## DetailContainer
 
-ID를 가지고 얻게되는 모든것들은 Result를 가지게 되고
-같은 detail container를 사용한다
+ID를 가지고 얻게되는 **모든것들은 Result를 가지게 되고** 같은 **detail container**를 사용한다
 
 ### compoentDidMount
 
 **컴포넌트 생명주기**
 
-모든 컴포넌트는 여러 종류의 “생명주기 메서드”를 가지며, 이 메서드를 오버라이딩하여 특정 시점에 코드가 실행되도록 설정할 수 있습니다.
+**모든 컴포넌트는 여러 종류의 “생명주기 메서드”를 가지며**, 이 메서드를 오버라이딩하여 특정 시점에 **코드가 실행되도록 설정할 수 있습니다.**
 
-아래 메서드들은 컴포넌트의 인스턴스가 생성되어 DOM 상에 삽입될 때에 순서대로 호출됩니다.
+아래 메서드들은 **컴포넌트의 인스턴스가 생성되어 DOM 상에 삽입될 때에 순서대로 호출**됩니다.
 
 constructor()
 static getDerivedStateFromProps()
@@ -410,14 +470,16 @@ render()
 
 ### Object Deconstruction (객체 비구조화)
 
-`const nowPlaying = await moviesApi.nowPlaying();` 이와 같이 api를 통해서
-가져오는 데이터를 분해하여 할당하는 것을 말한다.
+`const nowPlaying = await moviesApi.nowPlaying();` 
+
+위와 같이 평소에 사용하는 방법이아닌,
 
 `const { data: { results }} = await moviesApi.nowPlaying();`
-위와 같이 object로 구조화 되어있는 결과값을 **분해하여서 할당하는것을 말한다.**
+이와 같이 object로 구조화 되어있는 결과값을 **분해하여서 할당하는것을 말한다.**
 
 `const { data: { results: nowPlaying }} = await moviesApi.nowPlaying();`
-위와 같이 naming을 해주면 할당과 동시에 이름을 재지정 해줄수 있다.
+
+또한, 위와 같이 naming을 해주**면 할당과 동시에 이름을 재지정 해줄수 있다.**
 
 ### 자바스크립트 할당
 
@@ -441,7 +503,7 @@ render()
 
 ### handleSubmit
 
-누군가가 폼에서 text를 입력하고 엔터를 누르면, 그게 handleSubmit이 되는것이다.
+누군가가 **폼에서 text를 입력하고 엔터를 누르면, 그게 handleSubmit이 되는것이다.**
 
 ```
 import { moviesApi, tvApi } from 'api';
@@ -501,8 +563,9 @@ export default class extends React.Component {
 
 ```
 
-위와 같은 코드에서 searchPresenter에서 form을 만들고, onSubmit을 호출하게되면
-handleSubmit이 작동이 된다.
+위와 같은 코드에서 **searchPresenter에서 form을 만들고, onSubmit을 호출하게되면**
+**handleSubmit이 작동이 된다.**
+
 이때 container에서 미리 정의해준 handleSubmit을 presenter에게 전달해준다.
 
 ## detail
@@ -546,14 +609,17 @@ export default () => (
 
 ```
 
-위와 같이 history의 push를 사용해서 숫자가 아니라면 home으로 보낼수 있다.
+위와 같이 **history의 push를 사용해서 숫자가 아니라면 home으로 보낼수 있다.**
 
 ```
     this.isMovie = pathname.includes("/movie/");
 ```
 
 만일 랜더링할 필요가 없으면 class안에 둘수도 있다.
-핸더링 할 필요가 있다면 state에 두면 된다.
+
+랜더링 할 필요가 있다면 state에 두면 된다.
+
+
 
 ### class생성
 
@@ -593,6 +659,8 @@ export default () => (
   }
 
 ```
+
+
 
 ### 축약형
 
@@ -809,9 +877,10 @@ grid는 flex box보다 훨씬 좋다.
 
 ## Input
 
-Input에서 타이핑을 한다고 Input내에 글자가 쳐지지는 않는다
-이유는, 타이핑을 하는 update에 해당하는 처리가 추가적으로 필요하기 떄문이다.
-또한, Enter를 누르게되면 browser가 refresh되면서 타이핑해놓은 내용이 전부다 없어지게 되는데, 이유는 새로고침이 되면 state를 잃어 버리기 때문이다.
+Input에서 타이핑을 한다고 Input내에 글자가 쳐지지는 않는다.
+
+이유는, **타이핑을 하는 update에 해당하는 처리가 추가적으로 필요하기 떄문이다.**
+또한, Enter를 누르게되면 browser가 refresh되면서 타이핑해놓은 내용이 전부다 없어지게 되는데, 이유는 **새로고침이 되면 state를 잃어 버리기 때문이다.**
 이것을 유지 시키기 위해서 별도의 처리가 필요하다.
 
 바로, 이벤트를 중간에 가로채는것이다.
@@ -840,7 +909,7 @@ Input에서 타이핑을 한다고 Input내에 글자가 쳐지지는 않는다
 ### all:unset;
 
 우리는 Input과 같은 html기본 형태를 바꾸고 싶을때가 있다.
-왜냐면 기본형태는 우릭사 원하는 형태랑 다소 달라서 보기가 안좋기 때문이다.
+왜냐면 기본형태는 우리가 원하는 형태랑 다소 달라서 보기가 안좋기 때문이다.
 이럴떄 All:unset을 사용해주면 기본 형태가 전부 해제된다.
 
 ```
@@ -850,3 +919,86 @@ font-size : 28px;
 width : 100%;
 `
 ```
+
+
+
+
+
+## Key
+
+react에서 Key는 컴포넌트 배열을 랜더링 했을때 원소의 변동을 알아내기위하여 사용한다.
+
+Key를 사용하면 react에서 엘리멘트 들의 변화를 좀더 빠르게 알수 있어서, 전체를 랜더링 하는 일이 없게 만들어 준다.
+
+  
+
+
+
+----
+
+
+
+https://googleads.g.doubleclick.net/pagead/id net::ERR_BLOCKED_BY_CLIENT
+
+
+
+https://velog.io/@gojaegaebal/210401-%EA%B0%9C%EB%B0%9C%EC%9D%BC%EC%A7%80115%EC%9D%BC%EC%B0%A8-Youtube-api%EB%A1%9C-%EC%98%81%EC%83%81-%EA%B0%80%EC%A0%B8%EC%98%AC-%EB%95%8C-GET-https-googleads.g.doubleclick.netpageadid-netERRBLOCKEDBYCLIENT-%EB%B0%8F-Failed-to-load-resource-googleads.g.doubleclick.netpaged-%EC%97%90%EB%9F%AC-%EB%B0%9C%EC%83%9D-%EC%9D%B4%EC%9C%A0
+
+
+
+https://kss7547.tistory.com/36
+
+
+
+탭만들때 어떻게 할까를 고민하다가 container에서 로직을 구현하기 때문에,
+
+container에서 로직을 구현한다음에, present에서 전달해서 tab을 구현했다.
+
+
+
+Error: Helmet expects a string as a child of <title>. Did you forget to wrap your children in braces? ( <title>{``}</title> ) Refer to our API for more information.
+
+
+
+
+
+---
+
+
+
+[리액트 생명주기 도표](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
+
+### `constructor()`
+
+```
+constructor(props)
+```
+
+**메서드를 바인딩하거나 state를 초기화하는 작업이 없다면, 해당 React 컴포넌트에는 생성자를 구현하지 않아도 됩니다.**
+
+React 컴포넌트의 생성자는 해당 컴포넌트가 마운트되기 전에 호출됩니다. `React.Component`를 상속한 컴포넌트의 **생성자를 구현할 때에는 다른 구문에 앞서 `super(props)`를 호출해야 합니다. 그렇지 않으면 `this.props`가 생성자 내에서 정의되지 않아 버그로 이어질 수 있습니다.**
+
+-> 그래서 Detail에서는 사용하지만, Home이나 TV Container에서는 constructor가 없다.
+
+이유는상속하는 컴포넌트 생성자를 구현할 필요가 없기때문이다.
+
+
+
+### `componentDidMount()`
+
+```
+componentDidMount()
+```
+
+`componentDidMount()`는 컴포넌트가 마운트된 직후, 즉 트리에 삽입된 직후에 호출됩니다. DOM 노드가 있어야 하는 초기화 작업은 이 메서드에서 이루어지면 됩니다. **외부에서 데이터를 불러와야 한다면, 네트워크 요청을 보내기 적절한 위치입니다.**
+
+-> 그래서 api요청은 Did Mount에서 한다
+
+
+
+
+
+
+
+remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.
+

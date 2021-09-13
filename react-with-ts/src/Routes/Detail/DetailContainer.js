@@ -14,8 +14,13 @@ export default class extends React.Component {
       error: null,
       loading: true,
       isMovie: pathname.includes("/movie/"),
+      tabNumber: 0,
     };
   }
+
+  updateTabNumber = (tabNumber) => {
+    this.setState({ tabNumber });
+  };
 
   async componentDidMount() {
     const {
@@ -36,17 +41,26 @@ export default class extends React.Component {
       } else {
         ({ data: result } = await tvApi.showDetail(parsedId));
       }
-      console.log(result);
     } catch {
-      this.setState({ error: "Can't finnd anything." });
+      this.setState({ error: "Can't find anything." });
     } finally {
+      console.log("result :", result);
       this.setState({ loading: false, result });
     }
   }
 
   render() {
     console.log(this.state);
-    const { result, error, loading } = this.state;
-    return <DetailPesenter result={result} error={error} loading={loading} />;
+    const { result, error, loading, isMovie, tabNumber } = this.state;
+    return (
+      <DetailPesenter
+        result={result}
+        error={error}
+        loading={loading}
+        isMovie={isMovie}
+        tabNumber={tabNumber}
+        updateTabNumber={this.updateTabNumber}
+      />
+    );
   }
 }
