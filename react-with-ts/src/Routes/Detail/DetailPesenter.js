@@ -99,7 +99,7 @@ const Tab = styled.div`
   width: 80%;
   align-items: center;
   background-color: black;
-  margin: 20px 0px;
+  margin: 40px 0px;
   box-shadow: 0px 1px 5px 2px rgb(0, 0, 0, 0.8);
 `;
 
@@ -148,12 +148,6 @@ const ProductionCountry = styled.div`
   font-size: 15px;
 `;
 
-const StyledSlider = styled(Slider)`
-  .slick-slide div {
-    outline: none;
-  }
-`;
-
 const Message = styled.h1`
   width: 100%;
   color: white;
@@ -161,14 +155,40 @@ const Message = styled.h1`
   text-align: center;
 `;
 
+const SubTitle = styled.h1`
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 5px;
+`;
+const SliderDiv = styled.div`
+  width: 80%;
+  height: 180px;
+  margin-bottom: 40px;
+`;
+
+const StyledSlider = styled(Slider)`
+  .slick-slide {
+    height: auto; // ← that must not be ignored
+    width: 170px;
+  }
+  .slick-slide div {
+    outline: none;
+    margin: 1px;
+    width: 170px;
+  }
+  .slick-track {
+    display: flex !important;
+  }
+`;
+
 const settings = {
+  infinite: false,
   dots: false,
-  infinite: true,
   speed: 500,
   slidesToShow: 3,
   slidesToScroll: 3,
   arrows: false,
-  centerMode: true,
+  initialSlide: 0,
 };
 
 const DetailPresenter = ({
@@ -205,6 +225,7 @@ const DetailPresenter = ({
           }
         />
         <Data>
+          <SubTitle>INFOMATION</SubTitle>
           <Title> {result.original_title ?? result.original_name}</Title>
           <ItemContainer>
             <Item>
@@ -244,28 +265,21 @@ const DetailPresenter = ({
           <Overview>{result.overview}</Overview>
           {!isMovie && result.seasons.length > 0 ? (
             <>
-              <div>
+              <SubTitle>SEASONE</SubTitle>
+              <SliderDiv>
                 <StyledSlider {...settings}>
-                  <div>
-                    <h3>1</h3>
-                  </div>
-                  <div>
-                    <h3>2</h3>
-                  </div>
-                  <div>
-                    <h3>3</h3>
-                  </div>
-                  <div>
-                    <h3>4</h3>
-                  </div>
-                  <div>
-                    <h3>5</h3>
-                  </div>
-                  <div>
-                    <h3>6</h3>
-                  </div>
+                  {result.seasons.map((season) => (
+                    <Poster
+                      id={season.id}
+                      imageUrl={season.poster_path}
+                      title={season.name}
+                      year={season.air_date.substring(0.4)}
+                      isMovie={false}
+                      isLink={false}
+                    />
+                  ))}
                 </StyledSlider>
-              </div>
+              </SliderDiv>
             </>
           ) : (
             <></>
@@ -278,6 +292,8 @@ const DetailPresenter = ({
               </Link>
             </>
           )}
+
+          <SubTitle>DETAIL</SubTitle>
           <Tab>
             <List>
               <ListItem

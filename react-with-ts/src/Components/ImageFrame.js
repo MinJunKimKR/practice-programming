@@ -47,42 +47,8 @@ const Year = styled.div`
   color: rgba(255, 255, 255, 0.5);
 `;
 
-const Poster = ({
-  id,
-  imageUrl,
-  title,
-  rating,
-  year,
-  isMovie = false,
-  isLink = true,
-}) =>
-  isLink ? (
-    <Link to={isMovie ? `/movie/${id}` : `/show/${id}`}>
-      <Container>
-        <ImageContainer>
-          <Image
-            bgUrl={
-              imageUrl
-                ? `https://image.tmdb.org/t/p/w300${imageUrl}`
-                : require("../assets/noPosterSmall.png").default
-            }
-          ></Image>
-          {rating && (
-            <Rating>
-              <span role="img" aria-label="rating">
-                ⭐️
-              </span>{" "}
-              {rating}/10
-            </Rating>
-          )}
-        </ImageContainer>
-        <Title>
-          {title.length > 18 ? `${title.substring(0, 18)}...` : title}
-        </Title>
-        <Year>{year}</Year>
-      </Container>
-    </Link>
-  ) : (
+const ImageFrame = ({ id, imageUrl, title, rating, year, isMovie = false }) => (
+  <Link to={isMovie ? `/movie/${id}` : `/show/${id}`}>
     <Container>
       <ImageContainer>
         <Image
@@ -92,30 +58,28 @@ const Poster = ({
               : require("../assets/noPosterSmall.png").default
           }
         ></Image>
-        {rating && (
-          <Rating>
-            <span role="img" aria-label="rating">
-              ⭐️
-            </span>{" "}
-            {rating}/10
-          </Rating>
-        )}
+        <Rating>
+          <span role="img" aria-label="rating">
+            ⭐️
+          </span>{" "}
+          {rating}/10
+        </Rating>
       </ImageContainer>
       <Title>
         {title.length > 18 ? `${title.substring(0, 18)}...` : title}
       </Title>
       <Year>{year}</Year>
     </Container>
-  );
+  </Link>
+);
 
-Poster.propTypes = {
+ImageFrame.propTypes = {
   id: PropTypes.number.isRequired,
   imageUrl: PropTypes.string,
   title: PropTypes.string.isRequired,
   rating: PropTypes.number,
   year: PropTypes.string,
   isMovie: PropTypes.bool,
-  isLink: PropTypes.bool,
 };
 
-export default Poster;
+export default ImageFrame;
