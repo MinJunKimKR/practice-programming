@@ -11,10 +11,10 @@ const Continer = styled.div`
 `;
 
 /* eslint import/no-anonymous-default-export: [2, {"allowArrowFunction": true}] */
-export default () => {
+export default () => (
   <Continer>
     <span role="img" aria-label="Loading">
       ⏰
     </span>
-  </Continer>;
-};
+  </Continer>
+);
