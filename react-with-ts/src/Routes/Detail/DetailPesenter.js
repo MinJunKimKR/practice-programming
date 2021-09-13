@@ -263,26 +263,48 @@ const DetailPresenter = ({
             )}
           </ItemContainer>
           <Overview>{result.overview}</Overview>
-          {!isMovie && result.seasons.length > 0 ? (
+          {!isMovie && (
             <>
-              <SubTitle>SEASONE</SubTitle>
-              <SliderDiv>
-                <StyledSlider {...settings}>
-                  {result.seasons.map((season) => (
-                    <Poster
-                      id={season.id}
-                      imageUrl={season.poster_path}
-                      title={season.name}
-                      year={season.air_date.substring(0.4)}
-                      isMovie={false}
-                      isLink={false}
-                    />
-                  ))}
-                </StyledSlider>
-              </SliderDiv>
+              {result.seasons.length > 0 && (
+                <>
+                  <SubTitle>SEASONE</SubTitle>
+                  <SliderDiv>
+                    <StyledSlider {...settings}>
+                      {result.seasons.map((season) => (
+                        <Poster
+                          key={season.id}
+                          id={season.id}
+                          imageUrl={season.poster_path}
+                          title={season.name}
+                          year={season.air_date.substring(0.4)}
+                          isMovie={false}
+                          isLink={false}
+                        />
+                      ))}
+                    </StyledSlider>
+                  </SliderDiv>
+                </>
+              )}
+              {result.created_by.length > 0 && (
+                <>
+                  <SubTitle>CREATORS</SubTitle>
+                  <SliderDiv>
+                    <StyledSlider {...settings}>
+                      {result.created_by.map((creator) => (
+                        <Poster
+                          key={creator.id}
+                          id={creator.id}
+                          imageUrl={creator.profile_path}
+                          title={creator.name}
+                          isMovie={false}
+                          isLink={false}
+                        />
+                      ))}
+                    </StyledSlider>
+                  </SliderDiv>
+                </>
+              )}
             </>
-          ) : (
-            <></>
           )}
 
           {result.belongs_to_collection && (
