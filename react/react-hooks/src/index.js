@@ -1,37 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 
 /*
-useEffect는 componentWillUnmount와 
-componentDidMount, componentWillUpdate와 비슷함
+  reference는 기본적으로 component의 어떤부분을 선택할수 있는 방법이다
+  마치 document.getElementById()와 같다
 
-매번 누를때마다 콘솔로그를 실행시킨다.
--> 새로고침을 하면 실해이 된다.
+  react에 있는 모든 component는 reference element를 가지고 있다.
 
-DidUpdate의 역할도 하기에 클릭하면 sayHello를 실행한다.
+  useEffect는 componentDidMount에서 작동을한다.
+  따라서 componentWillMount에서 listner를 정리 해줄 필요가 있다.
+  
+  즉, 근복적으로 eventListener를 스스로 정리하게끔 만들어 줘야한다.
 
-useEffect의 인자는 2개가 있는데 첫번쨰 인자는 function이고, 
-두번쨰 인자는 배열인데, 이 배열의 값이 바뀌때 실행이 된다는 의미다. (dependency)
+  const useClick = (onClick) => {
+  const element = useRef();
+  useEffect(() => {
+    if (element.current) {
+      element.current.addEventListener("click", onClick);
+    } //mount 혹은 update되었을떄 add를 call한다.
+    return () => { //useEffect를 return받은 함수는 componentWillUnmount일때 호출
+      if (element.current) {
+        element.current.removeEventListener("click", onClick);
+      }
+    };
+  }, []); 
+  //다만 여기의 [] - dependency가 없기에 update는 고려하지 않아도 된다.
+  //만일 []를 넣지 않는다면, componentDidUpdate마다 리스너를 추가해줄꺼기 때문에
+  return element;
+};
 
-만일에 1번만 실행(처음에) 시키고 싶다면 dependency에 빈배열을 넣으면 한번만 실행이된다.
-
-useEffect는 function을 return하는데,
-이것은 componentWillUnmount일것이다.
-
+component가 mount되지 않았을떄 리스너가 배치되게 하고 싶지 않기 때문에 이와같은 방법을 택한다.
 */
 
-const App = () => {
-  const [number, setNumber] = useState(0);
-  const [aNummber, setAnumber] = useState(0);
-  const sayHello = () => console.log("hello");
+const useClick = (onClick) => {
+  const element = useRef();
   useEffect(() => {
-    sayHello();
-  }, [number]);
+    if (element.current) {
+      element.current.addEventListener("click", onClick);
+    } //mount 혹은 update되었을떄 add를 call한다.
+    return () => {
+      //useEffect를 return받은 함수는 componentWillUnmount일때 호출
+      if (element.current) {
+        element.current.removeEventListener("click", onClick);
+      }
+    };
+  }, []);
+  //다만 여기의 [] - dependency가 없기에 update는 고려하지 않아도 된다.
+  //만일 []를 넣지 않는다면, componentDidUpdate마다 리스너를 추가해줄꺼기 때문에
+  return typeof onClick !== "function" ? element : undefined;
+};
+
+const App = () => {
+  const sayHello = () => console.log("hello");
+  const title = useClick(sayHello);
   return (
     <div className="App">
-      <div>Hi</div>
-      <button onClick={() => setNumber(number + 1)}>{number}</button>
-      <button onClick={() => setAnumber(aNummber - 1)}>{aNummber}</button>
+      <h1 ref={title}>Hi</h1>
     </div>
   );
 };
