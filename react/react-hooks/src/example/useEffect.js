@@ -18,6 +18,8 @@ useEffect의 인자는 2개가 있는데 첫번쨰 인자는 function이고,
 useEffect는 function을 return하는데,
 이것은 componentWillUnmount일것이다.
 
+https://xiubindev.tistory.com/100
+
 */
 
 const App = () => {
