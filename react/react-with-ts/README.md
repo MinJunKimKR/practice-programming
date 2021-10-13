@@ -308,73 +308,33 @@ export default withRouter(Header);
 
 위와 같이 조건을 현재의 라우트 pathname으로 판변하게 하면 현재의 route 위치와 그에 따른 효과를 줄수있다.
 
-# Networking
+# Container-Presenter pattern
 
-api.js 이라는 파일을 만들어서 **api와 통신하는 코드를 몰아 넣을것이다.**
+## only container
 
-## axios
+기존의 개발방법은 **클래스컴포넌트와 스테이트를 만들고**, api서버에서 필요한 데이터를 가져오는데,모두 한곳에서 구현한다. 이것은 비교적 작은 프로젝트에서 사용할때 주로 쓰인다.
 
-```
-const api = axios.create({
-  baseURL: "https://api.themoviedb.org/3/",
-  params: {
-    api_key: "----",
-    language: "en-US",
-  },
-});
+이유는, 비지니스로직과 뷰가 한곳에 존재하게 되면 코드가 여러가지 기능이 섞여있기에 프로젝트가 커지게 되면 점점 유지보수하기가 힘들어진다.
 
-```
+그렇기에 유지보수를 위하여 **뷰와 비지니스로직을 분리해서 따로 관리를할 필요성**이 있는데, 그래서 사용하는것이 **container-presenter 디자인 패턴이다** 
 
-위와 같이 baseURL과 params를 설정을 해준다면 중복되는 코드를 막을수가 있다.
+개인적으로 비지니스 로직과 뷰를 분리한다는 점에서 **백앤드에서 자주쓰이는 MVC패턴과 유사함**을 느꼈다.
 
-```
-export const moviesApi = {
-  nowPlaying: () => api.get("movie/now_playing"),
-  upcoming: () => api.get("movie/upcoming"),
-  popular: () => api.get("movie/popular"),
-};
+ 
 
-export const tvApi = {
-  topRated: () => api.get("tv/top_rated"),
-  popular: () => api.get("tv/popular"),
-  airingToday: () => api.get("tv/airing_today"),
-};
+## 컨테이너 프리젠터(container-presenter) 패턴
 
-```
+- **컨테이너는 data를 가지고 state를 가지고, api를 불러온다**. 그리고 **모든 로직을 처리한다**
+- **프리젠터는** **데이터를 보여줌 하지만 state를 가지고 있지도 않고 단순한 함수형 컴포넌트다**
+- **프리젠터는 스타일, 컨테이더는 데이터의 개념을 가지고 있다.**
 
-따로따로 api요청을 보내는것이 아닌 위와 같이 json에 funtion으로 값을 바로 넣어줄수가 있다.
+index.js는 모든 페이지에서 만들어져있어서 default로 export시켜준다.
 
-```
-  showDetail: (id) =>
-    api.get(`tv/${id}`, {
-      params: {
-        append_to_response: "videos",
-      },
-    }),
-```
-
-위와 같이 사용한다면 각각의 api에 맞게 route나 params를 설정해 줄수 있다.
-
-# container
-
-컨테이너는 **클래스컴포넌트와 스테이트를 만들고** api에서 가져오는데 이것은 작은 프로젝트에서 사용할때 주로 쓰인다
-
-
-
-## 리액트 컨테이너 프리젠터 패턴
-
-- **컨테이너는 data를 가지고 state를 가지고, api를 불러온다**.그리고 **모든 로직을 처리함**
-- **프리젠터는** **데이터를 보여줌 하지만 state를 가지고 있지도 않고 단순한 함수형 컴포넌트임**
-- **프리젠터는 스타일, 컨테이더는 데이터**임
-
-index.js는 모든곳에서 만들어져야함
-
-1개의 컨테이너는
-index, container, presenter 로 이루어져 있다.
+즉, 1개의 페이지의 구성은 **index, container, presenter** 로 이루어져 있다.
 
 ## container component
 
-container는 상태(state)를 가지고 있다.
+**container는 상태(state)를 가지고 있다.**
 
 ```
 export default class extends React.Component {
@@ -402,12 +362,14 @@ export default class extends React.Component {
 
 ```
 
-위의 소스와 같이 가질수 있는 state들을 미리 정의를 해둔다
-나중에 여기에 모든 로직을 추가할것이다
+contianer는 위의 소스와 같이 가질수 있는 state를 미리 정의를 해둔다.
+여기에 추후에 필요한 비지니스 로직을 추가할것이다.
 
-예를 들어서 에러 처리나 api전송과 같은 로직들은 container내부에서 처리하도록 한다.
+예를 들어서 **에러 처리나 api 통신과 로직들은 container에서 처리하도록 한다**.
 
-그리고 난다음에 `render`에서 보이는것과 같이 `presenter`에 container에서 얻은 데이터를 전달아여 준다.
+그리고 난다음에 `render()`에서 보이는것과 같이 `presenter`에 container에서 정의한 데이터와 function들을 props로 전달하여준다.
+
+이와 같은 방법을 통해 container는 온전히 비지니스 로직만 생각하면되고, presenter는 온천히 보여지는 view만 생각하면 되기에, 관심사 분리가 이루어져서 유지보수의 용이성을 지니게된다. 
 
 
 
@@ -442,12 +404,14 @@ export default class extends React.Component {
 
 ```
 
-위와 같은 소스에서 ` movieResults: null, tvResult: null,` 둘다 들어가 있는 이유는'
-검색을 했을시에 영화와 TV모두를 보여주고 싶기에 위와같이 적었다.
+위 소스에서 ` movieResults: null, tvResult: null,` 둘다 들어가 있는 이유는
+검색을 했을시에 영화와 TV 모두를 보여주고 싶기에 위와같이 적었다.
 
-기본적으로 loading은 false가 될것이다.html의
-searchTerm은 검색 기본값이 없음으로 empty이고, 검색하고 엔터를 누르면 로딩이 true고 그 결과값을
-Result에 넣을것이다.
+기본적으로 loading은 false가 될것이다.
+
+searchTerm은 검색 기본값이 없고, 검색하고 엔터를 누르면 로딩이 true로 바뀌며 로딩 아이콘을 보여줄것이고 그 결과값을 Result에 넣을것이다.
+
+
 
 ## DetailContainer
 
@@ -697,10 +661,11 @@ Presenter는 로직의 결과를 보여주는 파트이다. 즉, 도면을 그�
   }
 ```
 
-위에서와 같이 DetailPesenter에 container의 render에서 return을 해주는데, 여기에 loading, error와 같은 값을 던져준다.
-이떄 state가 변경될때마다 reder를 해주게된다.
+위에서와 같이 DetailPesenter로 container의 render에서 return을 해주는데, 여기에 loading, error와 같은 props를 전달하여준다.
 
-이떄, DetailPresenter는 아래와 같다
+이때, state값이 변경이 된다면, 그럴때 마다 새롭게 reder를 해주게된다.
+
+DetailPresenter는 아래와 같다
 
 ```
 import React from "react";
