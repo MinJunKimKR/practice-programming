@@ -32,42 +32,37 @@ const test = {
 
 function solution(clothes) {
   let answer = 1;
-  const clotheList = {};
-  for (let i = 0; i < clothes.length; i++) {
-    const clotheInfo = clothes[i];
-    if (!clotheList[clotheInfo[1]]) {
-      clotheList[clotheInfo[1]] = [];
-    }
-    clotheList[clotheInfo[1]].push(clotheInfo[0]);
+  const clotheCate = {};
+  clothes.forEach((clothe) => {
+    clotheCate.hasOwnProperty(clothe[1])
+      ? clotheCate[clothe[1]].push(clothe[0])
+      : (clotheCate[clothe[1]] = ["", clothe[0]]);
+  });
+
+  for (const [key, value] of Object.entries(clotheCate)) {
+    answer = answer * value.length;
   }
-  console.log(clotheList);
-  for (const type in clotheList) {
-    if (clotheList.hasOwnProperty(type)) {
-      const items = clotheList[type];
-      answer = answer * (items.length + 1);
-    }
-  }
+
   return answer - 1;
 }
+
 // function solution(clothes) {
-//   var answer = 0;
+//   let answer = 1;
 //   const clotheList = {};
 //   for (let i = 0; i < clothes.length; i++) {
-//     const clothe = clothes[i];
-//     if (!clotheList[clothe[1]]) {
-//       clotheList[clothe[1]] = [];
+//     const clotheInfo = clothes[i];
+//     if (!clotheList[clotheInfo[1]]) {
+//       clotheList[clotheInfo[1]] = [];
 //     }
-//     clotheList[clothe[1]].push(clothe[0]);
+//     clotheList[clotheInfo[1]].push(clotheInfo[0]);
 //   }
-//   let combination = 1;
-//   for (const kind in clotheList) {
-//     combination = combination * clotheList[kind].length;
+//   for (const type in clotheList) {
+//     if (clotheList.hasOwnProperty(type)) {
+//       const items = clotheList[type];
+//       answer = answer * (items.length + 1); //+1을 하는 이유는 안입는 경우도 포함하기 떄문이다.
+//     }
 //   }
-//   return (
-//     answer +
-//     combination +
-//     (Object.keys(clotheList).length === 1 ? 0 : clothes.length)
-//   );
+//   return answer - 1; //모든부위를 안입는 경우가 1개 존재하기 때문에 제거한다
 // }
 
-console.log(solution(test["3"].input));
+console.log(solution(test["2"].input));
