@@ -55,33 +55,69 @@ const test = {
 
 function solution(tickets) {
   var answer = [];
-  function findRoute(remainTickets, destination, route) {
-    const copyRoute = route.slice();
-    copyRoute.push(destination);
+  const findRoute = (destination, remainTickets, route) => {
     if (remainTickets.length === 0) {
-      answer.push(copyRoute);
+      //티켓을 다썼다면 정답.
+      answer = [...route, destination];
       return;
     }
+    const nextTicketIndexes = [];
+    remainTickets.forEach((remainTicket, index) => {
+      //다음에갈 표가 있는지 검사
+      if (remainTicket[0] === destination) nextTicketIndexes.push(index);
+    });
 
-    const nextTicket = remainTickets
-      .filter((ticket) => destination === ticket[0])
-      .sort((a, b) => {
-        return a[1] > b[1] ? 1 : -1;
+    if (nextTicketIndexes.length > 1) {
+      nextTicketIndexes.sort((a, b) => {
+        //다음 티켓 알파벳 순서로 재배열
+        if (remainTickets[a][1] > remainTickets[b][1]) return -1;
+        if (remainTickets[a][1] == remainTickets[b][1]) return 0;
+        if (remainTickets[a][1] < remainTickets[b][1]) return 1;
       });
-    if (nextTicket.length < 1) {
-      //이게 아님
-      return 0;
     }
-    for (let i = 0; i < nextTicket.length; i++) {
+    if (nextTicketIndexes.length === 0) return; // 다음목적지가 없다면 잘못된 경로
+
+    nextTicketIndexes.forEach((nextTicketIndex) => {
+      const nextTicket = remainTickets[nextTicketIndex];
       const nextRemainTickets = remainTickets.filter(
-        (remainTicket) => remainTicket != nextTicket[i]
-      ); //다음 목적지를 가지고 있는 티켓가져오기(목적지에 해당하는 티켓을 제외)
-      findRoute(nextRemainTickets, nextTicket[i][1], copyRoute);
-    }
-  }
-  findRoute(tickets, "ICN", []);
-  return answer[0];
+        (ticket, index) => index !== nextTicketIndex
+      );
+      findRoute(nextTicket[1], nextRemainTickets, [...route, nextTicket[0]]);
+    });
+  };
+  findRoute("ICN", tickets, []);
+  return answer;
 }
+
+// function solution(tickets) {
+//   var answer = [];
+//   function findRoute(remainTickets, destination, route) {
+//     const copyRoute = route.slice();
+//     copyRoute.push(destination);
+//     if (remainTickets.length === 0) {
+//       answer.push(copyRoute);
+//       return;
+//     }
+
+//     const nextTicket = remainTickets
+//       .filter((ticket) => destination === ticket[0])
+//       .sort((a, b) => {
+//         return a[1] > b[1] ? 1 : -1;
+//       });
+//     if (nextTicket.length < 1) {
+//       //이게 아님
+//       return 0;
+//     }
+//     for (let i = 0; i < nextTicket.length; i++) {
+//       const nextRemainTickets = remainTickets.filter(
+//         (remainTicket) => remainTicket != nextTicket[i]
+//       ); //다음 목적지를 가지고 있는 티켓가져오기(목적지에 해당하는 티켓을 제외)
+//       findRoute(nextRemainTickets, nextTicket[i][1], copyRoute);
+//     }
+//   }
+//   findRoute(tickets, "ICN", []);
+//   return answer[0];
+// }
 
 // function findPath(remainTickets, tripRaoute) {
 //   if (remainTickets.length === 0) return;
@@ -112,40 +148,4 @@ function solution(tickets) {
 //   return answer;
 // }
 
-// function solution(tickets) {
-//   var answer = [];
-//   DFS(tickets, "ICN", ["ICN"]);
-//   console.log(answer.sort());
-//   return answer.sort()[0];
-
-//   function DFS(remainTicket, start, str) {
-//     console.log(
-//       "DFS remainTicket,start,str : [" +
-//         remainTicket +
-//         "] || [" +
-//         start +
-//         "] || [" +
-//         str +
-//         "]"
-//     );
-//     if (remainTicket.length == 0) {
-//       console.log(str + "\n");
-//       answer.push(str);
-//     }
-//     for (var i in remainTicket) {
-//       if (remainTicket[i][0] == start) {
-//         let tmp = remainTicket.slice(); //배열복사
-//         console.log("tmp : ", tmp);
-//         tmp.splice(i, 1);
-//         console.log("tmp : ", tmp);
-//         let route = str.slice(); //배열복사
-//         console.log("str : ", str);
-//         console.log("tmp2 : ", tmp2);
-//         route.push(remainTicket[i][1]); //이번회차 남은 티켓중 도착지
-//         DFS(tmp, remainTicket[i][1], route);
-//       }
-//     }
-//   }
-// }
-
-console.log("result : ", solution(test[2].input));
+console.log("result : ", solution(test[3].input));
