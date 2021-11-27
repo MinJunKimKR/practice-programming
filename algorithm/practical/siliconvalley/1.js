@@ -57,7 +57,6 @@ function solution(rows, columns, connections, queries) {
   queries.forEach((querie) => {
     if (connections.length === 0) {
       answer.push(0);
-      //   console.log("No Connection");
       return;
     }
     let cutCount = 0;
@@ -65,6 +64,7 @@ function solution(rows, columns, connections, queries) {
     let maxX = 0;
     let minY = 0;
     let maxY = 0;
+    //Math.min(q[0], q[2]); 등을 써서 좀 더 나이스하게 바꿀수 있을꺼 같다.
     if (querie[0] < querie[2]) {
       minX = querie[0];
       maxX = querie[2];
@@ -79,38 +79,28 @@ function solution(rows, columns, connections, queries) {
       minY = querie[3];
       maxY = querie[1];
     }
-    console.log(
-      `minX : ${minX} || maxX : ${maxX}  || minY : ${minY} || maxY : ${maxY}`
-    );
 
     const cuttingArea = [];
     for (let x = minX; x <= maxX; x++) {
       for (let y = minY; y <= maxY; y++) {
-        cuttingArea.push(`${x},${y}`);
+        cuttingArea.push(`${x},${y}`); //,등으로 구분을 안해서 틀린듯
       }
     }
-    console.log("cuttingArea : ", cuttingArea);
     connections = connections.filter((connection) => {
       const firstBlock = `${connection[0]},${connection[1]}`;
       const secondBlack = `${connection[2]},${connection[3]}`;
-      console.log(`${firstBlock}  ||  ${secondBlack}`);
       if (
         (cuttingArea.findIndex((el) => el === firstBlock) > -1 &&
           cuttingArea.findIndex((el) => el === secondBlack) > -1) ||
         (cuttingArea.findIndex((el) => el === firstBlock) === -1 &&
           cuttingArea.findIndex((el) => el === secondBlack) === -1)
+        //별도의 함수로 구분하면 좀더 깔끔했을꺼 같다
       ) {
-        console.log(`SAFE block : ${firstBlock}  ||  ${secondBlack}`);
         return true;
       }
-      console.log(`CUT block : ${firstBlock}  ||  ${secondBlack}`);
       cutCount++;
       return false;
     });
-    console.log("connections : ", connections);
-    console.log(
-      "================================================================"
-    );
     answer.push(cutCount);
   });
   return answer;
