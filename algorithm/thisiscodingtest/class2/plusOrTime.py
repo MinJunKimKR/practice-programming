@@ -13,5 +13,16 @@
 #         result *= i
 
 N = input()
-result = N[0]
-print(result)
+result = 0
+
+for i in range(len(N)):  # range(1, len(N))
+    number = int(N[i])
+    if i == 0:
+        result = number
+        continue
+    if N[i] == 0 or result == 0:
+        result += number
+    else:
+        result *= number
+
+print(f'result : {result}')
