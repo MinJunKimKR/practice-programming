@@ -54,3 +54,69 @@ print(sort(ARRAY))
 - j는 i를 시작으로 0이될때까지 반복을 합니다. 이 뜻은, i의 정렬되어 있는 영역을 역순으로 확인하는것이라고 생각하면됩니다.
 - j를 기준으로, 자신의 왼쪽에 있는게 자신보다 크다면, 위치를 바꿉니다. 이것은 원래의 위치를 밀어내고 끼워넣는것으로 이미지 하시면 좋습니다.
 - 이것을 반복하다 어느순간, 자신이 왼쪽의 값보다 크다면, 바로 그곳이 j의 값이 있을곳이기 때문에 break로 빠져나옵니다.
+
+## 퀵정렬
+
+- 기준 데이터를 설정하고 그 기준보다 큰 데이터와 작은 데이터의 위치를 바꾸는것
+- 가장 많이 사용되는 정렬 알고리즘중 하나
+- 병합정렬과 더불어 대부분의 프로그래밍 언어의 정렬 라이브러리 근간이 되는 알고리즘
+- 시간복잡도는 `O(NlogN)`이다. 최악의 경우는 `O(N^2)`이다
+- 가장 기본적인 퀵 정렬은 첫 번째 데이터를 기준 데이터로 설정한다
+- 왼쪽에서는 피봇 값보다 큰 값이 선택이 되고, 오른쪽에서는 작은 값이 선택이 된다.
+- 이때, 큰값의 위치와 작은값의 위치가 바뀌게 되면, 피봇의 수와 작은값과 자리를 바꿔준다
+- 이렇게 진행을 하게되면, 피복값을 기준으로 왼쪽은 다 작은값, 오른쪽은 다 큰값이 된다.
+- 이런식으로 2부분으로 나눈뒤에 그룹별로 다시한번 정렬을 반복한다
+
+```
+def quickSort(array, startIdx, endIdx):
+    if startIdx > endIdx:
+        return
+    pivot = startIdx
+    left = startIdx+1
+    right = endIdx
+    while left <= right:
+        while array[left] <= array[pivot] and left < endIdx:
+            left += 1
+        while array[right] >= array[pivot] and right > startIdx:
+            right -= 1
+        if right > left:
+            array[right], array[left] = array[left],  array[right]
+        else:
+            array[right], array[pivot] = array[pivot],  array[right]
+    quickSort(array, pivot, right-1)
+    quickSort(array, right+1, endIdx)
+
+
+quickSort(array, 0, len(array)-1)
+print(array)
+```
+
+- 먼저 퀵솔트에서 입력된 시작 인덱스와 끝인덱스가 엇갈려 있는지를 확인하고 맞다면 return을 시킵니다.
+- `pivot`을 startIdx로 넣어서 기준위치로 합니다
+- `left`, `right`를 지정해서 배열내에서 서치합니다.
+- 그리고 while을 엇갈리기 전까지 반복합니다.
+  - left에서 pivot보다 큰값을 찾을때까지 반복합니다
+  - right에서 pivot보다 작은 값을 찾을때 까지 반복합니다.
+  - 이때, 엇갈리지 않았다면 left값과 right값을 바뀝니다
+  - 만일, 엇갈렸다면 right와 pivot을 바꿔주고 while을 종료합니다
+- pivot을 기준으로 왼쪽배열과 오른쪽배열을 재귀로 반복시켜줍니다.
+
+### 파이썬의 특성
+
+위의 코드를 파이썬의 특성을 살려서 더욱더 간결하게 작성이 가능합니다
+
+```
+def quickSortShort(array):
+    if len(array) <= 1:
+        return array
+    pivot = array[0]
+    tail = array[1:]
+
+    left = [x for x in tail if x <= pivot]
+    right = [x for x in tail if x > pivot]
+
+    return quickSortShort(left) + [pivot] + quickSortShort(right)
+
+print(quickSortShort(array))
+
+```

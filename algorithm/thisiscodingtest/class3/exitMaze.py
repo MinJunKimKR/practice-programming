@@ -34,6 +34,8 @@ vector = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
 # print(cost)
 
+# 5:31 done
+
 
 def bfs(x, y):
     queue = deque()
