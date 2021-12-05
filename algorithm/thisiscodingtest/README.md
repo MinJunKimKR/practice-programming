@@ -134,4 +134,29 @@ print(quickSortShort(array))
 
 - 특정 조건이 부합할떄만 사용할수 있지만 **매우 빠르게 동작하는** 정렬 알고리즘 입니다.
   - 데이터의 크기 범위가 제한되어 정수 형태로 표현할수 있을때 사용가능 합니다.
-- 데이터의 개수가 N, 데이터(양수)중 최댓값이 K일때 최악의 경우에도 수행시간 O(N+K)를 보장합니다.
+- 데이터의 개수가 N, 데이터(양수)중 최댓값이 K일때 최악의 경우에도 수행시간 `O(N+K)`를 보장합니다.
+- 하지만 때에 따라 심각한 비효율성을 초래할수 있다 (ex : 0, 999,999 이렇게 2개의 값만 가지고 있다면?)
+- 계수 정렬은 동일한 값이 여러개 일때 효과적
+  - 성적의 경우 100점이 여러명일수도 있기 때문에 계수정렬이 유의미하다
+
+```
+array = [1, 2, 8, 0, 4, 3, 2, 5, 7, 9, 8, 1, 6]
+
+countingArray = [0] * (max(array) + 1)
+
+sortArray = []
+
+for i in array:
+    countingArray[i] += 1
+
+for i in range(len(countingArray)):
+    for _ in range(countingArray[i]):
+        sortArray.append(i)
+
+print(sortArray)
+
+```
+
+## 정렬 알고리즘
+
+표준 정렬 라이브러리는 최악의 경우에도 `O(NlogN)`을 보장하도록 설계되어 있다.
