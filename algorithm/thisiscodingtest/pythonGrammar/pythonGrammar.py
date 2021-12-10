@@ -172,7 +172,17 @@
 # print(math.gcd(a, b))
 # print(lcm(10, 20))
 
-stack = [1, 2, 3, 2, 2, 1, 4]
-print(stack[0:2])
-print(stack[1::2])  # a[start : end : step]
-print(stack[::-1])
+# stack = [1, 2, 3, 2, 2, 1, 4]
+# print(stack[0:2])
+# print(stack[1::2])  # a[start : end : step]
+# print(stack[::-1])
+
+# 배열 사이의 요소의 개수를 찾을때 사용
+from bisect import bisect_left, bisect_right
+
+a = [1, 2, 4, 4, 5, 5, 6]
+x = 4
+
+print(bisect_left(a, x))
+print(bisect_right(a, x))
+print(bisect_right(a, x) - bisect_left(a, x))

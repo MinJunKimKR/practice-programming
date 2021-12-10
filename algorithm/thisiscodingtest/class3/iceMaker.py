@@ -50,8 +50,6 @@ def dfs(x, y):
     if x < 0 or y < 0 or x >= N or y >= M or BLOCK[x][y] == '1':
         return False
     BLOCK[x][y] = '1'
-    print(BLOCK)
-
     dfs(x+1, y)
     dfs(x-1, y)
     dfs(x, y+1)
