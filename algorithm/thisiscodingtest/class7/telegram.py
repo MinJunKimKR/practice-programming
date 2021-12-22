@@ -1,4 +1,5 @@
 # 6:50 -> 7:50 [7:39]
+# Success
 import sys
 import heapq
 
