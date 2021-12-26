@@ -4,30 +4,71 @@
 
 If you want to know what I'm studying now, check readme file in directories.
 
-usually, I write down 'what I learned' on the readme file. 
+Usually, I write down 'what I learned' on the readme file.
 
-### now i'm studying about these
+### now I study these
 
-#### React
+---
 
-listening NomadCoder's [React course](react-for-beginners)
+## Programming Language
 
-#### Algoritm
+### [React](https://github.com/MinJunKimKR/practice-programming/tree/main/react)
 
-usually solve algoritm in [Programmers](https://programmers.co.kr/) and [LeetCode](https://leetcode.com/)
+Used React with TS and Mui for development '**ToGather System**'
 
-#### [Kubernetes](https://kubernetes.io/ko/docs/concepts/overview/what-is-kubernetes/)
+- Developed ‘ToGater system’ service for management members and certification ‘Today what I learn’ with Node.js, Nest.js, Typescript, TypeORM, Postgresql, React.
 
-#### [NestJS](https://nestjs.com/)
-Now, I'm studying from the the basic again for filling of lack. 
+---
 
-You can see my code in this repository 👉 [Nomad-Nest Repository](https://github.com/MinJunKimKR/nomad-nest)
+### [Algoritm](https://github.com/MinJunKimKR/practice-programming/tree/main/algorithm)
 
-### Javascript
+Leaning algorithm theory in **[This is coding test](https://www.youtube.com/watch?v=m-9pAwq1o3w&list=PLRx0vPvlEmdAghTr5mXQxGpHjWqSz0dgC&index=1)** YouTube course.
 
-studying 'how to write clean code'
+Usually solve algoritm in [Programmers](https://programmers.co.kr/) and [LeetCode](https://leetcode.com/)
 
-### Tech Interview questions
+---
 
-#### Docker
+### [Docker](https://github.com/MinJunKimKR/practice-programming/tree/main/docker-study)
+
+Leaned Docker.
+
+Used Docker in **CAPA** and **NewCAPA** Project in A-TEAM.
+
+---
+
+### [Kubernetes](https://github.com/MinJunKimKR/practice-programming/tree/main/k8s)
+
+Leaned K8S and structure of MSA.
+
+Used K8S in **New CAPA** Project in A-TEAM.
+
+- Remodeled 'CAPA' into MSA and developed an example service for the next step with Node.js, Typescript, Nest.js, Postgresql, AWS, Kubenetes.
+
+---
+
+### [NestJS](https://github.com/MinJunKimKR/practice-programming/tree/main/nest)
+
+Learned Nest.js framework for strong architecture programming.
+
+You can check my code in this repository (NomadCoder's Nest course) 👉 [Nomad-Nest Repository](https://github.com/MinJunKimKR/nomad-nest)
+
+Used K8S in **New CAPA** Project in A-TEAM and **ToGther system**.
+
+- Remodeled 'CAPA' into MSA and developed an example service for the next step with Node.js, Typescript, Nest.js, Postgresql, AWS, Kubenetes.
+
+- Developed ‘ToGater system’ service for management members and certification ‘Today what I learn’ with Node.js, Nest.js, Typescript, TypeORM, Postgresql, React.
+
+---
+
+### [Javascript](https://github.com/MinJunKimKR/practice-programming/tree/main/studyJS)
+
+Learned Javascript basic knowledge and how to write clean javascript code.
+
+---
+
+### [TypeScript](https://github.com/MinJunKimKR/practice-programming/tree/main/typescript)
+
+Leaned Typescript basic knowledge.
+
+Used Typescript in **A-TEAM** and **ToGather System**
 
