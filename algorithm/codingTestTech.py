@@ -6,6 +6,18 @@
 
 import math
 from bisect import bisect_left, bisect_right
+from collections import Counter
+# ===========[해시]===========
+
+print(Counter('hello world'))
+print(Counter('hello world').most_common(2))  # 가장 수가 많은 글자 2개
+
+# 배열의 차이만 떼어내기
+participant = ["leo", "kiki", "eden"]
+completion = ["eden", "kiki"]
+answer = Counter(participant) - Counter(completion)
+print(answer)
+print(list(answer.keys())[0])
 
 # ===========[배열]===========
 
@@ -37,6 +49,16 @@ print(bisect_right(a, x) - bisect_left(a, x))
 for i in range(0, 10, 2):  # 0부터 2까지 증가시키며 10까지 반복
     print(i)
 
+# zip함수 사용법
+numbers = [1, 2, 3]
+letters = ["A", "B", "C"]
+for pair in zip(numbers, letters):
+    print(pair)
+
+for num, letter in zip(numbers, letters):
+    print(num, letter)
+# zip으로 딕처너리로
+print(dict(zip(numbers, letters)))
 # ===========[수학]===========
 # 제곱근 구하기
 x = 15
