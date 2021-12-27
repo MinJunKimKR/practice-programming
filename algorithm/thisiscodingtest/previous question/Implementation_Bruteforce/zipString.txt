@@ -1,0 +1,21 @@
+
+aabb accc
+ababcdcdababcdcd
+abcabcdede
+abcabcabcabcdededededede
+xababcdcdababcdcd
+
+
+
+
+1 block => aa
+2 block => bb
+
+0:2
+aab bac cc[] <-
+block = [aa, bb ac cc]
+1. 무조건 맨앞에서 부터 압축을 시작한다.
+2. 압축은 한글자씩 부터 시작한다.
+3. 압축이 끝난 글자를 기준으로 가장 짧은것을 구한다.
+
+zipString = 2a2b..
