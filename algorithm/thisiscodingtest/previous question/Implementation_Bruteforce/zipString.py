@@ -32,10 +32,11 @@ for i in range(1, mid+1):  # 몇글자씩 자를것인지
             continue
         if preBlock == block:  # 이전것과 내가 같다면
             count += 1  # 압축
-        else:  # 다르다면
+        else:  # 다르다면, 압출문자열에 추가
             zipString += ('' if count == 1 else str(count)) + block
             count = 1
             preBlock = block
+
     minLenght = min(minLenght, len(zipString))
 print(minLenght)
 
