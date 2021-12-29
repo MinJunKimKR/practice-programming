@@ -4,13 +4,19 @@
 # collections :덱, 카운터등 자료구조 제공
 # math : 필수적인 수학적 기능제공 -> 팩토리얼, 제곱근, 최대공약수 등등
 
+from functools import cmp_to_key
 import math
 from bisect import bisect_left, bisect_right
 from collections import Counter
 
 
 # ===========[우선순위큐]===========
+import heapq
 
+scoville = [1, 2, 3, 7, 9, 10, 12]
+heapq.heapify(scoville)
+heapq.heappush(scoville, 2)
+heapq.heappop(scoville)
 # ===========[해시]===========
 
 print(Counter('hello world'))
@@ -47,6 +53,18 @@ x = 4
 print(bisect_left(a, x))
 print(bisect_right(a, x))
 print(bisect_right(a, x) - bisect_left(a, x))
+
+
+def sortRule(a, b):
+    # 크다 (양수 리턴)
+    # 작다 (음수 리턴)
+    # 같다 (0 리턴)
+    return a-b > b-1
+
+
+numbers = [1, 2, 3, 4, 3, 2]
+numbers = sorted(numbers, key=cmp_to_key(sortRule), reverse=True)
+
 
 # ===========[반복문]===========
 # 배열 2씩증가
