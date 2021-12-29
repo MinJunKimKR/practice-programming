@@ -8,7 +8,7 @@ from functools import cmp_to_key
 import math
 from bisect import bisect_left, bisect_right
 from collections import Counter
-
+from itertools import cycle
 
 # ===========[우선순위큐]===========
 import heapq
@@ -66,11 +66,6 @@ numbers = [1, 2, 3, 4, 3, 2]
 numbers = sorted(numbers, key=cmp_to_key(sortRule), reverse=True)
 
 
-# ===========[반복문]===========
-# 배열 2씩증가
-for i in range(0, 10, 2):  # 0부터 2까지 증가시키며 10까지 반복
-    print(i)
-
 # zip함수 사용법
 numbers = [1, 2, 3]
 letters = ["A", "B", "C"]
@@ -81,6 +76,28 @@ for num, letter in zip(numbers, letters):
     print(num, letter)
 # zip으로 딕처너리로
 print(dict(zip(numbers, letters)))
+# ===========[반복문]===========
+# 배열 2씩증가
+for i in range(0, 10, 2):  # 0부터 2까지 증가시키며 10까지 반복
+    print(i)
+
+for i in enumerate(['A', 'B', 'C']):
+    print(i)
+
+for i, letter in enumerate(['A', 'B', 'C']):
+    print(i, letter)
+
+for i, letter in enumerate(['A', 'B', 'C'], start=1):
+    print(i, letter)
+
+# Cycle로 리스트 무한하게 늘리기
+arr = [1, 2, 3, 4, 5]
+infinityArr = cycle(arr)
+print(len(arr))
+for i in range(10):
+    print(next(infinityArr), end='')
+
+
 # ===========[수학]===========
 # 제곱근 구하기
 x = 15
