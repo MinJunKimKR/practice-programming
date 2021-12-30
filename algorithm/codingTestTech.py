@@ -114,3 +114,9 @@ for i in range(2, int(math.sqrt(n))+1):
         while i*j <= n:
             array[i*j] = False
             j += 1
+
+# ===========[문자열]===========
+
+# 아스키 코드로 변환
+n = ord('A')
+print(n)
