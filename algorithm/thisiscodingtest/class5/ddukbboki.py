@@ -1,4 +1,4 @@
-# 3:40 -> 4:20 [FAIL] - TIME OUT ->무한루프 때문에 틀림a
+# 3:40 -> 4:20 [FAIL] - TIME OUT -> 무한루프 때문에 틀림a
 # 큰 탐색범위 (이번의 경우 10억)는 이진탐색을 떠올려야한다
 # import sys
 # sys.stdin = open(
