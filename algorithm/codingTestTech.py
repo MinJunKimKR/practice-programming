@@ -120,3 +120,7 @@ for i in range(2, int(math.sqrt(n))+1):
 # 아스키 코드로 변환
 n = ord('A')
 print(n)
+
+# 공백제거
+ex_str = "                   hello         "
+print(ex_str.strip())
