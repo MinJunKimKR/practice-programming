@@ -4,7 +4,7 @@
 # retry [Success] 2:30
 import sys
 sys.stdin = open(
-    '/Users/minjunkim/Documents/Programming/practice-programming/algorithm/Beakjoon/BasicGuide/Silver1/1149.txt', 'r')
+    '/Users/minjunkim/Documents/Programming/practice-programming/algorithm/Beakjoon/BasicGuide/Silver1/s1_1149.txt', 'r')
 
 N = int(input())
 
