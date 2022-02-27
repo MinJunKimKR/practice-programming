@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <div class="image">
+    <img src="https://goo.gl/2oZU2S" alt="First">
+    <button class="remove">X</button>
+</div>
+<div class="image">
+    <img src="https://goo.gl/tniGAc" alt="Second">
+    <button class="remove">X</button>
+</div>
+<div class="image">
+    <img src="https://goo.gl/tniGAc" alt="Second">
+    <button class="remove">X</button>
+</div>
+<div class="image">
+    <img src="https://goo.gl/tniGAc" alt="Second">
+    <button class="remove">X</button>
+</div>
+<div class="image">
+    <img src="https://goo.gl/tniGAc" alt="Second">
+    <button class="remove">X</button>
+</div>
+<script type="text/javascript">
+    function setup() {
+        console.log('run')
+        const btns = document.getElementsByClassName('remove')
+        console.log(btns)
+        for(let btn in btns){
+            btn.addEventListener("click", function(){
+                console.log(this)
+                this.parentNode.parentNode.removeChild(this.parentNode)
+            })
+        }
+    }
+    
+    window.onload = function () {
+        setup()
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+function newMessage(topicName) {
+//Write your code here
+const target = document.getElementsByTagName('p');
+for(let t of target){
+const elTarget = t.getAttribute('data-topic-name')
+if(topicName == elTarget){
+t.style.backgroundColor="red"
+}
+}
+}
+
+// Example case
+$('body').html(
+`<div>
+    <p data-topic-name="discussion">General discussion</p>
+    <p data-topic-name="bugs">Bugs</p>
+    <p data-topic-name="animals">Animals</p>
+</div>`
+);
+newMessage("discussion");
+console.log($('body').html());
