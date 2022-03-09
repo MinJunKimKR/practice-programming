@@ -1,5 +1,3 @@
-
-
 ### 데코레이터
 
 [데코레이터 개념](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841)
@@ -46,15 +44,13 @@ JS 데코레이터 함수에는 세 가지 인자가 전달된다.
 2. `key`는 데코레이터를 적용할 속성 이름이다(문자열).
 3. `descriptor`는 해당 속성의 설명자 객체이다.
 
-----
-
-
+---
 
 ### module
 
 App module 은 root module과 같다.
 
-따라서, 어플리케이션을 구현하게 된다면,  provider와 controller를 전부
+따라서, 어플리케이션을 구현하게 된다면, provider와 controller를 전부
 
 app module에 import하는것이 아닌, 각각의 모듈을 만들어서 그곳에 import를 한다.
 
@@ -63,8 +59,6 @@ app module에 import하는것이 아닌, 각각의 모듈을 만들어서 그곳
 그곳에 필요한 controller와 provider를 추가하여서 module을 구성해주고, 해당 module을
 
 app module에 import하여서 사용한다.
-
-
 
 ### controller
 
@@ -98,10 +92,7 @@ export class MoviesController {
     return `this will patch a movie with the id : ${movieId}`;
   }
 }
-
 ```
-
-
 
 @Param('') : controller에서 :/id 와 같이 parameter를 받아서 funciton에서 사용할때 쓰이는 decorator
 
@@ -115,25 +106,17 @@ export class MoviesController {
 
 @Param() : 쿼리스트링을 사용할수 있다.
 
-
-
-
-
 ### Provider
 
 provider의 주요 개념은 종속성으로 주입할수 있다는 것이 중요하다.
 
 controller는 HTTP 요청을 처리하고 더 복잡한 작업을 provider 위임해야 한다.
 
-
-
 즉, Controller에서 HTTP요청을 처리하여 필요한 Service를 호출한다.
 
 이후 호출된 Service에서는 비지니스 로직을 통하여 필요한 연산을 진행하여 값을 return 해준다.
 
 이러한 방법의 장점은,Controller는 라우팅 처리만 신경을 쓰면되고, Provider는 기능구현만 신경을 쓰면 된다는 장점이 있다.
-
-
 
 ---
 
@@ -151,11 +134,7 @@ controller는 HTTP 요청을 처리하고 더 복잡한 작업을 provider 위�
 - I: Interface Segregation Principle (인터페이스 분리 원칙)
 - D: Dependency Inversion Principle (의존성 역전 원칙)
 
-
-
 SOLID원칙은 모듈화, 캡슐화, 확장용이성, 구성용이한 컴포넌트등을 고려한 소프트웨어의 구축을 위한 설계입니다.
-
-
 
 ### Single-responsibility principle(SRP : 단일 책임 원칙)
 
@@ -168,7 +147,6 @@ export class Movie {
   year: number;
   genres: string[];
 }
-
 ```
 
 여기서 interface 나 type이 아닌 class를 사용한 이유는 컴파일을 거치게 되면 어차피 class가 되기 때문에 바로 class로 써서 사용한것이다.
@@ -177,9 +155,9 @@ export class Movie {
 
 ```javascript
 class Animal {
-    constructor(name: string){ }
-    getAnimalName() { }
-    saveAnimal(a: Animal) { }
+  constructor(name: string) {}
+  getAnimalName() {}
+  saveAnimal(a: Animal) {}
 }
 ```
 
@@ -196,8 +174,6 @@ class Animal {
 
 즉, saveAnimal이 DB의 Animal storage를 관리하는동안, 생성자와 getAnimalName은 Animal property를 관리합니다.
 
-
-
 이렇게 된다면 나중에 생길수 있는 이슈를 생각해 볼수 있습니다.
 
 추후에 DB관리 기능에 영향을 주도록 변경하게 된다면,
@@ -206,18 +182,16 @@ class Animal {
 
 즉, 시스템이 유연하지 않으며 도미노 효과로 보이고, 파급효과를 주는것이 보입니다.
 
-
-
-그러면 어떻게 리팩토링을 해야할까요 ? 
+그러면 어떻게 리팩토링을 해야할까요 ?
 
 ```javascript
 class Animal {
-    constructor(name: string){ }
-    getAnimalName() { }
+  constructor(name: string) {}
+  getAnimalName() {}
 }
 class AnimalDB {
-    getAnimal(a: Animal) { }
-    saveAnimal(a: Animal) { }
+  getAnimal(a: Animal) {}
+  saveAnimal(a: Animal) {}
 }
 ```
 
@@ -233,8 +207,6 @@ class AnimalDB {
 
 > 클래스들이 같은 이유로 매번 변화하는 변화경향이 있다면, 클래스를 설계할때 연관된 기능들을 함께 모으는 것을 목표로 해야한다. 우리는 기능을 분리하노록 노력하고, 기능들은 서로 다른 이유로 변경되어야 한다. - Steve Fenton
 
-
-
 ### Open-Closed Principle (OCP:열림-닫힘 원칙)
 
 > 소프트웨어 엔티티(클래스,모듈,함수)는 확장을 위해 열려있고, 수정되서는 안된다.
@@ -243,14 +215,12 @@ class AnimalDB {
 
 ```javascript
 class Animal {
-    constructor(name: string){ }
-    getAnimalName() { }
+  constructor(name: string) {}
+  getAnimalName() {}
 }
 ```
 
-
-
-우리는 Animal 리스트를 반복하고, 각 Animal의 울음소리를 반복하였습니다. 
+우리는 Animal 리스트를 반복하고, 각 Animal의 울음소리를 반복하였습니다.
 
 ```javascript
 //...
@@ -269,7 +239,7 @@ function AnimalSound(a: Array<Animal>) {
 AnimalSound(animals);
 ```
 
-함수 `AnimalSound()`는 OCP를 따르지 않고 있습니다. 
+함수 `AnimalSound()`는 OCP를 따르지 않고 있습니다.
 
 **왜냐하면 새로운 종의 Animal에 대해서 닫혀있지 않기 때문이죠 .**
 
@@ -322,7 +292,7 @@ function AnimalSound(a: Array<Animal>) {
 AnimalSound(animals);
 ```
 
- 여기서 가장 큰 특징은 모든 동물 class들이 `class Animal` 이라는 
+여기서 가장 큰 특징은 모든 동물 class들이 `class Animal` 이라는
 
 기본 class에서 각각 상속을 받아서 **Class내에서 각자의 울음소리를 구현**한다는 점입니다
 
@@ -330,17 +300,15 @@ AnimalSound(animals);
 
 이제, 새로운 동물을 추가할때 if 로직을 변경하는것이아닌 그저, class를 추가하고, animal배열에 추가만 하면 되도록 바뀌었습니다.
 
-
-
 다른예제를 한번 살펴보겠습니다.
 
 여러분이 좋아하는 고객에게 20% 할인해주고자 할때, 클래스는 아래와 같을겁니다.
 
 ```javascript
 class Discount {
-    giveDiscount() {
-        return this.price * 0.2
-    }
+  giveDiscount() {
+    return this.price * 0.2;
+  }
 }
 ```
 
@@ -348,24 +316,24 @@ class Discount {
 
 ```javascript
 class Discount {
-    giveDiscount() {
-        if(this.customer == 'fav') {
-            return this.price * 0.2;
-        }
-        if(this.customer == 'vip') {
-            return this.price * 0.4;
-        }
+  giveDiscount() {
+    if (this.customer == 'fav') {
+      return this.price * 0.2;
     }
+    if (this.customer == 'vip') {
+      return this.price * 0.4;
+    }
+  }
 }
 ```
 
-위 코드는 OCP 원칙을 지키지 못했습니다. 
+위 코드는 OCP 원칙을 지키지 못했습니다.
 
 만약에 위와 같이 다른이유로 신규 할인률을 다른 고객에게 적용하려고 한다면, 새로운 로직이 추가되는 것을 보게 될 것입니다.
 
-OCP 원칙을 준수하며 만드는 방법은 **Discount를 확장하여 새로운 클래스**를 추가하는 것입니다. 
+OCP 원칙을 준수하며 만드는 방법은 **Discount를 확장하여 새로운 클래스**를 추가하는 것입니다.
 
-추가된 신규 클래스에서 우리는 신규 행위를 구현 할 수 있을 것입니다. 
+추가된 신규 클래스에서 우리는 신규 행위를 구현 할 수 있을 것입니다.
 
 ```javascript
 class VIPDiscount: Discount {
@@ -387,13 +355,13 @@ class SuperVIPDiscount: VIPDiscount {
 
 **이제, 우리는 ‘수정’과는 별개로 ‘확장’ 된 모습을 볼 수 있습니다.**
 
-###  Liskov Substitution Principle (리스코프 치환원칙:LSP)
+### Liskov Substitution Principle (리스코프 치환원칙:LSP)
 
-> 하위 클래스는 반드시 상위클래스와 대체 가능 해야 한다. 
+> 하위 클래스는 반드시 상위클래스와 대체 가능 해야 한다.
 
 이 원칙이 지향하는 것은 하위클래스가 상위 클래스의 자리를 에러 없이 맡을 수 있는지 확인하는 것 입니다.
 
-**만약, 코드가 스스로 자신의 클래스 타입을 확인한다면, 그건 정말로 원칙을 위반 한 것입니다.** 
+**만약, 코드가 스스로 자신의 클래스 타입을 확인한다면, 그건 정말로 원칙을 위반 한 것입니다.**
 
 우리의 예제를 살펴보도록 합시다.
 
@@ -416,7 +384,7 @@ AnimalLegCount(animals);
 
 위 코드는 모든 Animal 타입을 알아야 하고, leg-counting 기능과 연관된 것을 호출해야합니다.
 
-무슨 말이냐면 
+무슨 말이냐면
 
 `if(typeof a[i] == Lion)` 이 부분이 먼저 문제가 되는데,
 
@@ -427,7 +395,7 @@ a에 해당하는 타입들을 하위 funtion인 AnimalLegCount에서 다 알아
 ```javascript
 //...
 class Pigeon extends Animal { //새로 추가된 class
-        
+
 }
 const animals[]: Array<Animal> = [
     //...,
@@ -450,15 +418,13 @@ AnimalLegCount(animals);
 
 이 함수가 LSP를 따르게 만드는 것은, 우리가 Steve Fenton가 필수조건으로 말한 LSP의 요구사항을 따르는 것 입니다.
 
-
-
 이제 LSP를 따르도록 수정을 해보면 다음과 같습니다.
 
 ```javascript
 function AnimalLegCount(a: Array<Animal>) {
-    for(let i = 0; i <= a.length; i++) {
-        a[i].LegCount();
-    }
+  for (let i = 0; i <= a.length; i++) {
+    a[i].LegCount();
+  }
 }
 AnimalLegCount(animals);
 ```
@@ -482,11 +448,11 @@ class Animal {
 
 ```javascript
 //...
-class Lion extends Animal{
+class Lion extends Animal {
+  //...
+  LegCount() {
     //...
-    LegCount() {
-        //...
-    }
+  }
 }
 //...
 ```
@@ -494,8 +460,6 @@ class Lion extends Animal{
 Lion 클래스 타입의 argument가 `AnimalLegCount()` 메소드로 전달 될 때, `LegCount()`는 lion이 갖고 있는 다리의 숫자를 반환 할 것입니다.
 
 `MouseLegCount(a[i])` 와 같이 기존의 animal 마다 다리의 수를 세는 function을 추가로 만들어 주지 않아도 됩니다.
-
-
 
 ### Interface Segregation Principle (인터페이스 분리 원칙 : ISP)
 
@@ -513,51 +477,51 @@ interface Shape {
 }
 ```
 
-이 인터페이스는 Squares와 circles, rectangles를 그립니다. 
+이 인터페이스는 Squares와 circles, rectangles를 그립니다.
 
 Shape 인터페이스를 구현하고 있는 클래스 Circle, Square, Rectangle는 반드시 메소드 `drawCircle()`, `drawSquare()`,`drawRectangle()`를 정의해야 합니다.
 
 ```javascript
 class Circle implements Shape {
-    drawCircle(){
-        //...
-    }
-    drawSquare(){
-        //...
-    }
-    drawRectangle(){
-        //...
-    }    
+  drawCircle() {
+    //...
+  }
+  drawSquare() {
+    //...
+  }
+  drawRectangle() {
+    //...
+  }
 }
 class Square implements Shape {
-    drawCircle(){
-        //...
-    }
-    drawSquare(){
-        //...
-    }
-    drawRectangle(){
-        //...
-    }    
+  drawCircle() {
+    //...
+  }
+  drawSquare() {
+    //...
+  }
+  drawRectangle() {
+    //...
+  }
 }
 class Rectangle implements Shape {
-    drawCircle(){
-        //...
-    }
-    drawSquare(){
-        //...
-    }
-    drawRectangle(){
-        //...
-    }    
+  drawCircle() {
+    //...
+  }
+  drawSquare() {
+    //...
+  }
+  drawRectangle() {
+    //...
+  }
 }
 ```
 
 위의 코드를 보면 꽤 재밌습니다.
 
- **클래스 Rectangle은 쓰이지 않는 메소드들(`drawCircle()`과 `drawSquare()`)을 구현하고 있습니다.** 
+**클래스 Rectangle은 쓰이지 않는 메소드들(`drawCircle()`과 `drawSquare()`)을 구현하고 있습니다.**
 
-마찬가지로 Square 또한 사용되지않는 `drawCircle()`과 `drawRactangle()`을, 
+마찬가지로 Square 또한 사용되지않는 `drawCircle()`과 `drawRactangle()`을,
 
 Circle 클래스는 `drawSquare()`, `drawSquare()`를 구현하고 있습니다.
 
@@ -574,12 +538,11 @@ interface Shape {
 
 클래스는 반드시 신규 메소드를 구현해야 하며, 그렇지 않으면 오류가 발생합니다.
 
-
 **클라이언트(여기서는 Rectangle, Circle, Square)는 필요하치 않거나 사용되지 않는 메소드에 의존하도록 강요해선 안됩니다.**
 
-또한, ISP는 다음과 같이 명시하고 있습니다. 
+또한, ISP는 다음과 같이 명시하고 있습니다.
 
-> ‘인터페이스는 꼭 하나의 일을 해야 하며, 추가적인 행위 그룹은 반드시 다른 인터페이스로 분리되어 추상화 되어야 한다.’ 
+> ‘인터페이스는 꼭 하나의 일을 해야 하며, 추가적인 행위 그룹은 반드시 다른 인터페이스로 분리되어 추상화 되어야 한다.’
 
 라고 말이에요.
 
@@ -616,7 +579,7 @@ class Square implements ISquare {
 class Rectangle implements IRectangle {
     drawRectangle() {
         //...
-    }    
+    }
 }
 class Triangle implements ITriangle {
     drawTriangle() {
@@ -630,25 +593,23 @@ class CustomShape implements Shape {
 }
 ```
 
-**ICircle 인터페이스는 오직 circle을 그리는 일**만 하고 있으며, 
+**ICircle 인터페이스는 오직 circle을 그리는 일**만 하고 있으며,
 
-**Shape는 그외의 도형**들을 그리는 것을 다루고 있습니다. 
-
-
+**Shape는 그외의 도형**들을 그리는 것을 다루고 있습니다.
 
 ### Dependency Inversion Principle (의존성 역전 원칙 : DIP)
 
 의존(종속)은 구**체가 아닌 추상과 이뤄져야 한다.**
 
-> **A. 고수준(High-Level)의 모듈은 저수준(Low-Level)의 모듈에 의존하면 안된다**. 둘다 추상화에 의존해야한다.  
+> **A. 고수준(High-Level)의 모듈은 저수준(Low-Level)의 모듈에 의존하면 안된다**. 둘다 추상화에 의존해야한다.
 >
 > **B. 추상은 세부사항(Details)에 의존해서는 안된다.** 세부사항은 추상에 의존해야 한다.
 
- 시작하기전, **우리는 의존성 주입(Dependency Injection) 과 관련된 일들에 대해서 명확히** 알아야 합니다.
+시작하기전, **우리는 의존성 주입(Dependency Injection) 과 관련된 일들에 대해서 명확히** 알아야 합니다.
 
 아래의 코드는 **고수준의 구성요소(Component)가 저수준의 구성요소에 따라 행동하는 모습의 예시**입니다.
 
-아래의 코드에서는 **HttpService가 저수준의 컴포넌트이고, Http는 고수준의 컴포넌트** 입니다. 
+아래의 코드에서는 **HttpService가 저수준의 컴포넌트이고, Http는 고수준의 컴포넌트** 입니다.
 
 아래의 설계는 DIP A를 위반하였습니다.
 
@@ -669,7 +630,7 @@ class Http {
 }
 ```
 
-상위 코드의 Http 클래스는 `XMLhttpService` 클래스에 의존하도록 되어있습니다. 
+상위 코드의 Http 클래스는 `XMLhttpService` 클래스에 의존하도록 되어있습니다.
 
 `constructor(private xmlhttpService: XMLHttpService) { }`
 
@@ -677,7 +638,7 @@ class Http {
 
 이럴때, 코드를 편집하기 위해서는 **모든 Http 인스턴스(사용중인)를 고려하여 조심스레 수정**해야합니다. 이는 OCP 원칙 위반이기도 합니다.
 
-따라서 **‘Connection 인터페이스’를 만들어, 사용중인 Http 서비스 타입들에 대해 덜 신경 써야합니다**. 
+따라서 **‘Connection 인터페이스’를 만들어, 사용중인 Http 서비스 타입들에 대해 덜 신경 써야합니다**.
 
 ```javascript
 interface Connection {
@@ -685,7 +646,7 @@ interface Connection {
 }
 ```
 
-request 메소드를 갖고 있는 Connection 인터페이스를 이용하여 Http를 개선 할 수 있습니다. 
+request 메소드를 갖고 있는 Connection 인터페이스를 이용하여 Http를 개선 할 수 있습니다.
 
 Connection 인터페이스 타입의 **Argument를 Http 클래스로 전송**합니다.
 
@@ -703,9 +664,7 @@ constructor(private httpConnection: Connection) { }
 }
 ```
 
-Http에 전달된 서비스 유형에 관계없이 **네트워크 연결 유형을 알지 않고도 쉽게 네트워크에 연결**할 수 있습니다. 
-
-
+Http에 전달된 서비스 유형에 관계없이 **네트워크 연결 유형을 알지 않고도 쉽게 네트워크에 연결**할 수 있습니다.
 
 이제 `XMLHttpService` 클래스를 다시 구현하여 **Connection 인터페이스를 구현할 수 있습니다.**
 
@@ -720,26 +679,24 @@ class XMLHttpService implements Connection {
 }
 ```
 
-많은 **Http Connection 타입을 만들고 Http 클래스에 에러**와 같은 야단법석한 일들은 피해서 전송 할 수 있습니다. 
+많은 **Http Connection 타입을 만들고 Http 클래스에 에러**와 같은 야단법석한 일들은 피해서 전송 할 수 있습니다.
 
 ```javascript
 class NodeHttpService implements Connection {
-    request(url: string, opts:any) {
-        //...
-    }
+  request(url: string, opts: any) {
+    //...
+  }
 }
 class MockHttpService implements Connection {
-    request(url: string, opts:any) {
-        //...
-    }    
+  request(url: string, opts: any) {
+    //...
+  }
 }
 ```
 
-우리는 **고수준의 모듈과 저수준의 모듈**이 추상에 의존하고 있음을 볼 수 있습니다. 
+우리는 **고수준의 모듈과 저수준의 모듈**이 추상에 의존하고 있음을 볼 수 있습니다.
 
-
-
-Http 클래스(고수준의 모듈)은 **Connection 인터페이스(추상)에 의존**하고 있으며, 
+Http 클래스(고수준의 모듈)은 **Connection 인터페이스(추상)에 의존**하고 있으며,
 
 ```javascript
 class Http {
@@ -754,13 +711,11 @@ constructor(private httpConnection: Connection) { }
 
 그렇기 때문에 추상화(같은 interface기 때문에 funtion이 있다)로 구현한다.
 
-
-
 Http 서비스 타입들(저수준의모듈)또한 **Connection 인터페이스에 의존**하고 있습니다.
 
 ```javascript
 class XMLHttpService implements Connection {
-    const xhr = new XMLHttpRequest();    
+    const xhr = new XMLHttpRequest();
 		//...
     request(url: string, opts:any) {
         xhr.open();
@@ -769,35 +724,13 @@ class XMLHttpService implements Connection {
 }
 ```
 
-->  `class Http` 와 같은 interface를 사용하여서 구현함으로, request가 존재하며, 직접적으로 Http에서 의존하지 않고 `connection interface` 통해서 의존하기 때문에 추상화가 이루어진다.
+-> `class Http` 와 같은 interface를 사용하여서 구현함으로, request가 존재하며, 직접적으로 Http에서 의존하지 않고 `connection interface` 통해서 의존하기 때문에 추상화가 이루어진다.
 
-또한, 여기서 DIP는 **Liskov Substitution Principle을 위반하지 않도록 합니다.** 
+또한, 여기서 DIP는 **Liskov Substitution Principle을 위반하지 않도록 합니다.**
 
 (Connection 유형 `Node-XML-MockHttpService`는 상위 유형 `Connection`을 대체 할 수 있습니다.)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-----
-
-
+---
 
 ### Exceptionfilter
 
@@ -820,14 +753,12 @@ Nest는 기본 **`HttpException`에서 상속되는 표준 예외 집합을 제�
 ### NotFoundException
 
 ```javascript
-    if (!movie) {
-      throw new NotFoundException(`Movie with Id : ${id} not found`);
-    }
+if (!movie) {
+  throw new NotFoundException(`Movie with Id : ${id} not found`);
+}
 ```
 
-----
-
-
+---
 
 ### DTO
 
@@ -861,9 +792,7 @@ export class CreateMovieDto {
 
 [class-validator 문서링크](https://docs.nestjs.com/pipes#class-validator)
 
-또한  Array의 경우 each를 사용해주면 각 요소가 string인지를 확인을 해줄수 있는 옵션도 제공을 해주고 있다.
-
-
+또한 Array의 경우 each를 사용해주면 각 요소가 string인지를 확인을 해줄수 있는 옵션도 제공을 해주고 있다.
 
 ### Movie Entity
 
@@ -874,10 +803,7 @@ export class Movie {
   year: number;
   genres: string[];
 }
-
 ```
-
-
 
 ### Entity와 DTO차이
 
@@ -893,25 +819,19 @@ export class Movie {
 
 ---
 
-
-
 `app.useGlobalPipes(new ValidationPipe());`
 
 main.ts에 사용할시에 몇가지 좋은 옵션을 사용할수 있다.
 
- `whitelist: true, forbidNonWhitelisted: true`
+`whitelist: true, forbidNonWhitelisted: true`
 
 두가지 옵션을 적용해주면 데코레이터가 없다면 문제가 있다는 에러를 알려준다,
 
 `transform: true,` 옵션은 URL등에 ID가 만일에 123일경우 String 123이 되는데, 이것을 자동으로 Number로 바꿔주는 역할을 한다.
 
- (실제 타입)
-
-
+(실제 타입)
 
 이러한 부분이 express로 쓰는것보다 nest와 같은 프레임워크를 썼을때 얻을수 있는 이득이다
-
-
 
 ```javascript
 export class UpdateMovieDto {
@@ -925,7 +845,7 @@ export class UpdateMovieDto {
 
 ```
 
-기존에 CreateDto를 기준으로 복사해서 쓰는것 대신에 
+기존에 CreateDto를 기준으로 복사해서 쓰는것 대신에
 
 Nest의 부분타입을 쓸것이다 (Partial Type)
 
@@ -937,20 +857,15 @@ https://www.npmjs.com/package/@nestjs/mapped-types
 
 이건 DTO를 변환하는것을 도와줌
 
-
-
 ```javascript
 export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
-
 ```
 
 UpdateMoviceDto는 CreateMovieDto와 동일함. 단, 전부 필수사항이 아니라는것이 다름
 
-
-
 module들은 controller와 service만을 가지고 있어야함.
 
-그렇기 떄문에 현재 app.module에 있는 controllers와 providers를 
+그렇기 떄문에 현재 app.module에 있는 controllers와 providers를
 
 movies.module로 옮겨줄것임
 
@@ -966,25 +881,21 @@ import { MoviesModule } from './movies/movies.module';
   providers: [MoviesService],
 })
 export class AppModule {}
-
 ```
 
 현재는 `nest g mo ` 를 사용해서 movies모듈을 만들어져 있는 상태.
 
-- [ ] ```javascript
-  import { Module } from '@nestjs/common';
-  import { MoviesModule } from './movies/movies.module';
-  
-  @Module({
-    imports: [MoviesModule],
-    controllers: [],
-    providers: [],
-  })
-  export class AppModule {}
-  
-  ```
+```javascript
+import { Module } from '@nestjs/common';
+import { MoviesModule } from './movies/movies.module';
 
-
+@Module({
+  imports: [MoviesModule],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
+```
 
 ```javascript
 import { Module } from '@nestjs/common';
@@ -996,18 +907,13 @@ import { MoviesService } from './movies.service';
   providers: [MoviesService],
 })
 export class MoviesModule {}
-
 ```
-
-
 
 이처럼 app.module에 전부다 import하는 것이 아닌 각각의 module에 import한다음에 app.module에는 각각의 module만 import하는
 
 방식으로 개발을 한다. 그렇다면 app.module에는 언제 povider와 controller를 import하는걸까?
 
 App의 기본적인 페이지를 보여주고자 할때(루트위치) 추가해준다.
-
-
 
 Dependency injhection 이라는 개념이 있다.
 
@@ -1019,13 +925,9 @@ Controller에서는 Service에서 구현한 비지니스 로직은 constructor�
 
 이것을 Depenency inject라고 한다.
 
-한마디로, 개발자가 직접 하나씩 import해주는것이 아닌 nest가 
+한마디로, 개발자가 직접 하나씩 import해주는것이 아닌 nest가
 
-알아서 import해주는것을 의존성 주입이라고 한다 
-
-
-
-
+알아서 import해주는것을 의존성 주입이라고 한다
 
 nest는 express위에서 돌아가기 때문에 원한다면
 
@@ -1040,19 +942,15 @@ controller에서 response나 request객체를 사용할수있다.
 
 이렇게 express로 바로 접근하는건 별로 좋진않다.
 
-하지만 nest에서는 express말고도 fastify위에서 돌아가는데 
+하지만 nest에서는 express말고도 fastify위에서 돌아가는데
 
 그렇기에 fastify 같은 다른 라이브러리와 호환이 된다.
 
 fastify는 express와 비슷하게 존재하는데 2배빠름
 
-
-
 또한, Nest에서 쓰이는 방식으로 사용한다면 추후에 express에서 fastify로 전환을 해도 문제가 생기지 않겠지만, 만일에 위에 나와있는것 처럼
 
 express방식을 사용을하게 된다면 나중에 fastify방식으로 전환한다면 에러가 발생할것이다.
-
-
 
 Nest에서 제공하는 test
 
@@ -1064,27 +962,17 @@ Nest에서 제공하는 test
     "test:e2e": "jest --config ./test/jest-e2e.json"
 ```
 
-
-
 watch 로 실행하게 되면 새로운 테스트를 만들어 낼때마다
 
 그 테스트가 실행이 된다
 
-
-
 Jest
-
-
 
 `spec.ts` 가 붙은 파일들이 있다.
 
 이것은 테스트를 포함하고 있다.
 
-
-
 nest에서는 jest가 .spec.ts파일들을 찾아볼수 있도록 설정되어있다.
-
-
 
 유닛테스팅 : 모든 function을 따로 테스트 하는것
 
@@ -1100,8 +988,6 @@ E2e : 모든 시스템을 검사하는것
 
 사용자가 취할만한 액션들을 처음부터 검사하는것을 말한다.
 
-
-
 ```javascript
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -1111,7 +997,7 @@ describe('MoviesService', () => {
       providers: [MoviesService],
     }).compile();
 
-    service = module.get<MoviesService>(MoviesService);
+    service = module.get < MoviesService > MoviesService;
   });
 
   it('should be defined', () => {
@@ -1122,25 +1008,19 @@ describe('MoviesService', () => {
 
 describe : 테스트를 설명해 주는것\
 
-afterEach : 
+afterEach :
 
- beforeEach : 테스트를 실행하기 전에 실행되는것
+beforeEach : 테스트를 실행하기 전에 실행되는것
 
 afterAll : 안에는 데이터베이스를 깨끗하게 정리해주는(모두 지우는) function을 넣을수있다
 
-beforeAll : 
+beforeAll :
 
 It : 테스트 할 요소를 정의한다.
 
 expect : 테스트해서 나와야할 값을 정의하여 테스트한다.
 
-
-
-
-
 Nest의 장점 떄문에 movie service 에 접근할수있음
-
-
 
 즉, describe에서 테스트할 요소의 큰부분(함수)를 정의하고
 
@@ -1150,8 +1030,6 @@ Nest의 장점 떄문에 movie service 에 접근할수있음
 
 테스트 케이스를 생성한다
 
-
-
 E2E
 
 Spec.ts 파일같은 경우는 모두 해당파일의 유닛 테스트를 위한것이다.
@@ -1159,10 +1037,6 @@ Spec.ts 파일같은 경우는 모두 해당파일의 유닛 테스트를 위한
 어떨떄는 1개를 테스트 해야하고 가끔은 2개를 테스트 해야하는 비밀번호 생성, 저장 funciton과 같은 경우에는 유닛 테스트가 다소 어려울수 있다
 
 여기서 e2e가 등장함
-
-
-
-
 
 ```javascript
 import { Test, TestingModule } from '@nestjs/testing';
@@ -1189,10 +1063,7 @@ describe('AppController (e2e)', () => {
       .expect('Hello World!');
   });
 });
-
 ```
-
-
 
 `supertest` 라는 라이브러리가 들어가 있다는점이 유닛테스트와는 다소 다르다
 
@@ -1201,9 +1072,9 @@ describe('AppController (e2e)', () => {
 따라서 controll, service등을 전부다 아우르는 내용이다.
 
 ```javascript
-  it('/movies (GET)', () => {
-    return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
-  });
+it('/movies (GET)', () => {
+  return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
+});
 ```
 
 위와 같은 내용으로 /movies의 url에 요청을 받을수가 있는데,
@@ -1211,11 +1082,11 @@ describe('AppController (e2e)', () => {
 `app.getHttpServer()` 라고 되어있는 부분은 localhost:3000과 같은 부분을 대체하여준다
 
 ```javascript
-  describe('/movies', () => {
-    it('GET', () => {
-      return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
-    });
+describe('/movies', () => {
+  it('GET', () => {
+    return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
   });
+});
 ```
 
 위와 같은 내용으로 리펙토링을 할수있다
@@ -1244,19 +1115,17 @@ describe('AppController (e2e)', () => {
 });
 ```
 
-
-
 
 
 ```javascript
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+beforeEach(async () => {
+  const moduleFixture: TestingModule = await Test.createTestingModule({
+    imports: [AppModule],
+  }).compile();
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+  app = moduleFixture.createNestApplication();
+  await app.init();
+});
 ```
 
 테스트를 할때 매번 새로운 app applicaiton을 만든다.
@@ -1266,16 +1135,14 @@ describe('AppController (e2e)', () => {
 즉, 브라우저로 들어갈수있는 실제 application과는 다르다.
 
 ```javascript
-  describe('/movies/:id', () => {
-    it.todo('GET');
-    it.todo('POST');
-    it.todo('PETCH');
-  });
+describe('/movies/:id', () => {
+  it.todo('GET');
+  it.todo('POST');
+  it.todo('PETCH');
+});
 ```
 
 또한 jest에서는 todo라는 기능을 제공하는데, 앞으로 작성해야하는 test들을 미리 만들어 놓을수있다.
-
-
 
 `beforeAll` 는 `beforeEach` 와는 다르게 모든 각각의 테스트 이전에 실행되는것이 아니다.
 
@@ -1283,37 +1150,33 @@ describe('AppController (e2e)', () => {
 
 baforeEach는 각테스트마다 생성하기 떄문에 항상 비어있게되지만, beforeAll같은 경우에는 1번만 실행되므로, 데이터 베이스를 유지한상태 즉, app application을 매번 초기화 하지않도 테스트를 진행할수있다.
 
-
-
 하지만, 여기서 문제가 발생을 한다.
 
-테스트에서 Movie객체를 create한다음 get을 해도,  만들어진 객체를 찾을수 없다라고 나온다.
-
-
+테스트에서 Movie객체를 create한다음 get을 해도, 만들어진 객체를 찾을수 없다라고 나온다.
 
 이유는 main.ts 에서
 
 ```javascript
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }),
+);
 ```
 
 위와 같이 transform을 사용해서 string인 url에 들어가는 id를 number로 변경해주기 때문이다.
 
-하지만 e2e test에서는 어떠한가? 
+하지만 e2e test에서는 어떠한가?
 
 ```javascript
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+const moduleFixture: TestingModule = await Test.createTestingModule({
+  imports: [AppModule],
+}).compile();
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
+app = moduleFixture.createNestApplication();
+await app.init();
 ```
 
 위에서 보는바와 같이 어떤 pipe도 태우지 않았다.
@@ -1321,46 +1184,3 @@ baforeEach는 각테스트마다 생성하기 떄문에 항상 비어있게되�
 이점이 test를 할때 가장 주의해야하는 점중에 하나다.
 
 바로, 실제 어플리케이션 환경을 그대로 적용시켜주어야지 제대로된 테스트 결과를 받을수 있다는 것이다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
