@@ -44,3 +44,18 @@ arr = [1, 2, 3, 4, 5, 5, 5, 5, 4, 3, 2, 1, 3, 4]
 val = Counter(arr).most_common()
 
 print(val)  # [(5, 4), (3, 3), (4, 3), (1, 2), (2, 2)]
+
+
+print('======================')
+# 소수 판별
+
+
+def is_prime_number(x):
+    for i in range(2, int(math.sqrt(x))+1):
+        if x % i == 0:
+            return False
+    return True
+
+
+print(is_prime_number(4))
+print(is_prime_number(7))
