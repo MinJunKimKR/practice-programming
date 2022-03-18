@@ -1,0 +1,38 @@
+<html>
+
+<head>
+    <style type="text/css">
+    </style>
+</head>
+
+<body>
+    <script>
+        const div = document.createElement('div');
+        div.setAttribute('avc',123);
+        const p = document.createElement('p');
+        p.innerHTML = '123'
+        div.appendChild(p)
+        document.body.appendChild(div)
+        for(let i=0 ;i < 5; i++){
+            const removeDiv = document.createElement('div')
+            removeDiv.id = i+'div'
+            removeDiv.className='removediv'
+            const removeP = document.createElement('p')
+            removeP.innerHTML = i+'번째 DIV'
+            removeDiv.appendChild(removeP)
+            const removeBtn = document.createElement('button')
+            removeBtn.innerHTML = 'X'
+            removeDiv.appendChild(removeBtn)
+            document.body.appendChild(removeDiv)
+        }
+        const divs = document.querySelectorAll('.removediv')
+        for(let i=0 ; i<divs.length; i++){
+            const rediv = divs[i]
+            rediv.addEventListener('click', function() {
+                this.parentNode.removeChild(rediv)
+            })
+        }
+    </script>
+</body>
+
+</html>
