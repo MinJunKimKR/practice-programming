@@ -91,3 +91,7 @@ jobs:
           echo "stepset value 1: ${{env.PRESET_VALUE_1}}"
           echo "stepset value 2: ${{env.PRESET_VALUE_2}}"
 ```
+
+:: -> '현재 스텝에 아웃풋 값을 지정을 해라'라는 뜻이다.
+
+`echo "::set-output name=first_value::$var_1"`
