@@ -129,5 +129,18 @@ jobs:
 ### 민감한 정보 숨기기
 
 ```
-echo "add-mask::$var_1"
+echo "::add-mask::$var_1"
+```
+
+아래와 같이 변수가 마스킹 된다
+
+```
+Run echo "***"
+***
+```
+
+### 시크릿 사용하기
+
+```
+echo "${{ scerets.HELLO}}"
 ```
