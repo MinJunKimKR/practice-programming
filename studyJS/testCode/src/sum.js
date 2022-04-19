@@ -1,5 +1,5 @@
-function sum(a, b) {
-  return a + b;
-}
+const fn = {
+  add: (num1, num2) => num1 + num2,
+};
 
-module.exports = sum;
+module.exports = fn;
