@@ -1,5 +1,11 @@
-const sum = require("../src/sum");
+const fn = require("../src/sum");
 
-test("adds 1 + 2 to equal 3", () => {
-  expect(sum(1, 2)).toBe(3);
+test("1은 1이야", () => {
+  expect(1).toBe(1);
+});
+test("2더하기 3은 5야", () => {
+  expect(fn.add(2, 3).tobe(5));
+});
+test("3더하기 3은 5야", () => {
+  expect(fn.add(3, 3).tobe(5));
 });
