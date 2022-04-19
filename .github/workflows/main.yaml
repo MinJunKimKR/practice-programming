@@ -17,7 +17,7 @@ jobs:
         run: |
           curl -X POST \
           https://webexapis.com/v1/messages \
-          -H "authorization: Bearer ${{ secrets.WEBEX_TOKEN}}"" \
+          -H "authorization: Bearer ${{ secrets.WEBEX_TOKEN}}" \
           -H "cache-control: no-cache" \
           -H "content-type: application/json" \
           -H "postman-token: 98054c42-ffbd-e5da-29a1-68151df7c26a" \
