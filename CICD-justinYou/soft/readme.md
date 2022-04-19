@@ -279,6 +279,7 @@ jobs:
 
 Job은 순서대로가 아니라 뭐가 먼제 실행되는지 모른다.
 따라서, 순서대로 하려면 `needs` 키워드가 필요하다
+이것을 이용하여 의존성이 생기게 된다.
 
 ```
 name: "SWM GitHub Actions Basic"
