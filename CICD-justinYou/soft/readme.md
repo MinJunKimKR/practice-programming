@@ -380,3 +380,81 @@ jobs:
 2. API Key
 3. markdown value
 4. text
+
+https://developer.webex.com/docs/api/v1/messages/create-a-message
+API를 참고하고, roomId와 token을 사용해서 api통신을 해서 bot 을 만들수 있다.
+
+```
+name: "SWM GitHub Actions Basic"
+
+on:
+  push
+env:
+  PRESET_VALUE: 'This is PRESET_VALUE'
+
+jobs:
+  first-job:
+    name: "First Job"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Send message bot"
+        shell: bash
+        run: |
+          curl -X POST \
+          'https://webexapis.com/v1/messages' \
+          -H "authorization: Bearer ${{ secrets.WEBEX_TOKEN}}" \
+          -H "cache-control: no-cache" \
+          -H "content-type: application/json" \
+          -H "postman-token: 98054c42-ffbd-e5da-29a1-68151df7c26a" \
+          -d '{
+            "roomId": "${{ secrets.WEBEX_ROOM_ID}}",
+            "markdown": "Message end by from github action from ${{ github.repository }}",
+            "text": "12"
+          }'
+```
+
+### custom github action
+
+타입스크립트로 만들면 꽤나 복잡하다.
+
+- 하지만 만들어놓으면 매우 빠름
+
+따라서 우리는 docker를 만들어 보도록한다.
+
+- 만드는 속도가 빠름
+- 다만 action이 될떄마다 docker가 매번 build가 되기 때문에 속도가 느리다
+
+3가지를 만들어야한다
+
+1. dockerfile
+2. entrypoint
+3. action.yml - 이 action이 무엇인지 정의를 해준다.
+
+`chmod +x ./entrypoint.sh`로 실행이 가능하도록 권한을 준다
+
+./entrypoint.sh -k $apiKey -r $roomId -t $bodyText -m $bodyMarkdown
+
+```
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   703    0   531  100   172    726    235 --:--:-- --:--:-- --:--:--   960
+::set-output name=response::{"id":"Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL01FU1NBR0UvMDI2NGE5YTAtYmZiNS0xMWVjLTllZWUtMTNlYTQ4NzEzZDU5","roomId":"Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1JPT00vNzcxZTI4ZDAtYmZhZi0xMWVjLThiNGQtM2ZiNTM2NmI4ZGQ2","roomType":"direct","text":"Hello Mark console","personId":"Y2lzY29zcGFyazovL3VzL1BFT1BMRS81ZWM5NThlMy1lYTgzLTQ5YTctOGNkMS1hZWFiZmJhMTZlM2E","personEmail":"Minjun.Kim.MJ@webex.bot","markdown":"**Hell**o Mark console","html":"<p><strong>Hell</strong>o Mark console</p>","created":"2022-04-19T07:47:49.178Z"}
+```
+
+shell은 정상 작동 한다는것을 알수 있다
+
+### action
+
+https://haya14busa.github.io/github-action-brandings/
+
+위의 링크를 참고해보면 어떤 아이콘등이 있는지 알수있다.
+
+#### docker
+
+`docker build . -t swm-gha`로 docker를 빌드해준다.
+
+`docker run -it swm-gha -k $apiKey -r $roomId -t $bodyText -m $bodyMarkdown`
+
+를 확인해보면 docker 내부적으로 잘 작동한다.

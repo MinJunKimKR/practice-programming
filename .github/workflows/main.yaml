@@ -13,16 +13,25 @@ jobs:
 
     steps:
       - name: "Send message bot"
-        shell: bash
-        run: |
-          curl -X POST \
-          https://webexapis.com/v1/messages \
-          -H "authorization: Bearer ${{ secrets.WEBEX_TOKEN}}" \
-          -H "cache-control: no-cache" \
-          -H "content-type: application/json" \
-          -H "postman-token: 98054c42-ffbd-e5da-29a1-68151df7c26a" \
-          -d '{
-            "roomId": "${{ secrets.WEBEX_ROOM_ID}}",
-            "markdown": "Message end by from github action from ${{ github.repository }}",
-            "text": "12"
-          }'
+        # 현재 파일들의 위치를 알려주는것.
+        # 만일 minjun/webex-bot과 같이 저장소를 적어주면 모든사람이 사용할수있다.
+        uses: ./
+        with:
+          webexToken: ${{ secrets.WEBEX_TOKEN}}
+          webexRoomId: ${{ secrets.WEBEX_ROOM_ID}}
+          bodyText: "Message end by from github action from ${{ github.repository }}"
+          bodyMarkdown: "Message end *by* from github action from ${{ github.repository }}"
+
+        # shell: bash
+        # run: |
+        #   curl -X POST \
+        #   'https://webexapis.com/v1/messages' \
+        #   -H "authorization: Bearer ${{ secrets.WEBEX_TOKEN}}" \
+        #   -H "cache-control: no-cache" \
+        #   -H "content-type: application/json" \
+        #   -H "postman-token: 98054c42-ffbd-e5da-29a1-68151df7c26a" \
+        #   -d '{
+        #     "roomId": "${{ secrets.WEBEX_ROOM_ID}}",
+        #     "markdown": "Message end by from github action from ${{ github.repository }}",
+        #     "text": "12"
+        #   }'
