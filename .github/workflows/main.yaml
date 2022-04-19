@@ -1,81 +1,37 @@
 name: "SWM GitHub Actions Basic"
 
-on: push
-
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+    
 env:
-  WORKFLOW_LEVEL: 'this value comes from the workflow level'
+  PRESET_VALUE: 'This is PRESET_VALUE'
 
 jobs:
   first-job:
     name: "First Job"
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
 
-    runs-on: ubuntu-latest
-
-    env:
-      JOB_LEVEL_1: 'this value comes from the job level 1'
-
-
-    steps:
-      - name: "say Hello world 11"
-        shell: bash
-        env:
-          STEP_LEVEL_11: 'this value comes from the step level 11'
-        run: |
-          echo "WORKFLOW: $WORKFLOW_LEVEL"
-          echo "JOB 1: $JOB_LEVEL_1"
-          echo "JOB 2: $JOB_LEVEL_2"
-          echo "STEP_LEVEL_11: ${{ env.STEP_LEVEL_11}}"
-          echo "STEP_LEVEL_12: ${{ env.STEP_LEVEL_12}}"
-          echo "STEP_LEVEL_21: ${{ env.STEP_LEVEL_21}}"
-          echo "STEP_LEVEL_22: ${{ env.STEP_LEVEL_22}}"
-
-
-      - name: "say Hello world 12"
-        shell: pwsh
-        env:
-          STEP_LEVEL_12: 'this value comes from the step level 12'
-        run: |
-          echo "WORKFLOW: $env:WORKFLOW_LEVEL"
-          echo "JOB 1: $env:JOB_LEVEL_1"
-          echo "JOB 2: $env:JOB_LEVEL_2"
-          echo "STEP_LEVEL_11: $env:STEP_LEVEL_11"
-          echo "STEP_LEVEL_12: $env:STEP_LEVEL_12"
-          echo "STEP_LEVEL_21: $env:STEP_LEVEL_21"
-          echo "STEP_LEVEL_22: $env:STEP_LEVEL_22"
-
-  second-job:
-    name: "Second Job"
-
-    runs-on: ubuntu-latest
-
-    env:
-      JOB_LEVEL_1: 'this value comes from the job level 2'
-
+    runs-on: ${{matrix.os}}
 
     steps:
-      - name: "say Hello world 21"
+      - name: "Set output value"
+        id: first
         shell: bash
-        env:
-          STEP_LEVEL_21: 'this value comes from the step level 21'
         run: |
-          echo "WORKFLOW: WORKFLOW_LEVEL"
-          echo "JOB 1: JOB_LEVEL_1"
-          echo "JOB 2: JOB_LEVEL_2"
-          echo "STEP_LEVEL_11: STEP_LEVEL_11"
-          echo "STEP_LEVEL_12: STEP_LEVEL_12"
-          echo "STEP_LEVEL_21: STEP_LEVEL_21"
-          echo "STEP_LEVEL_22: STEP_LEVEL_22"
+          var_1="This is the value: hello world"
+          echo "::set-output name=first_value::$var_1"
 
-      - name: "say Hello world 22"
+      - name: "Output output value on ${{ matrix.os}}"
+        if: matrix.os == 'ubuntu-latest'
         shell: pwsh
-        env:
-          STEP_LEVEL_22: 'this value comes from the step level 22'
         run: |
-          echo "WORKFLOW: $env:WORKFLOW_LEVEL"
-          echo "JOB 1: $env:JOB_LEVEL_1"
-          echo "JOB 2: $env:JOB_LEVEL_2"
-          echo "STEP_LEVEL_11: $env:STEP_LEVEL_11"
-          echo "STEP_LEVEL_12: $env:STEP_LEVEL_12"
-          echo "STEP_LEVEL_21: $env:STEP_LEVEL_21"
-          echo "STEP_LEVEL_22: $env:STEP_LEVEL_22"
-
+          echo "${{ steps.first.outputs.first_value}}"
