@@ -24,4 +24,4 @@ jobs:
         shell: pwsh
         run: |
           echo "${{ steps.first.outputs.first_value}}"
-          echo "${{ scerets.HELLO}}"
+          echo ${{ secrets.HELLO }}
