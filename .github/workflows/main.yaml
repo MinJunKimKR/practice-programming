@@ -1,37 +1,31 @@
 name: "SWM GitHub Actions Basic"
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
-  pull_request:
-    branches:
-      - main
-    
+  push
 env:
   PRESET_VALUE: 'This is PRESET_VALUE'
 
 jobs:
   first-job:
     name: "First Job"
-    strategy:
-      matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
 
-    runs-on: ${{matrix.os}}
+    runs-on: ubuntu-latest
 
     steps:
-      - name: "Set output value"
-        id: first
-        shell: bash
-        run: |
-          var_1="This is the value: hello world"
-          echo "::set-output name=first_value::$var_1"
-
-      - name: "Output output value on ${{ matrix.os}}"
+      - name: "Say hello"
         if: matrix.os == 'ubuntu-latest'
         shell: pwsh
         run: |
-          echo "${{ steps.first.outputs.first_value}}"
+          echo "hello world from first job"
+
+  second-job:
+    name: "second Job"
+    needs: first-job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Say hello 2"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "hello world from second job"

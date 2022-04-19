@@ -274,3 +274,43 @@ jobs:
           echo "${{ steps.first.outputs.first_value}}"
 
 ```
+
+### 순서대로 실행하기
+
+Job은 순서대로가 아니라 뭐가 먼제 실행되는지 모른다.
+따라서, 순서대로 하려면 `needs` 키워드가 필요하다
+
+```
+name: "SWM GitHub Actions Basic"
+
+on:
+  push
+env:
+  PRESET_VALUE: 'This is PRESET_VALUE'
+
+jobs:
+  first-job:
+    name: "First Job"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Say hello"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "hello world from first job"
+
+  second-job:
+    name: "second Job"
+    needs: first-job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Say hello 2"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "hello world from second job"
+
+```
