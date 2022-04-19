@@ -144,3 +144,7 @@ Run echo "***"
 ```
 echo "${{ scerets.HELLO}}"
 ```
+
+### matrix
+
+- 모든 OS에서 loop 해주고 싶다.
