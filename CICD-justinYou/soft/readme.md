@@ -189,3 +189,88 @@ jobs:
 ```
 if: github.event_name == 'pull_request'
 ```
+
+```
+name: "SWM GitHub Actions Basic"
+
+on: ['push', 'pull_request']
+
+env:
+  PRESET_VALUE: 'This is PRESET_VALUE'
+
+jobs:
+  first-job:
+    name: "First Job"
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - name: "Set output value"
+        id: first
+        shell: bash
+        run: |
+          var_1="This is the value: hello world"
+          echo "::set-output name=first_value::$var_1"
+
+      - name: "Output output value on ${{ matrix.os}}"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "${{ steps.first.outputs.first_value}}"
+
+```
+
+if는 workflow레벨에서는 안되지만, job이나 task레벨에서 적용가능하다
+
+### git aciton의 event
+
+1. tag
+2. api 호출했을때
+3. push
+4. pull request
+
+더 세분화해서 조정가능하다
+
+```
+name: "SWM GitHub Actions Basic"
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+
+env:
+  PRESET_VALUE: 'This is PRESET_VALUE'
+
+jobs:
+  first-job:
+    name: "First Job"
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - name: "Set output value"
+        id: first
+        shell: bash
+        run: |
+          var_1="This is the value: hello world"
+          echo "::set-output name=first_value::$var_1"
+
+      - name: "Output output value on ${{ matrix.os}}"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "${{ steps.first.outputs.first_value}}"
+
+```

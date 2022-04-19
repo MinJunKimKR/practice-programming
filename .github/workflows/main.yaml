@@ -1,7 +1,15 @@
 name: "SWM GitHub Actions Basic"
 
-on: ['push', 'pull_request']
-
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+    
 env:
   PRESET_VALUE: 'This is PRESET_VALUE'
 
