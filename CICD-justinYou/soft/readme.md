@@ -92,6 +92,42 @@ jobs:
           echo "stepset value 2: ${{env.PRESET_VALUE_2}}"
 ```
 
+### 스텝간에 환경변수 넘겨주기
+
 :: -> '현재 스텝에 아웃풋 값을 지정을 해라'라는 뜻이다.
 
-`echo "::set-output name=first_value::$var_1"`
+```
+name: "SWM GitHub Actions Basic"
+
+on: push
+
+env:
+  PRESET_VALUE: 'This is PRESET_VALUE'
+
+jobs:
+  first-job:
+    name: "First Job"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Set output value"
+        id: first
+        shell: bash
+        run: |
+          var_1="This is the value 1 in the step 1"
+
+          echo "::set-output name=first_value::$var_1"
+
+      - name: "Output output value"
+        shell: pwsh
+        run: |
+          echo "${{ steps.first.outputs.first_value}}"
+
+```
+
+### 민감한 정보 숨기기
+
+```
+echo "add-mask::$var_1"
+```
