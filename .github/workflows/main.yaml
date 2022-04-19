@@ -24,7 +24,7 @@ jobs:
         env:
           STEP_LEVEL_12: 'this value comes from the step level 12'
         run: |
-          var_2='This is the value 2 in the step 2"
+          var_2='This is the value 2 in the step 2'
 
           echo "STEPSET_VALUE_2=$var_2" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
 
