@@ -1,6 +1,6 @@
 name: "SWM GitHub Actions Basic"
 
-on: push
+on: ['push', 'pull_request']
 
 env:
   PRESET_VALUE: 'This is PRESET_VALUE'
@@ -8,7 +8,8 @@ env:
 jobs:
   first-job:
     name: "First Job"
-    
+    if: github.event_name == 'pull_request'
+
     strategy:
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']

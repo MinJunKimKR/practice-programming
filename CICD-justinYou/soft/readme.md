@@ -148,3 +148,44 @@ echo "${{ scerets.HELLO}}"
 ### matrix
 
 - 모든 OS에서 loop 해주고 싶다.
+- matrix를 사용하면 반복적인 작업을 줄여줄수 있다.
+
+```
+name: "SWM GitHub Actions Basic"
+
+on: ['push']
+
+env:
+  PRESET_VALUE: 'This is PRESET_VALUE'
+
+jobs:
+  first-job:
+    name: "First Job"
+
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        message: ['HEELO WORLD','LOREM IPSUM']
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - name: "Set output value"
+        id: first
+        shell: bash
+        run: |
+          var_1="This is the value: ${{ matrix.message}}"
+          echo "::set-output name=first_value::$var_1"
+
+      - name: "Output output value on ${{ matrix.os}}"
+        shell: pwsh
+        run: |
+          echo "${{ steps.first.outputs.first_value}}"
+
+```
+
+### condition
+
+```
+if: github.event_name == 'pull_request'
+```
