@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
       - name: "Send message bot"
         # 현재 파일들의 위치를 알려주는것.
         # 만일 minjun/webex-bot과 같이 저장소를 적어주면 모든사람이 사용할수있다.
