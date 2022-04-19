@@ -315,3 +315,68 @@ jobs:
           echo "hello world from second job"
 
 ```
+
+이렇게 하면 같이 실행되고,
+
+```
+  second-job:
+    name: "second Job"
+    needs: first-job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Say hello 2"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "hello world from second job"
+
+  third-job:
+    name: "Third Job"
+    needs: first-job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Say hello 3"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "hello world from third job"
+```
+
+이렇게 하면 순서대로 실행된다,
+
+```
+  second-job:
+    name: "second Job"
+    needs: first-job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Say hello 2"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "hello world from second job"
+
+  third-job:
+    name: "Third Job"
+    needs: second-job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Say hello 3"
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: |
+          echo "hello world from third job"
+```
+
+### webbex bot 만들기
+
+준비물은
+
+1. room id
+2. API Key
+3. markdown value
+4. text

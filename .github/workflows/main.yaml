@@ -12,33 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Say hello"
-        if: matrix.os == 'ubuntu-latest'
-        shell: pwsh
+      - name: "Send message bot"
+        shell: bash
         run: |
-          echo "hello world from first job"
-
-  second-job:
-    name: "second Job"
-    needs: first-job
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: "Say hello 2"
-        if: matrix.os == 'ubuntu-latest'
-        shell: pwsh
-        run: |
-          echo "hello world from second job"
-
-  third-job:
-    name: "Third Job"
-    needs: second-job
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: "Say hello 3"
-        if: matrix.os == 'ubuntu-latest'
-        shell: pwsh
-        run: |
-          echo "hello world from third job"
-
+          curl -X POST \
+          https://webexapis.com/v1/messages \
+          -H "authorization: Bearer ${{ secrets.WEBEX_TOKEN}}"" \
+          -H "cache-control: no-cache" \
+          -H "content-type: application/json" \
+          -H "postman-token: 98054c42-ffbd-e5da-29a1-68151df7c26a" \
+          -d '{
+            "roomId": "${{ secrets.WEBEX_ROOM_ID}}",
+            "markdown": "Message end by from github action from ${{ github.repository }}",
+            "text": "12"
+          }'
