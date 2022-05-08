@@ -458,3 +458,11 @@ https://haya14busa.github.io/github-action-brandings/
 `docker run -it swm-gha -k $apiKey -r $roomId -t $bodyText -m $bodyMarkdown`
 
 를 확인해보면 docker 내부적으로 잘 작동한다.
+
+이때 코드를 체크아웃 해줘야 코드에 접근이 가능하다
+
+```
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+```
